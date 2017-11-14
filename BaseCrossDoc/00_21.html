@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>BaseCrossドキュメント(2017年)</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h2>０２．シンプルバージョンでゲームの実装(Dx11版)</h2>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<br/>
+<h3>０２１．ゲーム実装の雛形(Dx11版)</h3>
+　このサンプルは<b>SimplSample021</b>というディレクトリに含まれます。<br />
+　<b>BaseCrossDx11.sln</b>というソリューションを開くと<b>Dx11版</b>が起動します。<br />
+　このサンプルは<b>Dx11版</b>しかありません。<b>Dx12版</b>はありませんのでご了承ください。<br />
+　また、このサンプルはこれ以降のサンプルの、ひな形的な役割を担ってます。<br />
+　あるいは実際のゲーム制作の、ひな形としても利用できると思います（ただし、これ以降のサンプルと同じ設計で作成する場合）。設計的には、<b>フルバージョン</b>の簡略化したものです。もし、このような設計が気に入らなければ、<b>SimpleSample015（あるいはそれ以前のサンプル）</b>をひな形として、自分の設計で制作することをお勧めします。<br />
+　例えば<b>画面のフェードイン。フェードアウト</b>を実装する場合は、このサンプルをひな型にしてもよいですが、<b>画面のオーバーラップ</b>を実装するには不向きです。そういう場合は<b>SimpleSample015（あるいはそれ以前のサンプル）</b>をひな形にするのをお勧めします。また今流行りの<b>オープンワールド</b>にも不向きでしょう。<b>オープンワールド</b>の実装には<b>ゲームを遊んでいる最中</b>の、リソース読み込みや破棄が必要であり、そのためには<b>マルチスレッド</b>処理や<b>テッセレーション</b>も必要になるでしょう。<br />
+<br />
+　また、これ以降<b>SimplSample023</b>までは、<b>個別の機能</b>を紹介するサンプルとなります。いろんな機能を同時に実装するには<b>SimplSample024</b>を、ひな形として利用するとよいでしょう。<br />
+<br />
+　サンプルを起動すると以下の画面が現れます。コントローラで操作でき、Aボタンでジャンプします。Bボタンで、いわゆる<b>ステージ</b>の切り替えができます。
+<p>&nbsp;</p>
+<img src="img/0021a.png" width="80%"/>
+<p>図0021a</p>
+<p>&nbsp;</p>
+<h3>【サンプルのポイント】</h3>
+　見た感じ、非常にシンプルですが、このサンプルにはいくつか新しい機能が実装されています。以下に列挙します。
+<div class="box1">
+<pre>
+１、ステージの切り替え
+２、テクスチャのリソース登録
+３、３Ｄの描画オブジェクト
+４、親子関係のスプライト
+</pre>
+</div>
+　これらについて、詳しく説明します。<br />
+<br />
+<h4>■１、ステージの切り替え■</h4>
+　ゲームにはいろんな<b>画面</b>があります。<b>ゲーム画面</b>や<b>メインメニュー</b>や<b>リザルト画面</b>などです。これらを<b>BaceCross</b>では<b>ステージ</b>と称してます。<br />
+　<b>ステージ</b>の実装方法はいろいろありますが、このサンプル（や今後のサンプル）では<b>シーンが動的に切り変える画面</b>として実装しています。フルバージョンと同様です。つまり<b>かなり縮小したフルバージョン</b>の設計をしています。<br />
+　<b>ステージ</b>は<b>シーン</b>が管理します。<b>シーン</b>は<b>アクティブステージ</b>というのを一つだけ持っていて、それを動的に変更します。変更する際に<b>今まで使っていたステージ</b>は破棄します。しかし、一度読み込んだ<b>リソース</b>をステージの破棄のたびに一緒に破棄していたのでは、読み込む時間がもったいないので<b>リソース登録</b>することにより、リソースの再読み込みをしなくても済むようになってます。（リソース登録については、３、テクスチャのリソース登録で説明します）。<br />
+<br />
+<h4>ステージ切り替えの実装</h4>
+　まず、<b>シーン</b>の<b>OnCreate()関数</b>を見てください。
+<div class="box1">
+<pre>
+void Scene::OnCreate() {
+    CreateResources();
+    //自分自身にイベントを送る
+    //これにより各ステージやオブジェクトがCreate時にシーンにアクセスできる
+    <span class="red">PostEvent(0.0f, GetThis&lt;ObjectInterface>(), GetThis&lt;Scene>(), L"ToGameStage");</span>
+}
+</pre>
+</div>
+　赤くなっているところで<b>イベント</b>を自分自身に送ってます。<b>PostEvent()関数</b>は、最速で<b>次のターンの最初</b>に実装されるイベントです。ここでは<b>L"ToGameStage"</b>というメッセージが送られます。<br />
+　送られたイベントは<b>Scene::OnEvent()関数</b>で処理されます。ここでは以下のように記述があります。
+<div class="box1">
+<pre>
+void Scene::OnEvent(const shared_ptr&lt;Event>& event) {
+    if (event->m_MsgStr == L"ToGameStage") {
+        //アクティブステージをGameStageに設定
+        ResetActiveStage&lt;GameStage>();
+    }
+    else if (event->m_MsgStr == L"ToEmptyStage") {
+        //アクティブステージをEmptyStageに設定
+        ResetActiveStage&lt;EmptyStage>();
+    }
+}
+</pre>
+</div>
+　<b>"ToGameStage"</b>という文字列が送られた場合は<b>GameStage</b>がアクティブステージになります。<b>ResetActiveStage()関数</b>は、指定されたクラスのインスタンスをnewして、アクティブステージに設定します。その際、これまでのステージは<b>スマートポインタ</b>により、自動的に破棄されます。<br />
+　ステージがnewされたときに呼ばれる関数が、<b>コンストラクタと、OnCreate()関数</b>です。<b>GameStage::OnCreate()関数</b>は以下の通りです。
+<div class="box1">
+<pre>
+void GameStage::OnCreate() {
+
+    //平面の作成
+    Quat Qt;
+    Qt.rotationX(XM_PIDIV2);
+    AddGameObject&lt;SquareObject>(
+        L"SKY_TX",
+        Vec3(50.0f, 50.0f, 1.0f),
+        Qt,
+        Vec3(0.0f, 0.0f, 0.0f)
+        );
+
+    //プレイヤーの作成
+    AddGameObject&lt;Player>(
+        L"TRACE_TX", 
+        true, 
+        Vec3(0.0f, 0.125f, 0.0f)
+        );
+
+    //PNT描画オブジェクトの作成
+    AddGameObject&lt;PNTDrawObject>();
+
+//中略
+
+}
+</pre>
+</div>
+　このように、以前のサンプル(SimplaSample015)では<b>Scene::OnCreate()関数</b>に記述されていた内容が変更されてます。フルバージョンのように
+<div class="box1">
+<pre>
+    AddGameObjectテンプレート関数
+</pre>
+</div>
+　が実装されています。<b>Stageクラス</b>にあるこの関数は、フルバージョンの者とほぼ同じです。<br />
+　(SimplaSample015)のように、ゲームステージに各インスタンスのポインタを持つことも可能ですが、配列で持たせることにより、各オブジェクトの仮想関数呼び出しが効率化されています。<br />
+　しかし、<b>Stageクラス</b>にあるこの配列は<b>GameObjectの配列</b>です。各派生クラスの仮想関数呼び出しは、直接呼び出すよりは負担はかかります。これが我慢できない場合は、<b>EmptyStage</b>のように、各々メンバとして持つといいでしょう。<br />
+　さて、中身を見てみましょう。テクスチャも<b>ファイル名</b>を渡すのではなく<b>リソース名</b>を渡しています。これは、テクスチャを使いまわしができるように<b>リソース登録</b>されているためです。<br />
+　ゲームオブジェクトの配列化により、<b>GameStage::OnUpdateStage()</b>も以下のようにシンプルになります。<br />
+<div class="box1">
+<pre>
+void GameStage::OnUpdateStage() {
+    for (auto& v : GetGameObjectVec()) {
+        //各オブジェクトの更新
+        v->OnUpdate();
+    }
+    //自分自身の更新
+    this->OnUpdate();
+}
+</pre>
+</div>
+　<b>GameStage::OnDrawStage()</b>も同様です。
+<div class="box1">
+<pre>
+void GameStage::OnDrawStage() {
+    //描画デバイスの取得
+    auto Dev = App::GetApp()->GetDeviceResources();
+    Dev->ClearDefaultViews(Col4(0, 0, 0, 1.0f));
+    //デフォルト描画の開始
+    Dev->StartDefaultDraw();
+    for (auto& v : GetGameObjectVec()) {
+        //各オブジェクトの描画
+        v->OnDraw();
+    }
+    //自分自身の描画
+    this->OnDraw();
+    //デフォルト描画の終了
+    Dev->EndDefaultDraw();
+}
+</pre>
+</div>
+<br />
+<br />
+　さて、このようにして<b>ゲームステージ</b>は表示されるわけですが、もう一つの<b>EmptyStage</b>はどのように切り替えられるのでしょうか。答えは<b>GameStage::OnUpdate()関数</b>にあります。<br />
+　この関数では<b>カメラの移動</b>を行っていますが、その際<b>コントローラのBボタンが押されたら</b>という処理が追加されています。
+<div class="box1">
+<pre>
+void GameStage::OnUpdate() {
+    //コントローラの取得
+    auto CntlVec = App::GetApp()->GetInputDevice().GetControlerVec();
+    if (CntlVec[0].bConnected) {
+
+        //中略
+
+        //Bボタン
+        if (CntlVec[0].wPressedButtons & XINPUT_GAMEPAD_B) {
+            <span class="red">PostEvent(0.0f, GetThis&lt;ObjectInterface>(),
+                 App::GetApp()->GetScene&lt;Scene>(), L"ToEmptyStage");</span>
+        }
+    }
+}
+</pre>
+</div>
+　このように、<b>L"ToEmptyStage"</b>というメッセージをシーンに送ってます。シーンでは<b>OnEvent()関数</b>で、ゲームステージのアクティブ化が行われますので、<b>ステージの切り替え</b>が実行されます。<br />
+<br />
+<h4>■２、テクスチャのリソース登録■</h4>
+　<b>ステージ切り替え</b>のところでも少し触れましたが、このサンプルでは<b>テクスチャのリソース登録</b>することで、同じテクスチャを、2つ以上メモリ上に配置しなくても済むような作りになってます。（同じデータを複数メモリ上に置くのは無駄ですからね）。<br />
+　<b>テクスチャのリソース登録</b>は<b>Appクラスにリソースを登録する</b>ことで実装します。<b>Scene::CreateResources()関数</b>で行っています。<br />
+<div class="box1">
+<pre>
+void Scene::CreateResources() {
+    wstring DataDir;
+    //サンプルのためアセットディレクトリを取得
+    App::GetApp()->GetAssetsDirectory(DataDir);
+    //各ゲームは以下のようにデータディレクトリを取得すべき
+    //App::GetApp()->GetDataDirectory(DataDir);
+    wstring strTexture = DataDir + L"sky.jpg";
+    <span class="red">App::GetApp()->RegisterTexture(L"SKY_TX", strTexture);</span>
+    strTexture = DataDir + L"trace.png";
+    <span class="red">App::GetApp()->RegisterTexture(L"TRACE_TX", strTexture);</span>
+    strTexture = DataDir + L"StageMessage.png";
+    <span class="red">App::GetApp()->RegisterTexture(L"MESSAGE_TX", strTexture);</span>
+}
+</pre>
+</div>
+　赤くなっているところは、<b>テクスチャリソースを作成してリソース登録する</b>という処理です。テクスチャファイル名とリソース名を渡すと<b>リソース登録</b>してくれます。<br />
+　一度リソース登録したデータは、このゲームが終了するまでメモリに保持されます。<br />
+　もし、ゲーム途中で、もう使用しなくなったリソースがあれば、<b>App::GetApp()->UnRegisterResource()関数</b>で解放できます。しかしこの関数は存在チェックをしないので、失敗したら例外が発生するので、あらかじめ<b>App::GetApp()->CheckResource()関数</b>で存在をチェックするとよいでしょう。<br />
+<br />
+　<b>リソース登録</b>は<b>メッシュ</b>や<b>WAVファイル</b>もすることが可能です。このサンプルで使用するメッシュは、動的に頂点を変更するのが多いのでリソース登録してませんが、固定メッシュの場合はリソースにしておいたほうがいいでしょう。またWAVはデータが大きくなる傾向にあるので、リソース登録は必須と言えます。（WAVについてのサンプルは後ほど紹介します）。<br />
+<br />
+<h4>■３、３Ｄの描画オブジェクト■</h4>
+　このサンプルには、SimpleSample015同様<b>描画オブジェクト</b>が実装されています。<b>DrawObjects.h/cpp</b>にあります。同じ描画方法をとるオブジェクトに対して、一度で描画をするオブジェクトですが、少し改良を加えています。<br />
+　３Ｄの処理の中で<b>透明処理</b>があります。<b>透明なもの</b>は<b>不透明なもの</b>の後に描画する必要があります。また、<b>透明処理</b>をするオブジェクト同士は<b>カメラより遠いものから順番に</b>描画すると、透明なのに奥が描画されない、などのエラーが出にくくなります。<br />
+　このサンプルの<b>描画オブジェクト</b>である、<b>PNTDrawObjectクラス</b>は<b>透明なものと不透明なもの</b>を別に管理しています。<br />
+　また、<b>透明なもの同士</b>は描画直前に<b>カメラ位置から遠いもの順</b>にソートします。以下がその部分です。
+<div class="box1">
+<pre>
+void PNTDrawObject::OnDraw() {
+//中略
+    //サブ関数呼び出し(不透明)
+    OnDrawSub(m_DrawObjectVec,sb);
+    //--------------------------------------------------------
+    //透明の3Dオブジェクトをカメラからの距離でソート
+    //以下は、オブジェクトを引数に取りboolを返すラムダ式
+    //--------------------------------------------------------
+    <span class="red">auto func = [&](shared_ptr&lt;DrawObject>& Left, shared_ptr&lt;DrawObject>& Right)->bool {
+        auto LeftPos = Left->m_WorldMatrix.transInMatrix();
+        auto RightPos = Right->m_WorldMatrix.transInMatrix();
+        auto LeftLen = bsm::length(LeftPos - CameraEye);
+        auto RightLen = bsm::length(RightPos - CameraEye);
+        return (LeftLen > RightLen);
+    };
+    //ラムダ式を使ってソート
+    std::sort(m_TraceDrawObjectVec.begin(), m_TraceDrawObjectVec.end(), func);</span>
+    //サブ関数呼び出し(透明)
+    OnDrawSub(m_TraceDrawObjectVec, sb);
+    //後始末
+    Dev->InitializeStates();
+    //描画用の配列をクリア
+    m_DrawObjectVec.clear();
+    m_TraceDrawObjectVec.clear();
+}
+</pre>
+</div>
+　赤くなっているところが透明のものをソートしている個所です。ラムダ式なので
+<div class="box1">
+<pre>
+//ラムダ式を使ってソート
+std::sort(m_TraceDrawObjectVec.begin(), m_TraceDrawObjectVec.end(), 
+    [&](shared_ptr&lt;DrawObject>& Left, shared_ptr&lt;DrawObject>& Right)->bool {
+    auto LeftPos = Left->m_WorldMatrix.transInMatrix();
+    auto RightPos = Right->m_WorldMatrix.transInMatrix();
+    auto LeftLen = bsm::length(LeftPos - CameraEye);
+    auto RightLen = bsm::length(RightPos - CameraEye);
+    return (LeftLen > RightLen);
+});
+</pre>
+</div>
+　のように書けるわけですが、ラムダ式を一気に記述すると、訳が分からなくなるので、ラムダ式を分離しています。<br />
+　ラムダ式の理解には分離した状態で記述するとわかりやすいと思います。<br />
+<br />
+<h4>■４、親子関係のスプライト■</h4>
+　最後にスプライトの説明です。BaseCrossでは<b>２Ｄの単一テクスチャオブジェクト</b>を<b>スプライト</b>と称しています。コ
+ード説明に入る前に、<b>スプライトにはどういう機能があると便利か</b>を記します。
+<div class="box1">
+<pre>
+１、PCT頂点を作成する機能（共通）
+２、描画機能（共通）
+３、頂点を変更する機能（個別）
+４、テクスチャを動的に変更できる機能（個別）
+５、エミッシブ色を変更できる機能（個別）
+６、ブレンドステートを変更できる機能（個別）
+</pre>
+</div>
+　<b>共通</b>となっているのは、どのスプライトでも同じように記述できる部分で、<b>個別</b>となっているのは、スプライトの種類（クラス）やインスタンスごとに違う処理ができるの便利な部分です。<br />
+　こういった要件を踏まえて作成したのが<b>SpriteBaseクラス</b>とその派生クラス<b>RotateSpriteとMessageSprite</b>です。<br />
+　共通の処理は<b>SpriteBaseクラス</b>で行い、ここでは個別処理用にインターフェイス（操作関数）を用意します。それで、各派生クラスでは、親クラスのインターフェイスを使って個別の処理をします。<br />
+<br />
+<h4>１、PCT頂点を作成する機能（共通）と２．描画機能（共通）</h4>
+　この機能は、親クラスの<b>SpriteBase::OnCr、ate()関数</b>で実装されてます。
+<div class="box1">
+<pre>
+void SpriteBase::OnCreate() {
+    float HelfSize = 0.5f;
+    //頂点配列(縦横指定数ずつ表示)
+    m_BackupVertices = {
+        { VertexPositionColorTexture(Vec3(-HelfSize, HelfSize, 0),
+            Col4(1.0f,1.0f,1.0f,1.0f), Vec2(0.0f, 0.0f)) },
+        { VertexPositionColorTexture(Vec3(HelfSize, HelfSize, 0), 
+            Col4(1.0f,1.0f,1.0f,1.0f), Vec2((float)m_XWrap, 0.0f)) },
+        { VertexPositionColorTexture(Vec3(-HelfSize, -HelfSize, 0), 
+            Col4(1.0f,1.0f,1.0f,1.0f), Vec2(0.0f, (float)m_YWrap)) },
+        { VertexPositionColorTexture(Vec3(HelfSize, -HelfSize, 0), 
+            Col4(1.0f,1.0f,1.0f,1.0f), Vec2((float)m_XWrap, (float)m_YWrap)) },
+    };
+    <span class="red">//頂点の初期修正（仮想関数呼びだし）
+    AdjustVertex();</span>
+    //インデックス配列
+    vector&lt;uint16_t> indices = { 0, 1, 2, 1, 3, 2 };
+    //メッシュの作成（変更できる）
+    m_SquareMesh 
+        = MeshResource::CreateMeshResource(m_BackupVertices, indices, true);
+}
+</pre>
+</div>
+　このように最初に<b>m_BackupVertices</b>を初期化し、赤くなっていおるところのように<b>AdjustVertex()</b>を呼び出します。この関数は仮想関数になっていて、派生クラスで多重定義する音で、<b>m_BackupVertices</b>の初期値を変更することができます。<br />
+　<b>RotateSpriteクラス</b>では多重定義内で変更しています。
+<div class="box1">
+<pre>
+void RotateSprite::AdjustVertex() {
+    //頂点色を変更する
+    for (size_t i = 0; i &lt; m_BackupVertices.size();i++) {
+        switch (i) {
+        case 0:
+            m_BackupVertices[i].color = Col4(1.0f, 0.0f, 0.0f, 1.0f);
+            break;
+        case 1:
+            m_BackupVertices[i].color = Col4(0.0f, 1.0f, 0.0f, 1.0f);
+            break;
+        case 2:
+            m_BackupVertices[i].color = Col4(0.0f, 0.0f, 1.0f, 1.0f);
+            break;
+        case 3:
+            m_BackupVertices[i].color = Col4(1.0f, 1.0f, 0, 1.0);
+            break;
+        }
+    }
+}
+</pre>
+</div>
+<br />
+<h4>３、頂点を変更する機能（個別）</h4>
+　これも、修正するタイミングで呼ばれる仮想関数が用意されています。<b>UpdateVertex()関数</b>です。<br />
+　<b>RotateSpriteクラス</b>では多重定義して、UV値を変更して、テクスチャのスクロール処理を実装しています。<br />
+　<b>MessageSpriteクラス</b>では多重定義して、点滅処理を実装しています。この仮想関数は、親クラスにおいて頂点バッファをあらかじめマップしておいて、そのデータのポインタを渡します。ですから、派生クラスではマップのことは考えずに修正処理のみ行うことができます。以下は、<b>MessageSprite</b>での更新処理です。
+<div class="box1">
+<pre>
+void  MessageSprite::UpdateVertex(float ElapsedTime, 
+        VertexPositionColorTexture* vertices) {
+    m_TotalTime += (ElapsedTime * 5.0f);
+    if (m_TotalTime >= XM_2PI) {
+        m_TotalTime = 0;
+    }
+    float sin_val = sin(m_TotalTime) * 0.5f + 0.5f;
+    Col4 UpdateCol(1.0f, 1.0f, 1.0f, sin_val);
+    for (size_t i = 0; i &lt; m_SquareMesh->GetNumVertices(); i++) {
+        vertices[i] = VertexPositionColorTexture(
+            m_BackupVertices[i].position,
+            UpdateCol,
+            m_BackupVertices[i].textureCoordinate
+        );
+
+    }
+}
+</pre>
+</div>
+<br />
+<h4>その他の処理</h4>
+　４、テクスチャを動的に変更できる機能（個別）、５、エミッシブ色を変更できる機能（個別）、６、ブレンドステートを変更できる機能（個別）については親クラスにアクセサが用意されてますので、それを利用します。アクセサは公開メンバですので外部からも利用できます。<br />
+<br/>
+<h4>■まとめ■</h4>
+　今回は、シンプルバージョンという低レベルの状態から、どのようにして<b>ゲーム</b>に仕上げていくか、そのヒントになる実装を紹介しました。<br />
+　また、今後、<b>SImpleSample023</b>までのサンプルの紹介では、個別に紹介することで、ほかの実装とは分けて考えることが可能にしてあります。<br />
+　それらは、<b>衝突判定の実装、影の描画</b>です。ほかの機能もそれらを参考に実装可能と思います。<br />
+　また、それらやほかの機能が<b>ミックスされた、汎用的なサンプル</b>は<b>SImpleSample024</b>に紹介します。それでは<bエフェクト、>モデルの描画</b>や、<b>リアルなシェーダ</b>も含まれます。
+<br />
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="index.html">目次</a></li>
+<li><a href="00_22.html">次へ</a></li>
+</ul>
+<!-- /フッタ　-->
+
+
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

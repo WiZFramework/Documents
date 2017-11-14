@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>BaseCrossドキュメント(2017年)</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h2>０．シンプルバージョンサンプル(Dx11版)</h2>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<br/>
+<h3>０１１．立方体とテクスチャ(Dx11版)</h3>
+　このサンプルは<b>SimplSample011</b>というディレクトリに含まれます。<br />
+　<b>BaseCrossDx11.sln</b>というソリューションを開くと<b>Dx11版</b>が起動します。<br />
+<br />
+　実行結果は以下のような画面が出ます。
+<p>&nbsp;</p>
+<img src="img/0011a.png" width="80%"/>
+<p>図0011a</p>
+<p>&nbsp;</p>
+<br/>
+　動画は以下になります。
+<p>&nbsp;</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/JKJbIPsmyWM?rel=0" frameborder="0" allowfullscreen></iframe>
+<p>&nbsp;</p>
+<h3>【サンプルのポイント】</h3>
+　今回のテーマは<b>３Ｄオブジェクトのテクスチャ</b>です。<b>ライティング、透明処理</b>も行います。<br />
+　今回の頂点型は３Ｄ表現のゲームで、一番多用される型と言えるでしょう。もちろん、物理ライティングや複数のテクスチャの貼り付けなど、高度なテクニックは山ほどありますが、まずは<b>テクスチャとライティング処理</b>されたオブジェクトの描画を実装します。<br />
+<br />
+<h3>【共通解説】</h3>
+　Dx12、Dx11両方に共通なのは<b>シェーダー</b>です。<b>DxSharedプロジェクト</b>内に<b>シェーダファイル</b>というフィルタがあり、そこに記述されてます。<br />
+　今回使用するシェーダは<b>頂点シェーダとピクセルシェーダ</b>です。<b>VertexPositionNormalTexture型</b>の頂点を持つものです。<b>コンスタントバッファ</b>もあります。<br />
+　シェーダは前項のシェーダに、テクスチャ対応を加えたものです。<br />
+　以下はテクスチャに関係ある<b>ピクセルシェーダ（PSPNTStatic.hlsl）</b>ですが、
+<div class="box1">
+<pre>
+<span class="red">Texture2D g_texture : register(t0);
+SamplerState g_sampler : register(s0);</span>
+
+float4 main(PSPNTInput input) : SV_TARGET
+{
+    //法線ライティング
+    float3 lightdir = normalize(LightDir.xyz);
+    float3 N1 = normalize(input.norm);
+    float4 Light = saturate(dot(N1, -lightdir) * Diffuse) + Emissive;
+    Light.a = Diffuse.a;
+     <span class="red">//テクスチャを設定
+    Light = g_texture.Sample(g_sampler, input.tex) * Light;</span>
+    return saturate(Light);
+}
+</pre>
+</div>
+　赤くなっているところが<b>テクスチャの設定</b>に関連する部分です。<b>サンプラーとテクスチャー</b>の２つのリソースを使用します。<br />
+　カラー要素として<b>ディフューズとエミッシブ</b>があります。テクスチャ要素と合わせて、3つのパラメータがあることになります。これらをどう組み合わせるかは、シェーダ作成者次第ということになります。例えば
+<div class="box1">
+<pre>
+
+float4 main(PSPNTInput input) : SV_TARGET
+{
+
+    //法線ライティング
+    float3 lightdir = normalize(LightDir.xyz);
+    float3 N1 = normalize(input.norm);
+    float4 Light = saturate(dot(N1, -lightdir) * Diffuse);
+    Light.a = Diffuse.a;
+    //テクスチャを設定
+    Light = g_texture.Sample(g_sampler, input.tex) * Light;
+    return saturate(Light <span class="red">+ Emissive</span>);
+}
+</pre>
+</div>
+　と最後にエミッシブを加算する形にするだけでも、表現は大きく変わります。いろいろ試してみましょう。<br />
+<br />
+<h3>【Dx11版解説】</h3>
+　<b>BaseCrossDx11.sln</b>を開くと、<b>BaseCrossDx11</b>というメインプロジェクトがあります。この中の<b>Character.h/cpp</b>が主な記述個所になります。<br />
+<br />
+<h4>■初期化■</h4>
+　<b>Dx11版</b>の初期化は、<b>Dx12版</b>のようにリソース初期化はありません。頂点バッファを作成し、スケール、位置などを初期化します。<br />
+<br />
+<h4>■更新処理■</h4>
+　<b>CubeObject::OnUpdate()関数</b>です。オブジェクトを回転させています。<br />
+<br />
+<h4>■描画処理■</h4>
+　<b>CubeObject::OnDraw()関数</b>です。透明処理をする場合としない場合がありますので、注意してください。<br />
+　また<b>ディフューズとエミッシブ</b>の値も設定しています。
+<div class="box1">
+<pre>
+void CubeObject::OnDraw() {
+    auto Dev = App::GetApp()->GetDeviceResources();
+    auto pD3D11DeviceContext = Dev->GetD3DDeviceContext();
+    auto RenderState = Dev->GetRenderState();
+
+    //行列の定義
+    Mat4x4 World, View, Proj;
+    //ワールド行列の決定
+    World.affineTransformation(
+        m_Scale,            //スケーリング
+        Vec3(0, 0, 0),      //回転の中心（重心）
+        m_Qt,               //回転角度
+        m_Pos               //位置
+    );
+    //転置する
+    World.transpose();
+    //ビュー行列の決定
+    View = XMMatrixLookAtLH(Vec3(0, 2.0, -5.0f), Vec3(0, 0, 0), Vec3(0, 1.0f, 0));
+    //転置する
+    View.transpose();
+    //射影行列の決定
+    float w = static_cast&lt;float>(App::GetApp()->GetGameWidth());
+    float h = static_cast&lt;float>(App::GetApp()->GetGameHeight());
+    Proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, w / h, 1.0f, 100.0f);
+    //転置する
+    Proj.transpose();
+    //コンスタントバッファの準備
+    PNTStaticConstantBuffer sb;
+    sb.World = World;
+    sb.View = View;
+    sb.Projection = Proj;
+    //ライティング
+    Vec4 LightDir(0.5f, -1.0f, 0.5f, 0.0f);
+    LightDir.normalize();
+    sb.LightDir = LightDir;
+    //ディフューズ
+    sb.Diffuse = Col4(1.0f, 1.0f, 1.0f, 1.0f);
+    //エミッシブ加算。
+    sb.Emissive = Col4(0.4f, 0.4f, 0.4f, 0);
+    //コンスタントバッファの更新
+    pD3D11DeviceContext->UpdateSubresource(CBPNTStatic::GetPtr()->GetBuffer(), 0, nullptr, &sb, 0, 0);
+
+    //ストライドとオフセット
+    UINT stride = sizeof(VertexPositionNormalTexture);
+    UINT offset = 0;
+    //頂点バッファのセット
+    pD3D11DeviceContext->IASetVertexBuffers(0, 1, 
+        m_CubeMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+    //インデックスバッファのセット
+    pD3D11DeviceContext->IASetIndexBuffer(m_CubeMesh->GetIndexBuffer().Get(), DXGI_FORMAT_R16_UINT, 0);
+
+    //描画方法（3角形）
+    pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    //コンスタントバッファの設定
+    ID3D11Buffer* pConstantBuffer = CBPNTStatic::GetPtr()->GetBuffer();
+    ID3D11Buffer* pNullConstantBuffer = nullptr;
+    //頂点シェーダに渡す
+    pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
+    //ピクセルシェーダに渡す
+    pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &pConstantBuffer);
+    //シェーダの設定
+    pD3D11DeviceContext->VSSetShader(VSPNTStatic::GetPtr()->GetShader(), nullptr, 0);
+    pD3D11DeviceContext->PSSetShader(PSPNTStatic::GetPtr()->GetShader(), nullptr, 0);
+    //インプットレイアウトの設定
+    pD3D11DeviceContext->IASetInputLayout(VSPNTStatic::GetPtr()->GetInputLayout());
+
+    //ブレンドステート
+    if (m_Trace) {
+        //透明処理
+        pD3D11DeviceContext->OMSetBlendState(RenderState->GetAlphaBlendEx(), nullptr, 0xffffffff);
+    }
+    else {
+        //透明処理しない
+        pD3D11DeviceContext->OMSetBlendState(RenderState->GetOpaque(), nullptr, 0xffffffff);
+    }
+
+    //デプスステンシルステート
+    pD3D11DeviceContext->OMSetDepthStencilState(RenderState->GetDepthDefault(), 0);
+
+    //テクスチャとサンプラーの設定
+    ID3D11ShaderResourceView* pNull[1] = { 0 };
+    pD3D11DeviceContext->PSSetShaderResources(0, 1,
+         m_TextureResource->GetShaderResourceView().GetAddressOf());
+    ID3D11SamplerState* pSampler = RenderState->GetLinearClamp();
+    pD3D11DeviceContext->PSSetSamplers(0, 1, &pSampler);
+
+    if (m_Trace) {
+        //透明処理の場合は、ラスタライザステートを変更して2回描画
+        //ラスタライザステート（裏面描画）
+        pD3D11DeviceContext->RSSetState(RenderState->GetCullFront());
+        //描画
+        pD3D11DeviceContext->DrawIndexed(m_CubeMesh->GetNumIndicis(), 0, 0);
+        //ラスタライザステート（表面描画）
+        pD3D11DeviceContext->RSSetState(RenderState->GetCullBack());
+        //描画
+        pD3D11DeviceContext->DrawIndexed(m_CubeMesh->GetNumIndicis(), 0, 0);
+    }
+    else {
+        //ラスタライザステート（表面描画）
+        pD3D11DeviceContext->RSSetState(RenderState->GetCullBack());
+        //描画
+        pD3D11DeviceContext->DrawIndexed(m_CubeMesh->GetNumIndicis(), 0, 0);
+    }
+    //後始末
+    Dev->InitializeStates();
+}
+</pre>
+</div>
+<br />
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="00_10.html">前へ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="00_12.html">次へ</a></li>
+</ul>
+<!-- /フッタ　-->
+
+
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

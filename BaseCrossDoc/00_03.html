@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>BaseCrossドキュメント(2017年)</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h2>０．シンプルバージョンサンプル(Dx11版)</h2>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<br/>
+<h3>００３．四角形の回転と移動(Dx11版)</h3>
+　このサンプルは<b>SimplSample003</b>というディレクトリに含まれます。<br />
+　<b>BaseCrossDx11.sln</b>というソリューションを開くと<b>Dx11版</b>が起動します。<br />
+<br />
+　実行結果は以下のような画面が出ます。単純な四角形が回転しながら左右に移動します。
+<p>&nbsp;</p>
+<img src="img/0003a.png" width="80%"/>
+<p>図0003a</p>
+<p>&nbsp;</p>
+<br/>
+　動画は以下になります。
+<p>&nbsp;</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/twgMpIBsbJ8?rel=0" frameborder="0" allowfullscreen></iframe>
+<p>&nbsp;</p>
+
+<h3>【共通解説】</h3>
+　Dx12、Dx11両方に共通なのは<b>シェーダー</b>です。<b>DxSharedプロジェクト</b>内に<b>シェーダファイル</b>というフィルタがあり、そこに記述されてます。<br />
+　今回使用するシェーダは<b>頂点シェーダとピクセルシェーダ</b>です。<b>VertexPositionColor型</b>の頂点を持ち、<b>コンスタントバッファ</b>からの入力で、位置を変更させています。<br />
+　SimpleSample002と同じシェーダです。<br/>
+<br />
+<h3>【Dx11版解説】</h3>
+　<b>BaseCrossDx11.sln</b>を開くと、<b>BaseCrossDx11</b>というメインプロジェクトがあります。この中の<b>Character.h/cpp</b>が主な記述個所になります。<br />
+　オブジェクトのクラスは<b>SquareSpriteクラス</b>です。
+<br />
+<h4>■初期化■</h4>
+　初期化は<b>SquareSprite::OnCreate関数</b>から呼ばれます。<br />
+　ここでは<b>インデックスバッファ</b>を作成します。作成方法は、<b>頂点配列</b>と<b>インデックス配列</b>を作成して、
+<div class="box1">
+<pre>
+    //メッシュの作成
+    m_SquareMesh = MeshResource::CreateMeshResource(vertices, indices, false);
+</pre>
+</div>
+　を呼びます。<br />
+<br />
+<h4>■更新処理■</h4>
+　更新処理は<b>回転しながら移動</b>を実装してます。左右の一定以上の場所で、回転方向と移動方向を変えています。
+<div class="box1">
+<pre>
+void SquareSprite::OnUpdate() {
+    if (m_PosSpan.x > 0) {
+        m_Rot -= 0.05f;
+    }
+    else {
+        m_Rot += 0.05f;
+    }
+    m_Pos += m_PosSpan;
+    if (abs(m_Pos.x) > 400.0f) {
+        m_PosSpan *= -1.0f;
+    }
+}
+</pre>
+</div>
+　このほかにもいろいろ記述方法はあると思いますので、各自いろいろやってみると勉強になります。<br />
+<br />
+<h4>■描画処理■</h4>
+　こちらも<b>SimpleSample002</b>とほとんど同じです。違うのは<b>インデックス描画</b>をするところです。あと、<b>コンスタントバッファ</b>へ渡すワールド行列の作成が少し違います。
+<div class="box1">
+<pre>
+void SquareSprite::OnDraw() {
+    //中略
+
+    //行列の定義
+    Mat4x4 World, Proj;
+    //ワールド行列の決定
+    World.affineTransformation2D(
+        m_Scale,            //スケーリング
+        Vec2(0, 0),     //回転の中心（重心）
+        m_Rot,              //回転角度
+        m_Pos               //位置
+    );
+    //射影行列の決定
+    float w = static_cast&lt;float>(App::GetApp()->GetGameWidth());
+    float h = static_cast&lt;float>(App::GetApp()->GetGameHeight());
+    Proj = XMMatrixOrthographicLH(w, h, -1.0, 1.0f);
+    //行列の合成
+    World *= Proj;
+
+    //コンスタントバッファの準備
+    SpriteConstantBuffer sb;
+    //エミッシブ加算は行わない。
+    sb.Emissive = Col4(0, 0, 0, 0);
+    //行列の設定
+    sb.World = World;
+    //コンスタントバッファの更新
+    pD3D11DeviceContext->UpdateSubresource(CBSprite::GetPtr()->GetBuffer(), 0, nullptr, &sb, 0, 0);
+
+    //ストライドとオフセット
+    UINT stride = sizeof(VertexPositionColor);
+    UINT offset = 0;
+    //頂点バッファのセット
+    pD3D11DeviceContext->IASetVertexBuffers(0, 1,
+         m_SquareMesh->GetVertexBuffer().GetAddressOf(), &stride, &offset);
+    //インデックスバッファのセット
+    pD3D11DeviceContext->IASetIndexBuffer(m_SquareMesh->GetIndexBuffer().Get(),
+         DXGI_FORMAT_R16_UINT, 0);
+
+    //描画方法（3角形）
+    pD3D11DeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    //コンスタントバッファの設定
+    ID3D11Buffer* pConstantBuffer = CBSprite::GetPtr()->GetBuffer();
+    ID3D11Buffer* pNullConstantBuffer = nullptr;
+    //頂点シェーダに渡す
+    pD3D11DeviceContext->VSSetConstantBuffers(0, 1, &pConstantBuffer);
+    //ピクセルシェーダに渡す
+    pD3D11DeviceContext->PSSetConstantBuffers(0, 1, &pConstantBuffer);
+    //シェーダの設定
+    pD3D11DeviceContext->VSSetShader(VSPCSprite::GetPtr()->GetShader(), nullptr, 0);
+    pD3D11DeviceContext->PSSetShader(PSPCSprite::GetPtr()->GetShader(), nullptr, 0);
+    //インプットレイアウトの設定
+    pD3D11DeviceContext->IASetInputLayout(VSPCSprite::GetPtr()->GetInputLayout());
+
+    //ブレンドステート
+    pD3D11DeviceContext->OMSetBlendState(RenderState->GetOpaque(), nullptr, 0xffffffff);
+    //デプスステンシルステート
+    pD3D11DeviceContext->OMSetDepthStencilState(RenderState->GetDepthNone(), 0);
+    //ラスタライザステート
+    pD3D11DeviceContext->RSSetState(RenderState->GetCullBack());
+
+    //描画
+    pD3D11DeviceContext->DrawIndexed(m_SquareMesh->GetNumIndicis(), 0, 0);
+    //後始末
+    Dev->InitializeStates();
+
+}
+</pre>
+</div>
+　このように、ワールド行列<b>World</b>を作成するために、<b>World.AffineTransformation2D関数</b>を使用しています。またそれによって作成した行列に、<b>ゲーム画面を基準とした射影行列</b>を掛け算して、最終的なシェーダに渡す行列を作成します。（詳細は上記、<b>Dx12のコンスタントバッファ更新</b>の説明もお読みください）<br />
+<br />
+ 描画処理後半の<b>インデックス描画</b>の方法は、<b>Dx12版</b>と違いはあまりありません。<br />
+<br />
+<h3>【まとめ】</h3>
+　今回は、前回の<b>SimpleSample002</b>と<b>シェーダーや頂点型</b>を変えずに<b>インデックス描画</b>をする方法をサンプル化しました。また<b>スプライト</b>の座標系についても少し触れました。スプライトの座標系は必ずしもこの方法がベストかどうかは議論も残るところですが、いずれにせよ一つのゲームでは一つの座標系で記述したほうが、グラフィッカーとのやり取りを考えてもよろしいかと思います。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="00_02.html">前へ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="00_04.html">次へ</a></li>
+</ul>
+<!-- /フッタ　-->
+
+
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
