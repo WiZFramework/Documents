@@ -1,0 +1,683 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>FullDx11: basecross::OBB 構造体</title>
+<link href="../../tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../jquery.js"></script>
+<script type="text/javascript" src="../../dynsections.js"></script>
+<link href="../../search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../search/searchdata.js"></script>
+<script type="text/javascript" src="../../search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="../../doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">FullDx11
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "../../search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="../../index.html"><span>総合概要</span></a></li>
+      <li class="current"><a href="../../annotated.html"><span>クラス</span></a></li>
+      <li><a href="../../files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="../../search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="../../annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="../../classes.html"><span>クラス索引</span></a></li>
+      <li><a href="../../hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="../../functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>basecross</b></li><li class="navelem"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html">OBB</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pub-attribs">公開変数類</a> &#124;
+<a href="../../de/d32/structbasecross_1_1_o_b_b-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">basecross::OBB 構造体</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>OBBボリューム境界  
+ <a href="../../de/d03/structbasecross_1_1_o_b_b.html#details">[詳解]</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../da/d63/_trans_helper_8h_source.html">TransHelper.h</a>&gt;</code></p>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:ab53666d0322c4d09d18b44f90f5a82ef"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#ab53666d0322c4d09d18b44f90f5a82ef">CreateOBB</a> (const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Size, const <a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp;Matrix)</td></tr>
+<tr class="memdesc:ab53666d0322c4d09d18b44f90f5a82ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">作成されたサイズと変換行列から、OBBを作り直す  <a href="#ab53666d0322c4d09d18b44f90f5a82ef">[詳解]</a><br /></td></tr>
+<tr class="separator:ab53666d0322c4d09d18b44f90f5a82ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a06e2276d628d1369649b24c3cf3a9c98"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a06e2276d628d1369649b24c3cf3a9c98"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a06e2276d628d1369649b24c3cf3a9c98">OBB</a> ()</td></tr>
+<tr class="memdesc:a06e2276d628d1369649b24c3cf3a9c98"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ <br /></td></tr>
+<tr class="separator:a06e2276d628d1369649b24c3cf3a9c98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa6b7fea35a820682de0bc440c72a83b1"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#aa6b7fea35a820682de0bc440c72a83b1">OBB</a> (const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Size, const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Rot, const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Center)</td></tr>
+<tr class="memdesc:aa6b7fea35a820682de0bc440c72a83b1"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ  <a href="#aa6b7fea35a820682de0bc440c72a83b1">[詳解]</a><br /></td></tr>
+<tr class="separator:aa6b7fea35a820682de0bc440c72a83b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace28db23f8cd29eb6eb47fa249276c4f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#ace28db23f8cd29eb6eb47fa249276c4f">OBB</a> (const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Size, const <a class="el" href="../../d1/dba/structbasecross_1_1bsm_1_1_quat.html">bsm::Quat</a> &amp;Qt, const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Center)</td></tr>
+<tr class="memdesc:ace28db23f8cd29eb6eb47fa249276c4f"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ  <a href="#ace28db23f8cd29eb6eb47fa249276c4f">[詳解]</a><br /></td></tr>
+<tr class="separator:ace28db23f8cd29eb6eb47fa249276c4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af41f9cfc4829b2d7f5e3b6cf332a7d1d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#af41f9cfc4829b2d7f5e3b6cf332a7d1d">OBB</a> (const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Size, const <a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp;Matrix)</td></tr>
+<tr class="memdesc:af41f9cfc4829b2d7f5e3b6cf332a7d1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ（作成されたサイズと変換行列から、OBBを作成）  <a href="#af41f9cfc4829b2d7f5e3b6cf332a7d1d">[詳解]</a><br /></td></tr>
+<tr class="separator:af41f9cfc4829b2d7f5e3b6cf332a7d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae00cee1c8954d2190e2f3e8116959fe2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#ae00cee1c8954d2190e2f3e8116959fe2">GetRotMatrix</a> () const </td></tr>
+<tr class="memdesc:ae00cee1c8954d2190e2f3e8116959fe2"><td class="mdescLeft">&#160;</td><td class="mdescRight">回転行列を得る  <a href="#ae00cee1c8954d2190e2f3e8116959fe2">[詳解]</a><br /></td></tr>
+<tr class="separator:ae00cee1c8954d2190e2f3e8116959fe2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59ec80503660e9189584755a141e9a0f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a59ec80503660e9189584755a141e9a0f">GetWorldMatrix</a> () const </td></tr>
+<tr class="memdesc:a59ec80503660e9189584755a141e9a0f"><td class="mdescLeft">&#160;</td><td class="mdescRight">行列を得る  <a href="#a59ec80503660e9189584755a141e9a0f">[詳解]</a><br /></td></tr>
+<tr class="separator:a59ec80503660e9189584755a141e9a0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a60e63abcc55d982fe72e6665bfdeb500"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a60e63abcc55d982fe72e6665bfdeb500">GetMaxHalfSize</a> () const </td></tr>
+<tr class="memdesc:a60e63abcc55d982fe72e6665bfdeb500"><td class="mdescLeft">&#160;</td><td class="mdescRight">一番大きい辺の半分長さを得る  <a href="#a60e63abcc55d982fe72e6665bfdeb500">[詳解]</a><br /></td></tr>
+<tr class="separator:a60e63abcc55d982fe72e6665bfdeb500"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a22534fe5d5f6c1d04bd5f448c60e40e2"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a22534fe5d5f6c1d04bd5f448c60e40e2">GetMaxSize</a> () const </td></tr>
+<tr class="memdesc:a22534fe5d5f6c1d04bd5f448c60e40e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">一番大きい辺の長さを得る  <a href="#a22534fe5d5f6c1d04bd5f448c60e40e2">[詳解]</a><br /></td></tr>
+<tr class="separator:a22534fe5d5f6c1d04bd5f448c60e40e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a480518f539f9f3e076f16cadcc847b6d"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a480518f539f9f3e076f16cadcc847b6d">GetMinHalfSize</a> () const </td></tr>
+<tr class="memdesc:a480518f539f9f3e076f16cadcc847b6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">一番小さい辺の長さ半分を得る  <a href="#a480518f539f9f3e076f16cadcc847b6d">[詳解]</a><br /></td></tr>
+<tr class="separator:a480518f539f9f3e076f16cadcc847b6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa2bcc5bcb275bb2ddca0449d51a0ebd"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#aaa2bcc5bcb275bb2ddca0449d51a0ebd">GetMinSize</a> () const </td></tr>
+<tr class="memdesc:aaa2bcc5bcb275bb2ddca0449d51a0ebd"><td class="mdescLeft">&#160;</td><td class="mdescRight">一番小さい辺の長さを得る  <a href="#aaa2bcc5bcb275bb2ddca0449d51a0ebd">[詳解]</a><br /></td></tr>
+<tr class="separator:aaa2bcc5bcb275bb2ddca0449d51a0ebd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a734431d835a55eff94cd8f7de1ad5c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a2a734431d835a55eff94cd8f7de1ad5c">GetNearNormalRot</a> (const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Check, float Epsilon, <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;Ret)</td></tr>
+<tr class="memdesc:a2a734431d835a55eff94cd8f7de1ad5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">ベクトルに一番近い回転を得る  <a href="#a2a734431d835a55eff94cd8f7de1ad5c">[詳解]</a><br /></td></tr>
+<tr class="separator:a2a734431d835a55eff94cd8f7de1ad5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c39d9545f8916571ffd69291875d2ee"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a3c39d9545f8916571ffd69291875d2ee">IsRotIdentity</a> () const </td></tr>
+<tr class="memdesc:a3c39d9545f8916571ffd69291875d2ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">OBBが回転してないかどうかを調べる（AABBとして使えるかどうかを調べられる）  <a href="#a3c39d9545f8916571ffd69291875d2ee">[詳解]</a><br /></td></tr>
+<tr class="separator:a3c39d9545f8916571ffd69291875d2ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac1370d6e505ffa0ca89edb7857d8763a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d50/structbasecross_1_1_r_e_c_t___x_z.html">RECT_XZ</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#ac1370d6e505ffa0ca89edb7857d8763a">GetWrappedRECT_XZ</a> () const </td></tr>
+<tr class="memdesc:ac1370d6e505ffa0ca89edb7857d8763a"><td class="mdescLeft">&#160;</td><td class="mdescRight">包み込むXZ矩形を得る  <a href="#ac1370d6e505ffa0ca89edb7857d8763a">[詳解]</a><br /></td></tr>
+<tr class="separator:ac1370d6e505ffa0ca89edb7857d8763a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adf7053a86a4b58fb9bc3615d956c7c38"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/d31/structbasecross_1_1_s_p_h_e_r_e.html">SPHERE</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#adf7053a86a4b58fb9bc3615d956c7c38">GetWrappedSPHERE</a> () const </td></tr>
+<tr class="memdesc:adf7053a86a4b58fb9bc3615d956c7c38"><td class="mdescLeft">&#160;</td><td class="mdescRight">包み込むSPHEREを得る  <a href="#adf7053a86a4b58fb9bc3615d956c7c38">[詳解]</a><br /></td></tr>
+<tr class="separator:adf7053a86a4b58fb9bc3615d956c7c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5babc0a8f0706aa4286613837fd5cba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dd0/structbasecross_1_1_a_a_b_b.html">AABB</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#af5babc0a8f0706aa4286613837fd5cba">GetWrappedAABB</a> () const </td></tr>
+<tr class="memdesc:af5babc0a8f0706aa4286613837fd5cba"><td class="mdescLeft">&#160;</td><td class="mdescRight">包み込むAABBを得る  <a href="#af5babc0a8f0706aa4286613837fd5cba">[詳解]</a><br /></td></tr>
+<tr class="separator:af5babc0a8f0706aa4286613837fd5cba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+公開変数類</h2></td></tr>
+<tr class="memitem:a42659a32fe4cc5039ffe5bb74d8add36"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a42659a32fe4cc5039ffe5bb74d8add36"></a>
+<a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a42659a32fe4cc5039ffe5bb74d8add36">m_Center</a></td></tr>
+<tr class="memdesc:a42659a32fe4cc5039ffe5bb74d8add36"><td class="mdescLeft">&#160;</td><td class="mdescRight">中心点の座標 <br /></td></tr>
+<tr class="separator:a42659a32fe4cc5039ffe5bb74d8add36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7eaec1c8dd5e51e669d45c2b6e37705c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7eaec1c8dd5e51e669d45c2b6e37705c"></a>
+<a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a7eaec1c8dd5e51e669d45c2b6e37705c">m_Rot</a> [3]</td></tr>
+<tr class="memdesc:a7eaec1c8dd5e51e669d45c2b6e37705c"><td class="mdescLeft">&#160;</td><td class="mdescRight">XYZ の各座標軸の傾きを表す方向ベクトル <br /></td></tr>
+<tr class="separator:a7eaec1c8dd5e51e669d45c2b6e37705c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a128517acffb9a91ee5284c9e2a4586ea"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a128517acffb9a91ee5284c9e2a4586ea"></a>
+<a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html#a128517acffb9a91ee5284c9e2a4586ea">m_Size</a></td></tr>
+<tr class="memdesc:a128517acffb9a91ee5284c9e2a4586ea"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../de/d03/structbasecross_1_1_o_b_b.html" title="OBBボリューム境界 ">OBB</a> の各座標軸に沿った長さの半分（中心点から面までの長さ） <br /></td></tr>
+<tr class="separator:a128517acffb9a91ee5284c9e2a4586ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>OBBボリューム境界 </p>
+</div><h2 class="groupheader">構築子と解体子</h2>
+<a class="anchor" id="aa6b7fea35a820682de0bc440c72a83b1"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">basecross::OBB::OBB </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Rot</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Center</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>コンストラクタ </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Size</td><td>サイズ </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Rot</td><td>回転ベクトル </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Center</td><td>中心位置 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="ace28db23f8cd29eb6eb47fa249276c4f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">basecross::OBB::OBB </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d1/dba/structbasecross_1_1bsm_1_1_quat.html">bsm::Quat</a> &amp;&#160;</td>
+          <td class="paramname"><em>Qt</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Center</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>コンストラクタ </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Size</td><td>サイズ </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Qt</td><td>回転クオータニオン </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Center</td><td>中心位置 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a class="anchor" id="af41f9cfc4829b2d7f5e3b6cf332a7d1d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">basecross::OBB::OBB </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp;&#160;</td>
+          <td class="paramname"><em>Matrix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>コンストラクタ（作成されたサイズと変換行列から、OBBを作成） </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Size</td><td>サイズ </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Matrix</td><td>変換行列 </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="ab53666d0322c4d09d18b44f90f5a82ef"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::OBB::CreateOBB </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Size</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp;&#160;</td>
+          <td class="paramname"><em>Matrix</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>作成されたサイズと変換行列から、OBBを作り直す </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Size</td><td>作成サイズ </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Matrix</td><td>変換行列 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a60e63abcc55d982fe72e6665bfdeb500"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float basecross::OBB::GetMaxHalfSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>一番大きい辺の半分長さを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>一番大きい辺の半分の長さ </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a22534fe5d5f6c1d04bd5f448c60e40e2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float basecross::OBB::GetMaxSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>一番大きい辺の長さを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>一番大きい辺の長さ </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a480518f539f9f3e076f16cadcc847b6d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float basecross::OBB::GetMinHalfSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>一番小さい辺の長さ半分を得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>一番小さい辺の長さの半分 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aaa2bcc5bcb275bb2ddca0449d51a0ebd"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">float basecross::OBB::GetMinSize </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>一番小さい辺の長さを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>一番小さい辺の長さ </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2a734431d835a55eff94cd8f7de1ad5c"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::OBB::GetNearNormalRot </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Check</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>Epsilon</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="../../d9/d52/structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>Ret</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>ベクトルに一番近い回転を得る </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Check</td><td>チェックするベクトル </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Epsilon</td><td>誤差 </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">Ret</td><td>戻されるベクトル </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae00cee1c8954d2190e2f3e8116959fe2"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> basecross::OBB::GetRotMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>回転行列を得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>回転行列 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a59ec80503660e9189584755a141e9a0f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d4/d72/structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> basecross::OBB::GetWorldMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>行列を得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>ワールド行列 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af5babc0a8f0706aa4286613837fd5cba"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/dd0/structbasecross_1_1_a_a_b_b.html">AABB</a> basecross::OBB::GetWrappedAABB </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>包み込むAABBを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd><a class="el" href="../../d0/dd0/structbasecross_1_1_a_a_b_b.html" title="AABBボリューム境界 ">AABB</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ac1370d6e505ffa0ca89edb7857d8763a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d50/structbasecross_1_1_r_e_c_t___x_z.html">RECT_XZ</a> basecross::OBB::GetWrappedRECT_XZ </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>包み込むXZ矩形を得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>XZ矩形 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="adf7053a86a4b58fb9bc3615d956c7c38"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../dc/d31/structbasecross_1_1_s_p_h_e_r_e.html">SPHERE</a> basecross::OBB::GetWrappedSPHERE </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>包み込むSPHEREを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd><a class="el" href="../../dc/d31/structbasecross_1_1_s_p_h_e_r_e.html" title="球ボリューム境界 ">SPHERE</a> </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a3c39d9545f8916571ffd69291875d2ee"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool basecross::OBB::IsRotIdentity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>OBBが回転してないかどうかを調べる（AABBとして使えるかどうかを調べられる） </p>
+<dl class="section return"><dt>戻り値</dt><dd>回転してなければtrue </dd></dl>
+
+</div>
+</div>
+<hr/>この構造体詳解は次のファイルから抽出されました:<ul>
+<li><a class="el" href="../../da/d63/_trans_helper_8h_source.html">TransHelper.h</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="../../doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

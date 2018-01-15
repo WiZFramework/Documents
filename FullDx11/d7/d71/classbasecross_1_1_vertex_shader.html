@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>FullDx11: basecross::VertexShader&lt; ShaderType, VirtexType &gt; クラステンプレート</title>
+<link href="../../tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../jquery.js"></script>
+<script type="text/javascript" src="../../dynsections.js"></script>
+<link href="../../search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../search/searchdata.js"></script>
+<script type="text/javascript" src="../../search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="../../doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">FullDx11
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "../../search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="../../index.html"><span>総合概要</span></a></li>
+      <li class="current"><a href="../../annotated.html"><span>クラス</span></a></li>
+      <li><a href="../../files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="../../search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="../../annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="../../classes.html"><span>クラス索引</span></a></li>
+      <li><a href="../../hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="../../functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>basecross</b></li><li class="navelem"><a class="el" href="../../d7/d71/classbasecross_1_1_vertex_shader.html">VertexShader</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">クラス</a> &#124;
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pub-static-methods">静的公開メンバ関数</a> &#124;
+<a href="#pro-methods">限定公開メンバ関数</a> &#124;
+<a href="#pro-attribs">限定公開変数類</a> &#124;
+<a href="#pro-static-attribs">静的限定公開変数類</a> &#124;
+<a href="../../d2/dac/classbasecross_1_1_vertex_shader-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">basecross::VertexShader&lt; ShaderType, VirtexType &gt; クラステンプレート</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>頂点シェーダ(シングルトン)  
+ <a href="../../d7/d71/classbasecross_1_1_vertex_shader.html#details">[詳解]</a></p>
+
+<p><code>#include &lt;<a class="el" href="../../dd/dab/_device_resources_8h_source.html">DeviceResources.h</a>&gt;</code></p>
+<div class="dynheader">
+basecross::VertexShader&lt; ShaderType, VirtexType &gt; の継承関係図</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="../../d7/d71/classbasecross_1_1_vertex_shader.png" usemap="#basecross::VertexShader_3C_20ShaderType_2C_20VirtexType_20_3E_map" alt=""/>
+  <map id="basecross::VertexShader_3C_20ShaderType_2C_20VirtexType_20_3E_map" name="basecross::VertexShader&lt; ShaderType, VirtexType &gt;_map">
+<area href="../../dc/d0a/classbasecross_1_1_shader_resource.html" title="シェーダ関連リソースのインターフェイス " alt="basecross::ShaderResource" shape="rect" coords="0,0,317,24"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+クラス</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de7/structbasecross_1_1_vertex_shader_1_1_deleter.html">Deleter</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:ae05106fe1e8e3ab240d027eed214a77f"><td class="memItemLeft" align="right" valign="top">ID3D11VertexShader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d71/classbasecross_1_1_vertex_shader.html#ae05106fe1e8e3ab240d027eed214a77f">GetShader</a> ()</td></tr>
+<tr class="memdesc:ae05106fe1e8e3ab240d027eed214a77f"><td class="mdescLeft">&#160;</td><td class="mdescRight">頂点シェーダを得る  <a href="#ae05106fe1e8e3ab240d027eed214a77f">[詳解]</a><br /></td></tr>
+<tr class="separator:ae05106fe1e8e3ab240d027eed214a77f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10ea4646e8affb7c9265ae78c410d150"><td class="memItemLeft" align="right" valign="top">ID3D11InputLayout *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d71/classbasecross_1_1_vertex_shader.html#a10ea4646e8affb7c9265ae78c410d150">GetInputLayout</a> ()</td></tr>
+<tr class="memdesc:a10ea4646e8affb7c9265ae78c410d150"><td class="mdescLeft">&#160;</td><td class="mdescRight">インプットレイアウトを得る  <a href="#a10ea4646e8affb7c9265ae78c410d150">[詳解]</a><br /></td></tr>
+<tr class="separator:a10ea4646e8affb7c9265ae78c410d150"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+静的公開メンバ関数</h2></td></tr>
+<tr class="memitem:aabf9b2f2eaf037883419b5a9c13f237b"><td class="memItemLeft" align="right" valign="top">static unique_ptr&lt; ShaderType, <a class="el" href="../../d4/de7/structbasecross_1_1_vertex_shader_1_1_deleter.html">Deleter</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d71/classbasecross_1_1_vertex_shader.html#aabf9b2f2eaf037883419b5a9c13f237b">GetPtr</a> ()</td></tr>
+<tr class="memdesc:aabf9b2f2eaf037883419b5a9c13f237b"><td class="mdescLeft">&#160;</td><td class="mdescRight">インスタンスを得る  <a href="#aabf9b2f2eaf037883419b5a9c13f237b">[詳解]</a><br /></td></tr>
+<tr class="separator:aabf9b2f2eaf037883419b5a9c13f237b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_static_methods_classbasecross_1_1_shader_resource"><td colspan="2" onclick="javascript:toggleInherit('pub_static_methods_classbasecross_1_1_shader_resource')"><img src="../../closed.png" alt="-"/>&#160;基底クラス <a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html">basecross::ShaderResource</a> に属する継承静的公開メンバ関数</td></tr>
+<tr class="memitem:a2985060ca8d1b80051a9e4cef80ec4f4 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#a2985060ca8d1b80051a9e4cef80ec4f4">ReadBinaryFile</a> (const wstring &amp;fileName, unique_ptr&lt; uint8_t[]&gt; &amp;Data, size_t &amp;CsoSz)</td></tr>
+<tr class="memdesc:a2985060ca8d1b80051a9e4cef80ec4f4 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイナリファイルを読み込む  <a href="#a2985060ca8d1b80051a9e4cef80ec4f4">[詳解]</a><br /></td></tr>
+<tr class="separator:a2985060ca8d1b80051a9e4cef80ec4f4 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a307be2c7e0954dc810eb0ff72ddcf758 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#a307be2c7e0954dc810eb0ff72ddcf758">CreateVertexShader</a> (unique_ptr&lt; uint8_t[]&gt; &amp;Data, size_t CsoSz, ID3D11VertexShader **pResult)</td></tr>
+<tr class="memdesc:a307be2c7e0954dc810eb0ff72ddcf758 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイナリデータから頂点シェーダを作成する  <a href="#a307be2c7e0954dc810eb0ff72ddcf758">[詳解]</a><br /></td></tr>
+<tr class="separator:a307be2c7e0954dc810eb0ff72ddcf758 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5e1f6115428a3590f06c117c31b793b inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#ac5e1f6115428a3590f06c117c31b793b">CreateInputLayout</a> (unique_ptr&lt; uint8_t[]&gt; &amp;Data, size_t CsoSz, const D3D11_INPUT_ELEMENT_DESC *pElement, UINT NumElement, ID3D11InputLayout **pResult)</td></tr>
+<tr class="memdesc:ac5e1f6115428a3590f06c117c31b793b inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイナリデータからインプットレイアウトを作成する  <a href="#ac5e1f6115428a3590f06c117c31b793b">[詳解]</a><br /></td></tr>
+<tr class="separator:ac5e1f6115428a3590f06c117c31b793b inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa542aee3cbc45b2d39a033cbb890a13 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#aaa542aee3cbc45b2d39a033cbb890a13">CreatePixelShader</a> (unique_ptr&lt; uint8_t[]&gt; &amp;Data, size_t CsoSz, ID3D11PixelShader **pResult)</td></tr>
+<tr class="memdesc:aaa542aee3cbc45b2d39a033cbb890a13 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイナリデータからピクセルシェーダを作成する  <a href="#aaa542aee3cbc45b2d39a033cbb890a13">[詳解]</a><br /></td></tr>
+<tr class="separator:aaa542aee3cbc45b2d39a033cbb890a13 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad172b22acbf9aef42a8d36b845f9682a inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#ad172b22acbf9aef42a8d36b845f9682a">CreateGeometryShader</a> (unique_ptr&lt; uint8_t[]&gt; &amp;Data, size_t CsoSz, ID3D11GeometryShader **pResult)</td></tr>
+<tr class="memdesc:ad172b22acbf9aef42a8d36b845f9682a inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイナリデータからジオメトリシェーダを作成する  <a href="#ad172b22acbf9aef42a8d36b845f9682a">[詳解]</a><br /></td></tr>
+<tr class="separator:ad172b22acbf9aef42a8d36b845f9682a inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa74e3a74deace83af2978add72d13ea8 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#aa74e3a74deace83af2978add72d13ea8">CreateGeometryShader</a> (unique_ptr&lt; uint8_t[]&gt; &amp;Data, size_t CsoSz, const vector&lt; D3D11_SO_DECLARATION_ENTRY &gt; &amp;SOEntries, UINT Stride, UINT NumStride, ID3D11GeometryShader **pResult)</td></tr>
+<tr class="memdesc:aa74e3a74deace83af2978add72d13ea8 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイナリデータからジオメトリシェーダを作成する  <a href="#aa74e3a74deace83af2978add72d13ea8">[詳解]</a><br /></td></tr>
+<tr class="separator:aa74e3a74deace83af2978add72d13ea8 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afc14e41ed4852f020ae3f381f1a7fdfb inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#afc14e41ed4852f020ae3f381f1a7fdfb">CreateComputeShader</a> (unique_ptr&lt; uint8_t[]&gt; &amp;Data, size_t CsoSz, ID3D11ComputeShader **pResult)</td></tr>
+<tr class="memdesc:afc14e41ed4852f020ae3f381f1a7fdfb inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">バイナリデータからコンピュートシェーダを作成する  <a href="#afc14e41ed4852f020ae3f381f1a7fdfb">[詳解]</a><br /></td></tr>
+<tr class="separator:afc14e41ed4852f020ae3f381f1a7fdfb inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af574e1a0e9d39f3863db295587511db2 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#af574e1a0e9d39f3863db295587511db2">CreateConstantBuffer</a> (UINT BuffSize, ID3D11Buffer **pResult)</td></tr>
+<tr class="memdesc:af574e1a0e9d39f3863db295587511db2 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンスタントバッファを作成する  <a href="#af574e1a0e9d39f3863db295587511db2">[詳解]</a><br /></td></tr>
+<tr class="separator:af574e1a0e9d39f3863db295587511db2 inherit pub_static_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+限定公開メンバ関数</h2></td></tr>
+<tr class="memitem:a1f4ff546798dce97890707cd63530dfd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1f4ff546798dce97890707cd63530dfd"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>VertexShader</b> (const wstring &amp;Filename)</td></tr>
+<tr class="separator:a1f4ff546798dce97890707cd63530dfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classbasecross_1_1_shader_resource"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classbasecross_1_1_shader_resource')"><img src="../../closed.png" alt="-"/>&#160;基底クラス <a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html">basecross::ShaderResource</a> に属する継承限定公開メンバ関数</td></tr>
+<tr class="memitem:a44581fa659e00c75b0ea21129e9fe0f2 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a44581fa659e00c75b0ea21129e9fe0f2"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#a44581fa659e00c75b0ea21129e9fe0f2">ShaderResource</a> ()</td></tr>
+<tr class="memdesc:a44581fa659e00c75b0ea21129e9fe0f2 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトコンストラクタ <br /></td></tr>
+<tr class="separator:a44581fa659e00c75b0ea21129e9fe0f2 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34bec059de4c47b5d5661edcc1d3d20b inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a34bec059de4c47b5d5661edcc1d3d20b"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#a34bec059de4c47b5d5661edcc1d3d20b">~ShaderResource</a> ()</td></tr>
+<tr class="memdesc:a34bec059de4c47b5d5661edcc1d3d20b inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトデストラクタ <br /></td></tr>
+<tr class="separator:a34bec059de4c47b5d5661edcc1d3d20b inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab5208d871c3e2b16373dc1462a1899bf inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">ID3D11VertexShader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#ab5208d871c3e2b16373dc1462a1899bf">GetVertexShaderBase</a> (const wstring &amp;Filename, ComPtr&lt; ID3D11VertexShader &gt; &amp;VSPtr)</td></tr>
+<tr class="memdesc:ab5208d871c3e2b16373dc1462a1899bf inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">頂点シェーダアクセッサ  <a href="#ab5208d871c3e2b16373dc1462a1899bf">[詳解]</a><br /></td></tr>
+<tr class="separator:ab5208d871c3e2b16373dc1462a1899bf inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7023417c88cf1268b796d0cb46cdf0c inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">ID3D11InputLayout *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#ab7023417c88cf1268b796d0cb46cdf0c">GetInputLayoutBase</a> (const wstring &amp;Filename, ComPtr&lt; ID3D11InputLayout &gt; &amp;ILPtr, const D3D11_INPUT_ELEMENT_DESC *pElem, UINT NumElements)</td></tr>
+<tr class="memdesc:ab7023417c88cf1268b796d0cb46cdf0c inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">インプットレイアウトアクセッサ  <a href="#ab7023417c88cf1268b796d0cb46cdf0c">[詳解]</a><br /></td></tr>
+<tr class="separator:ab7023417c88cf1268b796d0cb46cdf0c inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3c332795aca5d075a2d35a79b9c9074 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">ID3D11Buffer *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#ad3c332795aca5d075a2d35a79b9c9074">GetConstantBufferBase</a> (UINT BuffSize, ComPtr&lt; ID3D11Buffer &gt; &amp;Buffer)</td></tr>
+<tr class="memdesc:ad3c332795aca5d075a2d35a79b9c9074 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンスタントバッファアクセッサ  <a href="#ad3c332795aca5d075a2d35a79b9c9074">[詳解]</a><br /></td></tr>
+<tr class="separator:ad3c332795aca5d075a2d35a79b9c9074 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c79257f7c1212ec2edb36c75f8f9493 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">ID3D11PixelShader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#a6c79257f7c1212ec2edb36c75f8f9493">GetPixelShaderBase</a> (const wstring &amp;Filename, ComPtr&lt; ID3D11PixelShader &gt; &amp;PSPtr)</td></tr>
+<tr class="memdesc:a6c79257f7c1212ec2edb36c75f8f9493 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">ピクセルシェーダアクセッサ  <a href="#a6c79257f7c1212ec2edb36c75f8f9493">[詳解]</a><br /></td></tr>
+<tr class="separator:a6c79257f7c1212ec2edb36c75f8f9493 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8493e234c876db46b00aec1175f9e0f9 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">ID3D11GeometryShader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#a8493e234c876db46b00aec1175f9e0f9">GetGeometryShaderBase</a> (const wstring &amp;Filename, ComPtr&lt; ID3D11GeometryShader &gt; &amp;GSPtr)</td></tr>
+<tr class="memdesc:a8493e234c876db46b00aec1175f9e0f9 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">ジオメトリシェーダアクセッサ  <a href="#a8493e234c876db46b00aec1175f9e0f9">[詳解]</a><br /></td></tr>
+<tr class="separator:a8493e234c876db46b00aec1175f9e0f9 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1faa5e8991f3fcac3178d60b30d3cae0 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">ID3D11GeometryShader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#a1faa5e8991f3fcac3178d60b30d3cae0">GetGeometryShaderBase</a> (const wstring &amp;Filename, const vector&lt; D3D11_SO_DECLARATION_ENTRY &gt; &amp;SOEntries, UINT Stride, UINT NumStride, ComPtr&lt; ID3D11GeometryShader &gt; &amp;GSPtr)</td></tr>
+<tr class="memdesc:a1faa5e8991f3fcac3178d60b30d3cae0 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">ジオメトリシェーダアクセッサ  <a href="#a1faa5e8991f3fcac3178d60b30d3cae0">[詳解]</a><br /></td></tr>
+<tr class="separator:a1faa5e8991f3fcac3178d60b30d3cae0 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af70da29c25e533d6db0ae8e2f8b4f074 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top">ID3D11ComputeShader *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html#af70da29c25e533d6db0ae8e2f8b4f074">GetComputeShaderBase</a> (const wstring &amp;Filename, ComPtr&lt; ID3D11ComputeShader &gt; &amp;CSPtr)</td></tr>
+<tr class="memdesc:af70da29c25e533d6db0ae8e2f8b4f074 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンピュートシェーダアクセッサ  <a href="#af70da29c25e533d6db0ae8e2f8b4f074">[詳解]</a><br /></td></tr>
+<tr class="separator:af70da29c25e533d6db0ae8e2f8b4f074 inherit pro_methods_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-attribs"></a>
+限定公開変数類</h2></td></tr>
+<tr class="memitem:a0331e2c8203f56a2d73ab5efcff733ee"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0331e2c8203f56a2d73ab5efcff733ee"></a>
+ComPtr&lt; ID3D11VertexShader &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_VSPtr</b></td></tr>
+<tr class="separator:a0331e2c8203f56a2d73ab5efcff733ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3f195ced7311b003eafb70d7f0e7ff2"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac3f195ced7311b003eafb70d7f0e7ff2"></a>
+ComPtr&lt; ID3D11InputLayout &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_ILPtr</b></td></tr>
+<tr class="separator:ac3f195ced7311b003eafb70d7f0e7ff2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4199a05536690c32a1a824e4ebc865b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa4199a05536690c32a1a824e4ebc865b"></a>
+std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>Mutex</b></td></tr>
+<tr class="separator:aa4199a05536690c32a1a824e4ebc865b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_attribs_classbasecross_1_1_shader_resource"><td colspan="2" onclick="javascript:toggleInherit('pro_attribs_classbasecross_1_1_shader_resource')"><img src="../../closed.png" alt="-"/>&#160;基底クラス <a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html">basecross::ShaderResource</a> に属する継承限定公開変数類</td></tr>
+<tr class="memitem:a2a73936014043525671b68dce32a24b9 inherit pro_attribs_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2a73936014043525671b68dce32a24b9"></a>
+std::mutex&#160;</td><td class="memItemRight" valign="bottom"><b>MutexBase</b></td></tr>
+<tr class="separator:a2a73936014043525671b68dce32a24b9 inherit pro_attribs_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-attribs"></a>
+静的限定公開変数類</h2></td></tr>
+<tr class="memitem:aec9e6a907f60e182a42a1199c26df0b4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aec9e6a907f60e182a42a1199c26df0b4"></a>
+static unique_ptr&lt; ShaderType, <a class="el" href="../../d4/de7/structbasecross_1_1_vertex_shader_1_1_deleter.html">Deleter</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_Ptr</b></td></tr>
+<tr class="separator:aec9e6a907f60e182a42a1199c26df0b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
+その他の継承メンバ</h2></td></tr>
+<tr class="inherit_header pub_static_attribs_classbasecross_1_1_shader_resource"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classbasecross_1_1_shader_resource')"><img src="../../closed.png" alt="-"/>&#160;基底クラス <a class="el" href="../../dc/d0a/classbasecross_1_1_shader_resource.html">basecross::ShaderResource</a> に属する継承静的公開変数類</td></tr>
+<tr class="memitem:a44edc1defcf654512067ac57711bf280 inherit pub_static_attribs_classbasecross_1_1_shader_resource"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a44edc1defcf654512067ac57711bf280"></a>
+static const int&#160;</td><td class="memItemRight" valign="bottom"><b>m_LightMax</b> { 3 }</td></tr>
+<tr class="separator:a44edc1defcf654512067ac57711bf280 inherit pub_static_attribs_classbasecross_1_1_shader_resource"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><h3>template&lt;typename ShaderType, typename VirtexType&gt;<br />
+class basecross::VertexShader&lt; ShaderType, VirtexType &gt;</h3>
+
+<p>頂点シェーダ(シングルトン) </p>
+</div><h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="a10ea4646e8affb7c9265ae78c410d150"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ShaderType , typename VirtexType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ID3D11InputLayout* <a class="el" href="../../d7/d71/classbasecross_1_1_vertex_shader.html">basecross::VertexShader</a>&lt; ShaderType, VirtexType &gt;::GetInputLayout </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>インプットレイアウトを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>インプットレイアウト </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aabf9b2f2eaf037883419b5a9c13f237b"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ShaderType , typename VirtexType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static unique_ptr&lt;ShaderType, <a class="el" href="../../d4/de7/structbasecross_1_1_vertex_shader_1_1_deleter.html">Deleter</a>&gt;&amp; <a class="el" href="../../d7/d71/classbasecross_1_1_vertex_shader.html">basecross::VertexShader</a>&lt; ShaderType, VirtexType &gt;::GetPtr </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>インスタンスを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>クラスのインスタンス </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae05106fe1e8e3ab240d027eed214a77f"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ShaderType , typename VirtexType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ID3D11VertexShader* <a class="el" href="../../d7/d71/classbasecross_1_1_vertex_shader.html">basecross::VertexShader</a>&lt; ShaderType, VirtexType &gt;::GetShader </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>頂点シェーダを得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>頂点シェーダ </dd></dl>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li><a class="el" href="../../dd/dab/_device_resources_8h_source.html">DeviceResources.h</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="../../doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>

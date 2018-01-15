@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>FullDx11: BasePhysics.cpp ファイル</title>
+<link href="../../tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../jquery.js"></script>
+<script type="text/javascript" src="../../dynsections.js"></script>
+<link href="../../search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="../../search/searchdata.js"></script>
+<script type="text/javascript" src="../../search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="../../doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">FullDx11
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "../../search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="../../index.html"><span>総合概要</span></a></li>
+      <li><a href="../../annotated.html"><span>クラス</span></a></li>
+      <li class="current"><a href="../../files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="../../search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="../../search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="../../files.html"><span>ファイル一覧</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="../../dir_0298df15861a28bb0a495b3c8e87f13a.html">BaseCross</a></li><li class="navelem"><a class="el" href="../../dir_3d505ee3dc73940b8f0e31b0c93525a6.html">Libs</a></li><li class="navelem"><a class="el" href="../../dir_ac9c0b9e1853d662b9ce46d3246b5341.html">BaseLib</a></li><li class="navelem"><a class="el" href="../../dir_f541ca7e64f8989d768c585e40a89e4b.html">DxLib</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#nested-classes">クラス</a> &#124;
+<a href="#define-members">マクロ定義</a> &#124;
+<a href="#func-members">関数</a> &#124;
+<a href="#var-members">変数</a>  </div>
+  <div class="headertitle">
+<div class="title">BasePhysics.cpp ファイル</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>物理計算インターファイス実体  
+<a href="#details">[詳解]</a></p>
+<div class="textblock"><code>#include &quot;stdafx.h&quot;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+クラス</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d0f/structbasecross_1_1_ps_box_1_1_impl.html">basecross::PsBox::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/dd4/structbasecross_1_1_ps_sphere_1_1_impl.html">basecross::PsSphere::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dfd/structbasecross_1_1_ps_capsule_1_1_impl.html">basecross::PsCapsule::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d43/structbasecross_1_1_ps_cylinder_1_1_impl.html">basecross::PsCylinder::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dfb/structbasecross_1_1_ps_convex_mesh_resource_1_1_impl.html">basecross::PsConvexMeshResource::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dcb/structbasecross_1_1_ps_convex_1_1_impl.html">basecross::PsConvex::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/db8/structbasecross_1_1_ps_combined_1_1_impl.html">basecross::PsCombined::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d39/structbasecross_1_1_ps_ball_joint_1_1_impl.html">basecross::PsBallJoint::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/d11/structbasecross_1_1_ps_swing_twist_joint_1_1_impl.html">basecross::PsSwingTwistJoint::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/de2/structbasecross_1_1_ps_hinge_joint_1_1_impl.html">basecross::PsHingeJoint::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d13/structbasecross_1_1_ps_slider_joint_1_1_impl.html">basecross::PsSliderJoint::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d02/structbasecross_1_1_ps_fix_joint_1_1_impl.html">basecross::PsFixJoint::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/da2/structbasecross_1_1_ps_universal_joint_1_1_impl.html">basecross::PsUniversalJoint::Impl</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+マクロ定義</h2></td></tr>
+<tr class="memitem:ac0f0c4c2ec497f10ec992f0e1a82c26c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac0f0c4c2ec497f10ec992f0e1a82c26c"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_RIGIDBODIES</b>&#160;&#160;&#160;500</td></tr>
+<tr class="separator:ac0f0c4c2ec497f10ec992f0e1a82c26c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af742980593d698725375a7d12711c24f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af742980593d698725375a7d12711c24f"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_JOINTS</b>&#160;&#160;&#160;500</td></tr>
+<tr class="separator:af742980593d698725375a7d12711c24f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af79586566cb00f407a777aed5b1ddbfe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af79586566cb00f407a777aed5b1ddbfe"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_CONTACTS</b>&#160;&#160;&#160;4000</td></tr>
+<tr class="separator:af79586566cb00f407a777aed5b1ddbfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac121d26add357218b7615524b316defd"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac121d26add357218b7615524b316defd"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>NUM_KEEP_SHAPES</b>&#160;&#160;&#160;(NUM_RIGIDBODIES*4)</td></tr>
+<tr class="separator:ac121d26add357218b7615524b316defd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2cf8b31c99dbc7a5e530b8ea247eb12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af2cf8b31c99dbc7a5e530b8ea247eb12"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>POOL_BYTES</b>&#160;&#160;&#160;(5*1024*1024)</td></tr>
+<tr class="separator:af2cf8b31c99dbc7a5e530b8ea247eb12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
+関数</h2></td></tr>
+<tr class="memitem:aefbba4a76e13600eed2ed7d127b6428d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aefbba4a76e13600eed2ed7d127b6428d"></a>
+PfxVector3&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::worldCenter</b> (0.0f)</td></tr>
+<tr class="separator:aefbba4a76e13600eed2ed7d127b6428d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae81a752a9bba03b315397a6ff417cdf7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae81a752a9bba03b315397a6ff417cdf7"></a>
+PfxVector3&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::worldExtent</b> (500.0f)</td></tr>
+<tr class="separator:ae81a752a9bba03b315397a6ff417cdf7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d29c66547e328cc82065d9eb6c4d25e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9d29c66547e328cc82065d9eb6c4d25e"></a>
+PfxUInt8&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::SCE_PFX_ALIGNED</b> (16) islandBuff[32 *NUM_RIGIDBODIES]</td></tr>
+<tr class="separator:a9d29c66547e328cc82065d9eb6c4d25e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacd5e86f6e0f3f4d0ca50f0d0dc5172f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aacd5e86f6e0f3f4d0ca50f0d0dc5172f"></a>
+unsigned char&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::SCE_PFX_ALIGNED</b> (128) poolBuff[POOL_BYTES]</td></tr>
+<tr class="separator:aacd5e86f6e0f3f4d0ca50f0d0dc5172f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a27996c71bb99de9db64133630d320e36"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a27996c71bb99de9db64133630d320e36"></a>
+PfxHeapManager&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::pool</b> (poolBuff, POOL_BYTES)</td></tr>
+<tr class="separator:a27996c71bb99de9db64133630d320e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2bfb1f1bf2ef8f3d2d7ccad31a588391"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2bfb1f1bf2ef8f3d2d7ccad31a588391"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::broadphase</b> ()</td></tr>
+<tr class="separator:a2bfb1f1bf2ef8f3d2d7ccad31a588391"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b95de92ac9cbeb1de3dfe3214a1ab12"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9b95de92ac9cbeb1de3dfe3214a1ab12"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::collision</b> ()</td></tr>
+<tr class="separator:a9b95de92ac9cbeb1de3dfe3214a1ab12"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a16ea4198ee62c973c272e6f108853b13"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a16ea4198ee62c973c272e6f108853b13"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::constraintSolver</b> ()</td></tr>
+<tr class="separator:a16ea4198ee62c973c272e6f108853b13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa41a00ddfa88c399a68b14912d413169"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa41a00ddfa88c399a68b14912d413169"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::sleepOrWakeup</b> ()</td></tr>
+<tr class="separator:aa41a00ddfa88c399a68b14912d413169"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1134491124b155382e2884b40b91777"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ae1134491124b155382e2884b40b91777"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::integrate</b> ()</td></tr>
+<tr class="separator:ae1134491124b155382e2884b40b91777"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90e4f02a9fd3539328b7d269c7cfe59e"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a90e4f02a9fd3539328b7d269c7cfe59e"></a>
+uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::getNextConvexMesheIndex</b> ()</td></tr>
+<tr class="separator:a90e4f02a9fd3539328b7d269c7cfe59e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c1f7998f7b8a6ef90eee64a8ba5d310"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8c1f7998f7b8a6ef90eee64a8ba5d310"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::rereaseConvexMesheIndex</b> (uint32_t index)</td></tr>
+<tr class="separator:a8c1f7998f7b8a6ef90eee64a8ba5d310"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6782913a7b31cab3208ffc21b4562ac"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac6782913a7b31cab3208ffc21b4562ac"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::getNewCombinedShapesIndices</b> (vector&lt; PfxUInt16 &gt; &amp;indices, PfxUInt16 count)</td></tr>
+<tr class="separator:ac6782913a7b31cab3208ffc21b4562ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+変数</h2></td></tr>
+<tr class="memitem:a21b1614feaf2c76b36a3ffc468474791"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a21b1614feaf2c76b36a3ffc468474791"></a>
+const float&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::timeStep</b> = 0.016f</td></tr>
+<tr class="separator:a21b1614feaf2c76b36a3ffc468474791"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c4327fb42cf5ad3384d60b8e43dd9bb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a7c4327fb42cf5ad3384d60b8e43dd9bb"></a>
+const float&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::separateBias</b> = 0.1f</td></tr>
+<tr class="separator:a7c4327fb42cf5ad3384d60b8e43dd9bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a251f4ca62a1c02a6fdec0ab274c402"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4a251f4ca62a1c02a6fdec0ab274c402"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::iteration</b> = 8</td></tr>
+<tr class="separator:a4a251f4ca62a1c02a6fdec0ab274c402"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb0301eb236d48fc3b8bc85954218f83"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="afb0301eb236d48fc3b8bc85954218f83"></a>
+PfxRigidState&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::states</b> [NUM_RIGIDBODIES]</td></tr>
+<tr class="separator:afb0301eb236d48fc3b8bc85954218f83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab42e4196508f24a17849a16071252027"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ab42e4196508f24a17849a16071252027"></a>
+PfxRigidBody&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::bodies</b> [NUM_RIGIDBODIES]</td></tr>
+<tr class="separator:ab42e4196508f24a17849a16071252027"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9b907642f595fbc58b494a253f81128"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ac9b907642f595fbc58b494a253f81128"></a>
+PfxCollidable&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::collidables</b> [NUM_RIGIDBODIES]</td></tr>
+<tr class="separator:ac9b907642f595fbc58b494a253f81128"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3964a26ede190d42eb62eafa927caf05"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3964a26ede190d42eb62eafa927caf05"></a>
+PfxSolverBody&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::solverBodies</b> [NUM_RIGIDBODIES]</td></tr>
+<tr class="separator:a3964a26ede190d42eb62eafa927caf05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad87db16c01855ad5df80b3cbd3af68f9"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad87db16c01855ad5df80b3cbd3af68f9"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::numRigidBodies</b> = 0</td></tr>
+<tr class="separator:ad87db16c01855ad5df80b3cbd3af68f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09cee3ab0c1ada7fda48eb90e870b651"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a09cee3ab0c1ada7fda48eb90e870b651"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::numProxiesInWorld</b> = 0</td></tr>
+<tr class="separator:a09cee3ab0c1ada7fda48eb90e870b651"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f17e16652b4ffc28c091dfb1d9dfcad"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2f17e16652b4ffc28c091dfb1d9dfcad"></a>
+PfxBroadphaseProxy&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::proxies</b> [6][NUM_RIGIDBODIES]</td></tr>
+<tr class="separator:a2f17e16652b4ffc28c091dfb1d9dfcad"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b38eea6a70a67797b28a71ceda4bf35"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a9b38eea6a70a67797b28a71ceda4bf35"></a>
+PfxConstraintPair&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::jointPairs</b> [NUM_JOINTS]</td></tr>
+<tr class="separator:a9b38eea6a70a67797b28a71ceda4bf35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37a433fcedefb37c693d467b6f435ec7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a37a433fcedefb37c693d467b6f435ec7"></a>
+PfxJoint&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::joints</b> [NUM_JOINTS]</td></tr>
+<tr class="separator:a37a433fcedefb37c693d467b6f435ec7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1594568d525aa27b05dd8ef426cb00b3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1594568d525aa27b05dd8ef426cb00b3"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::numJoints</b> = 0</td></tr>
+<tr class="separator:a1594568d525aa27b05dd8ef426cb00b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a781688ccfec1482d4ed98b0b30b0fbdc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a781688ccfec1482d4ed98b0b30b0fbdc"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::pairSwap</b></td></tr>
+<tr class="separator:a781688ccfec1482d4ed98b0b30b0fbdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3d82eb640175102cacf769645730c06"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="ad3d82eb640175102cacf769645730c06"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::numPairs</b> [2]</td></tr>
+<tr class="separator:ad3d82eb640175102cacf769645730c06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8da2219e1199abd105e102d1503eacdc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8da2219e1199abd105e102d1503eacdc"></a>
+PfxBroadphasePair&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::pairsBuff</b> [2][NUM_CONTACTS]</td></tr>
+<tr class="separator:a8da2219e1199abd105e102d1503eacdc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0efd2d6c4cebfebc40fd218f77fefc4f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0efd2d6c4cebfebc40fd218f77fefc4f"></a>
+PfxContactManifold&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::contacts</b> [NUM_CONTACTS]</td></tr>
+<tr class="separator:a0efd2d6c4cebfebc40fd218f77fefc4f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aae1cd032161de08eed56a8a9a872c88d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aae1cd032161de08eed56a8a9a872c88d"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::numContacts</b></td></tr>
+<tr class="separator:aae1cd032161de08eed56a8a9a872c88d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2d84f48a1a767acfa3a4babf200335f7"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2d84f48a1a767acfa3a4babf200335f7"></a>
+PfxUInt32&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::contactIdPool</b> [NUM_CONTACTS]</td></tr>
+<tr class="separator:a2d84f48a1a767acfa3a4babf200335f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44e26b89ac08b96ad039e62aa3c61037"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a44e26b89ac08b96ad039e62aa3c61037"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::numContactIdPool</b></td></tr>
+<tr class="separator:a44e26b89ac08b96ad039e62aa3c61037"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c2991a171b91facb7188bdb329cba83"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4c2991a171b91facb7188bdb329cba83"></a>
+PfxIsland *&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::island</b> = NULL</td></tr>
+<tr class="separator:a4c2991a171b91facb7188bdb329cba83"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6f2f10ad765b15b8245d0448416d98d4"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6f2f10ad765b15b8245d0448416d98d4"></a>
+const PfxUInt32&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::sleepCount</b> = 180</td></tr>
+<tr class="separator:a6f2f10ad765b15b8245d0448416d98d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af0dc84db93ea99e9a62efbd57d205694"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af0dc84db93ea99e9a62efbd57d205694"></a>
+const PfxFloat&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::sleepVelocity</b> = 0.3f</td></tr>
+<tr class="separator:af0dc84db93ea99e9a62efbd57d205694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa320440635923eb60c7c3161cb5f2fb5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="aa320440635923eb60c7c3161cb5f2fb5"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::frame</b> = 0</td></tr>
+<tr class="separator:aa320440635923eb60c7c3161cb5f2fb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a73cb5cbfe95b35db4275cf23d1bca5be"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a73cb5cbfe95b35db4275cf23d1bca5be"></a>
+PfxConvexMesh&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::convexMeshes</b> [NUM_RIGIDBODIES]</td></tr>
+<tr class="separator:a73cb5cbfe95b35db4275cf23d1bca5be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af58201913d8425013453b3294449a3ef"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="af58201913d8425013453b3294449a3ef"></a>
+set&lt; uint32_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::reservedConvexMeshes</b></td></tr>
+<tr class="separator:af58201913d8425013453b3294449a3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a293ee49c365ff2486c4b27f3fa9ef9b6"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a293ee49c365ff2486c4b27f3fa9ef9b6"></a>
+PfxShape&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::combinedShapes</b> [NUM_KEEP_SHAPES]</td></tr>
+<tr class="separator:a293ee49c365ff2486c4b27f3fa9ef9b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4290b5b09887a23bb95b76d2d4676a89"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a4290b5b09887a23bb95b76d2d4676a89"></a>
+PfxUInt16&#160;</td><td class="memItemRight" valign="bottom"><b>basecross::ps::numCombinedShapes</b> = 0</td></tr>
+<tr class="separator:a4290b5b09887a23bb95b76d2d4676a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>物理計算インターファイス実体 </p>
+<dl class="section copyright"><dt>著作権所有</dt><dd>Copyright (c) 2017 WiZ Tamura Hiroki,Yamanoi Yasushi. </dd></dl>
+</div></div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="../../doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>
