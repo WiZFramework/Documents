@@ -1,0 +1,565 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>SimpleDx11: basecross::ObjectInterface クラス</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">SimpleDx11
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li class="current"><a href="annotated.html"><span>クラス</span></a></li>
+      <li><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="classes.html"><span>クラス索引</span></a></li>
+      <li><a href="hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>basecross</b></li><li class="navelem"><a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pro-methods">限定公開メンバ関数</a> &#124;
+<a href="#friends">フレンド</a> &#124;
+<a href="classbasecross_1_1_object_interface-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">basecross::ObjectInterface クラス<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>CreateとPreCreateを持ち、Thisスマートポインタがとれるインターフェイス  
+ <a href="classbasecross_1_1_object_interface.html#details">[詳解]</a></p>
+
+<p><code>#include &lt;<a class="el" href="_base_helper_8h_source.html">BaseHelper.h</a>&gt;</code></p>
+<div class="dynheader">
+basecross::ObjectInterface の継承関係図</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classbasecross_1_1_object_interface.png" usemap="#basecross::ObjectInterface_map" alt=""/>
+  <map id="basecross::ObjectInterface_map" name="basecross::ObjectInterface_map">
+<area href="classbasecross_1_1_base_resource.html" title="メモリ上に保持するリソースの親クラス " alt="basecross::BaseResource" shape="rect" coords="0,112,287,136"/>
+<area href="classbasecross_1_1_multi_audio_object.html" alt="basecross::MultiAudioObject" shape="rect" coords="297,112,584,136"/>
+<area href="classbasecross_1_1_ps_joint.html" title="ジョイントの親 " alt="basecross::PsJoint" shape="rect" coords="594,112,881,136"/>
+<area href="classbasecross_1_1_ps_object.html" title="物理オブジェクトの親 " alt="basecross::PsObject" shape="rect" coords="1188,112,1475,136"/>
+<area href="classbasecross_1_1_scene_interface.html" title="シーンインターフェイス " alt="basecross::SceneInterface" shape="rect" coords="1485,112,1772,136"/>
+<area href="classbasecross_1_1_audio_resource.html" title="オーディオリソース（wav）クラス " alt="basecross::AudioResource" shape="rect" coords="297,168,584,192"/>
+<area href="classbasecross_1_1_mesh_resource.html" title="メッシュリソース " alt="basecross::MeshResource" shape="rect" coords="297,224,584,248"/>
+<area href="classbasecross_1_1_multi_mesh_resource.html" title="マルチメッシュリソース " alt="basecross::MultiMeshResource" shape="rect" coords="297,280,584,304"/>
+<area href="classbasecross_1_1_ps_convex_mesh_resource.html" title="ConvexMeshリソース " alt="basecross::PsConvexMeshResource" shape="rect" coords="297,336,584,360"/>
+<area href="classbasecross_1_1_texture_resource.html" title="テクスチャリソース " alt="basecross::TextureResource" shape="rect" coords="297,392,584,416"/>
+<area href="classbasecross_1_1_ps_ball_joint.html" title="ボールジョイント " alt="basecross::PsBallJoint" shape="rect" coords="891,168,1178,192"/>
+<area href="classbasecross_1_1_ps_fix_joint.html" title="固定ジョイント " alt="basecross::PsFixJoint" shape="rect" coords="891,224,1178,248"/>
+<area href="classbasecross_1_1_ps_hinge_joint.html" title="蝶番(ちょうつがい)ジョイント " alt="basecross::PsHingeJoint" shape="rect" coords="891,280,1178,304"/>
+<area href="classbasecross_1_1_ps_slider_joint.html" title="スライダージョイント " alt="basecross::PsSliderJoint" shape="rect" coords="891,336,1178,360"/>
+<area href="classbasecross_1_1_ps_swing_twist_joint.html" title="球関節ジョイント " alt="basecross::PsSwingTwistJoint" shape="rect" coords="891,392,1178,416"/>
+<area href="classbasecross_1_1_ps_universal_joint.html" title="ユニバーサルジョイント " alt="basecross::PsUniversalJoint" shape="rect" coords="891,448,1178,472"/>
+<area href="classbasecross_1_1_ps_box.html" title="ボックス物理オブジェクト " alt="basecross::PsBox" shape="rect" coords="1485,168,1772,192"/>
+<area href="classbasecross_1_1_ps_capsule.html" title="カプセル物理オブジェクト " alt="basecross::PsCapsule" shape="rect" coords="1485,224,1772,248"/>
+<area href="classbasecross_1_1_ps_combined.html" title="プリミティブ合成物理オブジェクト " alt="basecross::PsCombined" shape="rect" coords="1485,280,1772,304"/>
+<area href="classbasecross_1_1_ps_convex.html" title="凸面物理オブジェクト(頂点指定のオブジェクト) " alt="basecross::PsConvex" shape="rect" coords="1485,336,1772,360"/>
+<area href="classbasecross_1_1_ps_cylinder.html" title="シリンダー物理オブジェクト " alt="basecross::PsCylinder" shape="rect" coords="1485,392,1772,416"/>
+<area href="classbasecross_1_1_ps_sphere.html" title="球体物理オブジェクト " alt="basecross::PsSphere" shape="rect" coords="1485,448,1772,472"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:a99f4c5a47c335b1276803b1e718af57a"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a99f4c5a47c335b1276803b1e718af57a"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a99f4c5a47c335b1276803b1e718af57a">GetThis</a> ()</td></tr>
+<tr class="memdesc:a99f4c5a47c335b1276803b1e718af57a"><td class="mdescLeft">&#160;</td><td class="mdescRight">thisポインタ取得  <a href="#a99f4c5a47c335b1276803b1e718af57a">[詳解]</a><br /></td></tr>
+<tr class="separator:a99f4c5a47c335b1276803b1e718af57a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad48ec10eb86e0105b3ef8c7eb11688c4"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#ad48ec10eb86e0105b3ef8c7eb11688c4">OnPreCreate</a> ()</td></tr>
+<tr class="memdesc:ad48ec10eb86e0105b3ef8c7eb11688c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">前初期化を行う（仮想関数）<br />
+ ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる  <a href="#ad48ec10eb86e0105b3ef8c7eb11688c4">[詳解]</a><br /></td></tr>
+<tr class="separator:ad48ec10eb86e0105b3ef8c7eb11688c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa1a959e5205b6205f5c03e21f40929e8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#aa1a959e5205b6205f5c03e21f40929e8">OnCreate</a> ()=0</td></tr>
+<tr class="memdesc:aa1a959e5205b6205f5c03e21f40929e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">初期化を行う（仮想関数）<br />
+ ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる  <a href="#aa1a959e5205b6205f5c03e21f40929e8">[詳解]</a><br /></td></tr>
+<tr class="separator:aa1a959e5205b6205f5c03e21f40929e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467719b4eb4bccccf01d287e9e335a5f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a467719b4eb4bccccf01d287e9e335a5f">IsCreated</a> ()</td></tr>
+<tr class="memdesc:a467719b4eb4bccccf01d287e9e335a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">クリエイト済みかどうか  <a href="#a467719b4eb4bccccf01d287e9e335a5f">[詳解]</a><br /></td></tr>
+<tr class="separator:a467719b4eb4bccccf01d287e9e335a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b106bffb9ea66941022cfbd07c7df8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a9b106bffb9ea66941022cfbd07c7df8c">PostEvent</a> (float DispatchTime, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Receiver, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:a9b106bffb9ea66941022cfbd07c7df8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのPOST（キューに入れる）  <a href="#a9b106bffb9ea66941022cfbd07c7df8c">[詳解]</a><br /></td></tr>
+<tr class="separator:a9b106bffb9ea66941022cfbd07c7df8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1624c3c744a456abddb4359a4d96d26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#af1624c3c744a456abddb4359a4d96d26">PostEvent</a> (float DispatchTime, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const wstring &amp;ReceiverKey, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:af1624c3c744a456abddb4359a4d96d26"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのPOST（キューに入れる）  <a href="#af1624c3c744a456abddb4359a4d96d26">[詳解]</a><br /></td></tr>
+<tr class="separator:af1624c3c744a456abddb4359a4d96d26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b3b1e37d88c11f5f7d2181b3c8b484a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a9b3b1e37d88c11f5f7d2181b3c8b484a">SendEvent</a> (const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Receiver, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:a9b3b1e37d88c11f5f7d2181b3c8b484a"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのSEND（キューに入れずにそのまま送る）  <a href="#a9b3b1e37d88c11f5f7d2181b3c8b484a">[詳解]</a><br /></td></tr>
+<tr class="separator:a9b3b1e37d88c11f5f7d2181b3c8b484a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26741734307b6f9c7dcaa1201fb4df05"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a26741734307b6f9c7dcaa1201fb4df05">SendEvent</a> (const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const wstring &amp;ReceiverKey, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:a26741734307b6f9c7dcaa1201fb4df05"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのSEND（キューに入れずにそのまま送る）  <a href="#a26741734307b6f9c7dcaa1201fb4df05">[詳解]</a><br /></td></tr>
+<tr class="separator:a26741734307b6f9c7dcaa1201fb4df05"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adee5f75a7b001b394e086c3181842c6f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#adee5f75a7b001b394e086c3181842c6f">OnEvent</a> (const shared_ptr&lt; <a class="el" href="structbasecross_1_1_event.html">Event</a> &gt; &amp;event)</td></tr>
+<tr class="memdesc:adee5f75a7b001b394e086c3181842c6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントを受け取る  <a href="#adee5f75a7b001b394e086c3181842c6f">[詳解]</a><br /></td></tr>
+<tr class="separator:adee5f75a7b001b394e086c3181842c6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+限定公開メンバ関数</h2></td></tr>
+<tr class="memitem:a527197118b289e21f9f83ce6d403f61c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a527197118b289e21f9f83ce6d403f61c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a527197118b289e21f9f83ce6d403f61c">ObjectInterface</a> ()</td></tr>
+<tr class="memdesc:a527197118b289e21f9f83ce6d403f61c"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトコンストラクタ <br /></td></tr>
+<tr class="separator:a527197118b289e21f9f83ce6d403f61c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01cdf2e9a6205ec041170525a7d266eb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01cdf2e9a6205ec041170525a7d266eb"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a01cdf2e9a6205ec041170525a7d266eb">~ObjectInterface</a> ()</td></tr>
+<tr class="memdesc:a01cdf2e9a6205ec041170525a7d266eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトデストラクタ <br /></td></tr>
+<tr class="separator:a01cdf2e9a6205ec041170525a7d266eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+フレンド</h2></td></tr>
+<tr class="memitem:a2810e70b8c8377aa8617138fc0f65e92"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a2810e70b8c8377aa8617138fc0f65e92"></a>
+class&#160;</td><td class="memItemRight" valign="bottom"><b>ObjectFactory</b></td></tr>
+<tr class="separator:a2810e70b8c8377aa8617138fc0f65e92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>CreateとPreCreateを持ち、Thisスマートポインタがとれるインターフェイス </p>
+</div><h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="a99f4c5a47c335b1276803b1e718af57a"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::shared_ptr&lt;T&gt; basecross::ObjectInterface::GetThis </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>thisポインタ取得 </p>
+<dl class="tparams"><dt>テンプレート引数</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>thisポインタの型 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>thisポインタ（shared_ptr） </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a467719b4eb4bccccf01d287e9e335a5f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool basecross::ObjectInterface::IsCreated </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>クリエイト済みかどうか </p>
+<dl class="section return"><dt>戻り値</dt><dd>クリエイト済みならtrue </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa1a959e5205b6205f5c03e21f40929e8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void basecross::ObjectInterface::OnCreate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>初期化を行う（仮想関数）<br />
+ ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる </p>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+<p><a class="el" href="classbasecross_1_1_base_resource.html#a603133e32436b286bde5be3f1a081a2d">basecross::BaseResource</a>, <a class="el" href="classbasecross_1_1_multi_audio_object.html#a6490e23f012b36603d6bd926b2183eca">basecross::MultiAudioObject</a>, <a class="el" href="classbasecross_1_1_ps_universal_joint.html#ac28eb28159dbffb6840ff76f6715a0be">basecross::PsUniversalJoint</a>, <a class="el" href="classbasecross_1_1_ps_fix_joint.html#a2765d34b2ae7de46364502ca76f3eea0">basecross::PsFixJoint</a>, <a class="el" href="classbasecross_1_1_ps_slider_joint.html#a79c5aafcb2b560983d3f7c69759ed757">basecross::PsSliderJoint</a>, <a class="el" href="classbasecross_1_1_ps_hinge_joint.html#af001395fbf74670fca4a4ac101ebbbea">basecross::PsHingeJoint</a>, <a class="el" href="classbasecross_1_1_ps_swing_twist_joint.html#a9a06e3586cef1e7ad1dcd86fb10e9e24">basecross::PsSwingTwistJoint</a>, <a class="el" href="classbasecross_1_1_ps_ball_joint.html#a37ac93cd8efb2c1698dccfd62f103b9f">basecross::PsBallJoint</a>, <a class="el" href="classbasecross_1_1_ps_combined.html#a83f41c67cbde626f47ae1913d8ed7673">basecross::PsCombined</a>, <a class="el" href="classbasecross_1_1_ps_convex.html#a643c247b5f331600de091d3c9b5ccb65">basecross::PsConvex</a>, <a class="el" href="classbasecross_1_1_ps_cylinder.html#a25cf1f2486cd402d53ec7cb01fe6fc92">basecross::PsCylinder</a>, <a class="el" href="classbasecross_1_1_ps_capsule.html#a9ba02b8c76eb57f0a185ec444676cc8a">basecross::PsCapsule</a>, <a class="el" href="classbasecross_1_1_ps_sphere.html#a30c55123ef16930c4e981b2fe5c7dfca">basecross::PsSphere</a>, <a class="el" href="classbasecross_1_1_ps_box.html#a84a39408817442f572da965363273195">basecross::PsBox</a>で実装されています。</p>
+
+</div>
+</div>
+<a class="anchor" id="adee5f75a7b001b394e086c3181842c6f"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void basecross::ObjectInterface::OnEvent </td>
+          <td>(</td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="structbasecross_1_1_event.html">Event</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>event</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>イベントを受け取る </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">event</td><td>イベント </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ad48ec10eb86e0105b3ef8c7eb11688c4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void basecross::ObjectInterface::OnPreCreate </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>前初期化を行う（仮想関数）<br />
+ ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる </p>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+<p><a class="el" href="classbasecross_1_1_base_resource.html#a776fbfdc4147618689d85d23fe677240">basecross::BaseResource</a>で再実装されています。</p>
+
+</div>
+</div>
+<a class="anchor" id="a9b106bffb9ea66941022cfbd07c7df8c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::ObjectInterface::PostEvent </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>DispatchTime</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Receiver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wstring &amp;&#160;</td>
+          <td class="paramname"><em>MsgStr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">shared_ptr&lt; void &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Info</em> = <code>shared_ptr&lt;void&gt;()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>イベントのPOST（キューに入れる） </p>
+<p>CreateとPreCreateを持ち、Thisスマートポインタがとれるインターフェイス</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">DispatchTime</td><td>POSTする時間（0で次のターン） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Sender</td><td>イベント送信者（nullptr可） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Receiver</td><td>イベント受信者（nullptr不可） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MsgStr</td><td>メッセージ </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">Info</td><td>追加情報 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af1624c3c744a456abddb4359a4d96d26"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::ObjectInterface::PostEvent </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>DispatchTime</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wstring &amp;&#160;</td>
+          <td class="paramname"><em>ReceiverKey</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wstring &amp;&#160;</td>
+          <td class="paramname"><em>MsgStr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">shared_ptr&lt; void &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Info</em> = <code>shared_ptr&lt;void&gt;()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>イベントのPOST（キューに入れる） </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">DispatchTime</td><td>POSTする時間（0で次のターン） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Sender</td><td>イベント送信者（nullptr可） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ReceiverKey</td><td>受け手側オブジェクトを判別するキー </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MsgStr</td><td>メッセージ </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">Info</td><td>追加情報 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9b3b1e37d88c11f5f7d2181b3c8b484a"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::ObjectInterface::SendEvent </td>
+          <td>(</td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Receiver</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wstring &amp;&#160;</td>
+          <td class="paramname"><em>MsgStr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">shared_ptr&lt; void &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Info</em> = <code>shared_ptr&lt;void&gt;()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>イベントのSEND（キューに入れずにそのまま送る） </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Sender</td><td>イベント送信者（nullptr可） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">ReceiverKey</td><td>受け手側オブジェクトを判別するキー </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MsgStr</td><td>メッセージ </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">Info</td><td>追加情報 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a26741734307b6f9c7dcaa1201fb4df05"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::ObjectInterface::SendEvent </td>
+          <td>(</td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Sender</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wstring &amp;&#160;</td>
+          <td class="paramname"><em>ReceiverKey</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const wstring &amp;&#160;</td>
+          <td class="paramname"><em>MsgStr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">shared_ptr&lt; void &gt; &amp;&#160;</td>
+          <td class="paramname"><em>Info</em> = <code>shared_ptr&lt;void&gt;()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>イベントのSEND（キューに入れずにそのまま送る） </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Sender</td><td>イベント送信者（nullptr可） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">Receiver</td><td>イベント受信者（nullptr不可） </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">MsgStr</td><td>メッセージ </td></tr>
+    <tr><td class="paramdir">[in,out]</td><td class="paramname">Info</td><td>追加情報 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li><a class="el" href="_base_helper_8h_source.html">BaseHelper.h</a></li>
+<li><a class="el" href="_base_helper_8cpp.html">BaseHelper.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>
