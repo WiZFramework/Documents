@@ -5,7 +5,6 @@ var searchData=
   ['aabb_5faabb_5fnot_5fequal',['AABB_AABB_NOT_EQUAL',['../structbasecross_1_1_hit_test.html#ace0de51a950fe212625e934dad2af8b4',1,'basecross::HitTest']]],
   ['aabb_5fin_5faabb',['AABB_IN_AABB',['../structbasecross_1_1_hit_test.html#af0e88465e18d63ca42f673a9149077cb',1,'basecross::HitTest']]],
   ['aabb_5for_5faabb',['AABB_OR_AABB',['../structbasecross_1_1_hit_test.html#a93b8aec531de178d4943fd0485df904f',1,'basecross::HitTest']]],
-  ['absperelem',['absPerElem',['../_base_math_8h.html#a11ae336b5ce663f9a6e92556c17ca4e4',1,'basecross::bsm::absPerElem(const Flt2 &amp;vec)'],['../_base_math_8h.html#abcd3b171625cf0314e3bf994eecafd1f',1,'basecross::bsm::absPerElem(const Flt3 &amp;vec)'],['../_base_math_8h.html#a807c08f77a6b88dbcefdbb1268bdbfd8',1,'basecross::bsm::absPerElem(const Flt4 &amp;vec)'],['../_base_math_8h.html#ad6eed288df862cf304efb4f589f7cf60',1,'basecross::bsm::absPerElem(const Mat3x3 &amp;mat)'],['../_base_math_8h.html#a89d870f06ef94abe0d80500f3d34b5eb',1,'basecross::bsm::absPerElem(const Mat4x4 &amp;mat)']]],
   ['addaudioresource',['AddAudioResource',['../classbasecross_1_1_multi_audio_object.html#a877eab2d331ff08e297bc65c1b383a7b',1,'basecross::MultiAudioObject']]],
   ['addballjoint',['AddBallJoint',['../classbasecross_1_1_base_physics.html#a7266dc792351be064f4882ad306f519d',1,'basecross::BasePhysics']]],
   ['addbox',['AddBox',['../classbasecross_1_1_base_physics.html#a6fa0862691e36f7ce13ad6c9b059ff86',1,'basecross::BasePhysics']]],

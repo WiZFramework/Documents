@@ -6,7 +6,6 @@ var searchData=
   ['aabb_5faabb_5fnot_5fequal',['AABB_AABB_NOT_EQUAL',['../structbasecross_1_1_hit_test.html#ace0de51a950fe212625e934dad2af8b4',1,'basecross::HitTest']]],
   ['aabb_5fin_5faabb',['AABB_IN_AABB',['../structbasecross_1_1_hit_test.html#af0e88465e18d63ca42f673a9149077cb',1,'basecross::HitTest']]],
   ['aabb_5for_5faabb',['AABB_OR_AABB',['../structbasecross_1_1_hit_test.html#a93b8aec531de178d4943fd0485df904f',1,'basecross::HitTest']]],
-  ['absperelem',['absPerElem',['../_base_math_8h.html#a11ae336b5ce663f9a6e92556c17ca4e4',1,'basecross::bsm::absPerElem(const Flt2 &amp;vec)'],['../_base_math_8h.html#abcd3b171625cf0314e3bf994eecafd1f',1,'basecross::bsm::absPerElem(const Flt3 &amp;vec)'],['../_base_math_8h.html#a807c08f77a6b88dbcefdbb1268bdbfd8',1,'basecross::bsm::absPerElem(const Flt4 &amp;vec)'],['../_base_math_8h.html#ad6eed288df862cf304efb4f589f7cf60',1,'basecross::bsm::absPerElem(const Mat3x3 &amp;mat)'],['../_base_math_8h.html#a89d870f06ef94abe0d80500f3d34b5eb',1,'basecross::bsm::absPerElem(const Mat4x4 &amp;mat)']]],
   ['addaudioresource',['AddAudioResource',['../classbasecross_1_1_multi_audio_object.html#a877eab2d331ff08e297bc65c1b383a7b',1,'basecross::MultiAudioObject']]],
   ['addballjoint',['AddBallJoint',['../classbasecross_1_1_base_physics.html#a7266dc792351be064f4882ad306f519d',1,'basecross::BasePhysics']]],
   ['addbox',['AddBox',['../classbasecross_1_1_base_physics.html#a6fa0862691e36f7ce13ad6c9b059ff86',1,'basecross::BasePhysics']]],
@@ -28,13 +27,11 @@ var searchData=
   ['affinetransformation2d',['affineTransformation2D',['../structbasecross_1_1bsm_1_1_mat4x4.html#a82e6e2cdd5cf15ac4e3b9f87893733be',1,'basecross::bsm::Mat4x4']]],
   ['afterinitcontents',['AfterInitContents',['../classbasecross_1_1_device_resources.html#aa60881eff1cc60ebace8b387a16ec2fc',1,'basecross::DeviceResources::AfterInitContents()'],['../classbasecross_1_1_app.html#ab585a72a5c28d6019882460ecf8395ed',1,'basecross::App::AfterInitContents()']]],
   ['app',['App',['../classbasecross_1_1_app.html',1,'basecross']]],
-  ['app_2ecpp',['App.cpp',['../_app_8cpp.html',1,'']]],
-  ['app_2eh',['App.h',['../_app_8h.html',1,'']]],
   ['appcheck',['AppCheck',['../classbasecross_1_1_app.html#a4158bed2d8f90bf8c73b2a3c7147ed08',1,'basecross::App']]],
   ['applybodyforce',['ApplyBodyForce',['../classbasecross_1_1_base_physics.html#a4c9142e40378739a0717316396841f33',1,'basecross::BasePhysics']]],
   ['applybodytorque',['ApplyBodyTorque',['../classbasecross_1_1_base_physics.html#af124a9c3c6287c3968f534f89c3b0e9c',1,'basecross::BasePhysics']]],
-  ['audiomanager',['AudioManager',['../classbasecross_1_1_audio_manager.html#a98d673b10a654ea94cc43f5110936161',1,'basecross::AudioManager']]],
   ['audiomanager',['AudioManager',['../classbasecross_1_1_audio_manager.html',1,'basecross']]],
-  ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html#ac559258f3513e81bf7cc885a8997a156',1,'basecross::AudioResource']]],
-  ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html',1,'basecross']]]
+  ['audiomanager',['AudioManager',['../classbasecross_1_1_audio_manager.html#a98d673b10a654ea94cc43f5110936161',1,'basecross::AudioManager']]],
+  ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html',1,'basecross']]],
+  ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html#ac559258f3513e81bf7cc885a8997a156',1,'basecross::AudioResource']]]
 ];

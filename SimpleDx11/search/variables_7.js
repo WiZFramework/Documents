@@ -1,20 +1,9 @@
 var searchData=
 [
-  ['vertexpositioncolorlayout',['VertexPositionColorLayout',['../_vertex_helper_8h.html#a0c2677f12173a0391d4a786a2b1b0592',1,'basecross']]],
-  ['vertexpositioncolormatrixlayout',['VertexPositionColorMatrixLayout',['../_vertex_helper_8h.html#a770cbe27492fb7e7b3b48c1b1e4f81b5',1,'basecross']]],
-  ['vertexpositioncolortexturelayout',['VertexPositionColorTextureLayout',['../_vertex_helper_8h.html#a7b0232b79baa267d1f50348f21a2e41f',1,'basecross']]],
-  ['vertexpositioncolortexturematrixlayout',['VertexPositionColorTextureMatrixLayout',['../_vertex_helper_8h.html#a5f89cd0d0530ee6834a0ddd0309d91ce',1,'basecross']]],
-  ['vertexpositionlayout',['VertexPositionLayout',['../_vertex_helper_8h.html#a08995ef53a8294cf25553ad5cebb1068',1,'basecross']]],
-  ['vertexpositionnormalcolorlayout',['VertexPositionNormalColorLayout',['../_vertex_helper_8h.html#a373b6216d818bb6e2d8fb0c2eecffb6d',1,'basecross']]],
-  ['vertexpositionnormalcolortexturelayout',['VertexPositionNormalColorTextureLayout',['../_vertex_helper_8h.html#ac54c8fc3e5e38e7e95e990afc910e3a9',1,'basecross']]],
-  ['vertexpositionnormallayout',['VertexPositionNormalLayout',['../_vertex_helper_8h.html#ac6832721fd3676d93213e507913d37f3',1,'basecross']]],
-  ['vertexpositionnormaltangentcolortexturelayout',['VertexPositionNormalTangentColorTextureLayout',['../_vertex_helper_8h.html#a09cf9bbf32c00059964fc41fbf1185f2',1,'basecross']]],
-  ['vertexpositionnormaltangentcolortextureskinninglayout',['VertexPositionNormalTangentColorTextureSkinningLayout',['../_vertex_helper_8h.html#a17e8df73e8997ac91f70081d6c5a53ae',1,'basecross']]],
-  ['vertexpositionnormaltangenttexturelayout',['VertexPositionNormalTangentTextureLayout',['../_vertex_helper_8h.html#ae335bd5ff02800080d4a49393d196375',1,'basecross']]],
-  ['vertexpositionnormaltangenttextureskinninglayout',['VertexPositionNormalTangentTextureSkinningLayout',['../_vertex_helper_8h.html#ac14e57ac0519becc83282dbb4402c09f',1,'basecross']]],
-  ['vertexpositionnormaltexturelayout',['VertexPositionNormalTextureLayout',['../_vertex_helper_8h.html#ac7e1123fc504dbc784c7a20aabbd8b90',1,'basecross']]],
-  ['vertexpositionnormaltexturematrixlayout',['VertexPositionNormalTextureMatrixLayout',['../_vertex_helper_8h.html#a1fa26e0cd43ea8888d48720596cba24d',1,'basecross']]],
-  ['vertexpositionnormaltextureskinninglayout',['VertexPositionNormalTextureSkinningLayout',['../_vertex_helper_8h.html#a1bd2e70165196a008706a3ef56b1673a',1,'basecross']]],
-  ['vertexpositiontexturelayout',['VertexPositionTextureLayout',['../_vertex_helper_8h.html#a81ab1227276bb779f2e36d89bd2ddba1',1,'basecross']]],
-  ['vertexpositiontexturematrixlayout',['VertexPositionTextureMatrixLayout',['../_vertex_helper_8h.html#a5afc58aef7c4e1c4541f1f2795bbafe1',1,'basecross']]]
+  ['wbuttons',['wButtons',['../structbasecross_1_1_c_o_n_t_r_o_l_e_r___s_t_a_t_e.html#a14df5c1039f32766acaf723bec81ac45',1,'basecross::CONTROLER_STATE']]],
+  ['weights',['weights',['../structbasecross_1_1_vertex_position_normal_texture_skinning_p_o_d.html#a190dc967e8667a574ad19589a963ae62',1,'basecross::VertexPositionNormalTextureSkinningPOD::weights()'],['../structbasecross_1_1_vertex_position_normal_tangent_texture_skinning_p_o_d.html#acd90c9794d4c11f0d38011ced6624ad1',1,'basecross::VertexPositionNormalTangentTextureSkinningPOD::weights()']]],
+  ['wlastbuttons',['wLastButtons',['../structbasecross_1_1_c_o_n_t_r_o_l_e_r___s_t_a_t_e.html#acad22b2341a060c4139a5c553b8b504d',1,'basecross::CONTROLER_STATE']]],
+  ['wnowupdatebuttons',['wNowUpdateButtons',['../structbasecross_1_1_c_o_n_t_r_o_l_e_r___s_t_a_t_e.html#a04e9bef1a8cebd33b20dc2afb8e2f0d4',1,'basecross::CONTROLER_STATE']]],
+  ['wpressedbuttons',['wPressedButtons',['../structbasecross_1_1_c_o_n_t_r_o_l_e_r___s_t_a_t_e.html#a2ade8a8a306fc4fb9197c1d98842a3bd',1,'basecross::CONTROLER_STATE']]],
+  ['wreleasedbuttons',['wReleasedButtons',['../structbasecross_1_1_c_o_n_t_r_o_l_e_r___s_t_a_t_e.html#a867b59344123f3e6f4d9685d57782d1b',1,'basecross::CONTROLER_STATE']]]
 ];

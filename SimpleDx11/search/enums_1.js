@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['depthstencilstate',['DepthStencilState',['../_device_resources_8h.html#a93ff14551a943405192929376ea937cc',1,'basecross']]]
+  ['nummodify',['NumModify',['../structbasecross_1_1_util.html#a1b80abf6e7feb1b79a099a91306aafca',1,'basecross::Util']]]
 ];

@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['facing',['facing',['../structbasecross_1_1bsm_1_1_quat.html#abe7e2fa398703fc52394eea20324bd7e',1,'basecross::bsm::Quat::facing()'],['../_base_math_8h.html#a97246a147f777ce312f9d1f4a1e0a641',1,'basecross::bsm::facing()']]],
-  ['facingy',['facingY',['../structbasecross_1_1bsm_1_1_quat.html#adbf4dd2a744309a39e063d603b7e5e8e',1,'basecross::bsm::Quat::facingY()'],['../_base_math_8h.html#a5a71a3b5bbd04ff4bd6912f7e0918779',1,'basecross::bsm::facingY()']]],
+  ['facing',['facing',['../structbasecross_1_1bsm_1_1_quat.html#abe7e2fa398703fc52394eea20324bd7e',1,'basecross::bsm::Quat']]],
+  ['facingy',['facingY',['../structbasecross_1_1bsm_1_1_quat.html#adbf4dd2a744309a39e063d603b7e5e8e',1,'basecross::bsm::Quat']]],
   ['floatclamp',['floatClamp',['../structbasecross_1_1_hit_test.html#ac3cbdb9c370b62c974b19d4407b68445',1,'basecross::HitTest']]],
   ['floattostr',['FloatToStr',['../structbasecross_1_1_util.html#a01304561312b7d064d02d05a1e056454',1,'basecross::Util']]],
   ['floattowstr',['FloatToWStr',['../structbasecross_1_1_util.html#a06b2bad785a55eb6db010941ee935ce3',1,'basecross::Util']]],

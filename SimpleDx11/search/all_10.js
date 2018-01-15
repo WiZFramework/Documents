@@ -1,7 +1,6 @@
 var searchData=
 [
   ['randzerotoone',['RandZeroToOne',['../structbasecross_1_1_util.html#a64ba95cbe3beae6982bd6d9cc209c620',1,'basecross::Util']]],
-  ['rasterizerstate',['RasterizerState',['../_device_resources_8h.html#aa2a0f6c8bb8fc603f845cae30b33aa00',1,'basecross']]],
   ['read',['Read',['../classbasecross_1_1_binary_reader.html#a9df7cac84a0c255d372351179d3eb616',1,'basecross::BinaryReader']]],
   ['readarray',['ReadArray',['../classbasecross_1_1_binary_reader.html#a4437ea8841574d861c5d1e06fd8a9a4d',1,'basecross::BinaryReader']]],
   ['readbasebonedata',['ReadBaseBoneData',['../classbasecross_1_1_mesh_resource.html#a5a1c0c869472a0787b9925a00701814f',1,'basecross::MeshResource']]],
@@ -12,7 +11,7 @@ var searchData=
   ['rect2d',['Rect2D',['../structbasecross_1_1_rect2_d.html',1,'basecross']]],
   ['rect2d',['Rect2D',['../structbasecross_1_1_rect2_d.html#a459f28f36a161b038d9763173498b289',1,'basecross::Rect2D::Rect2D()'],['../structbasecross_1_1_rect2_d.html#ae6f4e79c3142efe2fb3aa92efe8e9487',1,'basecross::Rect2D::Rect2D(T l, T t, T r, T b)']]],
   ['rect_5fxz',['RECT_XZ',['../structbasecross_1_1_r_e_c_t___x_z.html',1,'basecross']]],
-  ['reflect',['reflect',['../structbasecross_1_1bsm_1_1_flt3.html#a5c3b0d23a9f97b539be291b0f9666f41',1,'basecross::bsm::Flt3::reflect()'],['../_base_math_8h.html#ab8beaa3dfc066c68f9ae8670bfaf2498',1,'basecross::bsm::reflect()']]],
+  ['reflect',['reflect',['../structbasecross_1_1bsm_1_1_flt3.html#a5c3b0d23a9f97b539be291b0f9666f41',1,'basecross::bsm::Flt3']]],
   ['registerresource',['RegisterResource',['../classbasecross_1_1_app.html#a3b5f7ae48cd7a5531944d16a656bb257',1,'basecross::App']]],
   ['registertexture',['RegisterTexture',['../classbasecross_1_1_app.html#a8ba049ef01d61c2dd0b665a186b5a0f5',1,'basecross::App']]],
   ['registerwav',['RegisterWav',['../classbasecross_1_1_app.html#a74fb9750906284e026fbea3915719d2d',1,'basecross::App']]],
@@ -29,8 +28,7 @@ var searchData=
   ['resumeaudio',['ResumeAudio',['../classbasecross_1_1_audio_manager.html#a255b327322bc80c97e12312dc3cc8b6d',1,'basecross::AudioManager']]],
   ['reversewinding',['ReverseWinding',['../classbasecross_1_1_mesh_utill.html#ab8ac6366414de521ed262ad3e2580aed',1,'basecross::MeshUtill']]],
   ['reverttopreviousstate',['RevertToPreviousState',['../classbasecross_1_1_state_machine.html#af7d64426e0666a03d3863b1c9e0f1c6b',1,'basecross::StateMachine']]],
-  ['rotate',['rotate',['../_base_math_8h.html#a0b5fcf96e067b503421104027add8bd3',1,'basecross::bsm']]],
-  ['rotation',['rotation',['../structbasecross_1_1bsm_1_1_quat.html#ad965c277f9fc232a875221df9d993273',1,'basecross::bsm::Quat::rotation(float radians, const Flt3 &amp;unitVec)'],['../structbasecross_1_1bsm_1_1_quat.html#a2698c4bb43800d1bfb701fd5ca085af1',1,'basecross::bsm::Quat::rotation(const Flt3 &amp;unitVec, float radians)'],['../structbasecross_1_1bsm_1_1_mat3x3.html#a12f12a9006a160a3b91c7b3e0cf541e8',1,'basecross::bsm::Mat3x3::rotation()'],['../structbasecross_1_1bsm_1_1_mat4x4.html#abaecb9646cbd6331723dba1f3ed85a06',1,'basecross::bsm::Mat4x4::rotation()'],['../_base_math_8h.html#ade484f710fef05797674319f3809b673',1,'basecross::bsm::rotation()']]],
+  ['rotation',['rotation',['../structbasecross_1_1bsm_1_1_quat.html#ad965c277f9fc232a875221df9d993273',1,'basecross::bsm::Quat::rotation(float radians, const Flt3 &amp;unitVec)'],['../structbasecross_1_1bsm_1_1_quat.html#a2698c4bb43800d1bfb701fd5ca085af1',1,'basecross::bsm::Quat::rotation(const Flt3 &amp;unitVec, float radians)'],['../structbasecross_1_1bsm_1_1_mat3x3.html#a12f12a9006a160a3b91c7b3e0cf541e8',1,'basecross::bsm::Mat3x3::rotation()'],['../structbasecross_1_1bsm_1_1_mat4x4.html#abaecb9646cbd6331723dba1f3ed85a06',1,'basecross::bsm::Mat4x4::rotation()']]],
   ['rotationrollpitchyawfromvector',['rotationRollPitchYawFromVector',['../structbasecross_1_1bsm_1_1_quat.html#a8855a7eb1b9c6fc7bb37e7a91e588c22',1,'basecross::bsm::Quat']]],
   ['rotationx',['rotationX',['../structbasecross_1_1bsm_1_1_quat.html#a0b32a10e4a70b554e4f1efd08cccec8f',1,'basecross::bsm::Quat']]],
   ['rotationy',['rotationY',['../structbasecross_1_1bsm_1_1_quat.html#a08e2286496e2356a92626ef55506bf72',1,'basecross::bsm::Quat']]],
