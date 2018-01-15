@@ -1,0 +1,708 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.11"/>
+<title>FullDx11: basecross::DrawComponent クラス</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() { init_search(); });
+</script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">FullDx11
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 構築: Doxygen 1.8.11 -->
+<script type="text/javascript">
+var searchBox = new SearchBox("searchBox", "search",false,'検索');
+</script>
+  <div id="navrow1" class="tabs">
+    <ul class="tablist">
+      <li><a href="index.html"><span>総合概要</span></a></li>
+      <li class="current"><a href="annotated.html"><span>クラス</span></a></li>
+      <li><a href="files.html"><span>ファイル</span></a></li>
+      <li>
+        <div id="MSearchBox" class="MSearchBoxInactive">
+        <span class="left">
+          <img id="MSearchSelect" src="search/mag_sel.png"
+               onmouseover="return searchBox.OnSearchSelectShow()"
+               onmouseout="return searchBox.OnSearchSelectHide()"
+               alt=""/>
+          <input type="text" id="MSearchField" value="検索" accesskey="S"
+               onfocus="searchBox.OnSearchFieldFocus(true)" 
+               onblur="searchBox.OnSearchFieldFocus(false)" 
+               onkeyup="searchBox.OnSearchFieldChange(event)"/>
+          </span><span class="right">
+            <a id="MSearchClose" href="javascript:searchBox.CloseResultsWindow()"><img id="MSearchCloseImg" border="0" src="search/close.png" alt=""/></a>
+          </span>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div id="navrow2" class="tabs2">
+    <ul class="tablist">
+      <li><a href="annotated.html"><span>クラス一覧</span></a></li>
+      <li><a href="classes.html"><span>クラス索引</span></a></li>
+      <li><a href="hierarchy.html"><span>クラス階層</span></a></li>
+      <li><a href="functions.html"><span>クラスメンバ</span></a></li>
+    </ul>
+  </div>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<iframe src="javascript:void(0)" frameborder="0" 
+        name="MSearchResults" id="MSearchResults">
+</iframe>
+</div>
+
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><b>basecross</b></li><li class="navelem"><a class="el" href="classbasecross_1_1_draw_component.html">DrawComponent</a></li>  </ul>
+</div>
+</div><!-- top -->
+<div class="header">
+  <div class="summary">
+<a href="#pub-methods">公開メンバ関数</a> &#124;
+<a href="#pro-methods">限定公開メンバ関数</a> &#124;
+<a href="classbasecross_1_1_draw_component-members.html">全メンバ一覧</a>  </div>
+  <div class="headertitle">
+<div class="title">basecross::DrawComponent クラス</div>  </div>
+</div><!--header-->
+<div class="contents">
+
+<p>描画コンポーネントの親クラス  
+ <a href="classbasecross_1_1_draw_component.html#details">[詳解]</a></p>
+
+<p><code>#include &lt;<a class="el" href="_draw_components_8h_source.html">DrawComponents.h</a>&gt;</code></p>
+<div class="dynheader">
+basecross::DrawComponent の継承関係図</div>
+<div class="dyncontent">
+ <div class="center">
+  <img src="classbasecross_1_1_draw_component.png" usemap="#basecross::DrawComponent_map" alt=""/>
+  <map id="basecross::DrawComponent_map" name="basecross::DrawComponent_map">
+<area href="classbasecross_1_1_component.html" title="コンポーネント親クラス " alt="basecross::Component" shape="rect" coords="594,112,881,136"/>
+<area href="classbasecross_1_1_object_interface.html" title="CreateとPreCreateを持ち、Thisスマートポインタがとれるインターフェイス " alt="basecross::ObjectInterface" shape="rect" coords="445,56,732,80"/>
+<area href="classbasecross_1_1_shape_interface.html" title="UpdateとDrawのインターフェイス " alt="basecross::ShapeInterface" shape="rect" coords="742,56,1029,80"/>
+<area href="classbasecross_1_1_bc_base_draw.html" title="Bc描画オブジェクトの親 " alt="basecross::BcBaseDraw" shape="rect" coords="0,224,287,248"/>
+<area href="classbasecross_1_1_p_c_t_particle_draw.html" title="PCTParticle描画コンポーネント(パーティクル描画) " alt="basecross::PCTParticleDraw" shape="rect" coords="297,224,584,248"/>
+<area href="classbasecross_1_1_shadowmap.html" title="シャドウマップコンポーネント（前処理用） " alt="basecross::Shadowmap" shape="rect" coords="594,224,881,248"/>
+<area href="classbasecross_1_1_sm_base_draw.html" title="これより新システム " alt="basecross::SmBaseDraw" shape="rect" coords="891,224,1178,248"/>
+<area href="classbasecross_1_1_sprite_base_draw.html" title="Sprite描画オブジェクトの親 " alt="basecross::SpriteBaseDraw" shape="rect" coords="1485,224,1772,248"/>
+<area href="classbasecross_1_1_bc_p_c_static_draw.html" title="BcPCStatic描画コンポーネント " alt="basecross::BcPCStaticDraw" shape="rect" coords="297,280,584,304"/>
+<area href="classbasecross_1_1_bc_p_c_t_static_draw.html" title="BasicPCTStatic描画コンポーネント " alt="basecross::BcPCTStaticDraw" shape="rect" coords="297,336,584,360"/>
+<area href="classbasecross_1_1_bc_p_n_t_bone_model_draw.html" title="BcPNTBoneModel描画コンポーネント（ボーンモデル描画用） " alt="basecross::BcPNTBoneModelDraw" shape="rect" coords="297,392,584,416"/>
+<area href="classbasecross_1_1_bc_p_n_tn_t_bone_model_draw.html" title="BcPNTnTBoneModelDraw描画コンポーネント（ボーンモデル描画用） " alt="basecross::BcPNTnTBoneModelDraw" shape="rect" coords="297,448,584,472"/>
+<area href="classbasecross_1_1_bc_p_n_tn_t_static_draw.html" title="BasicPNTnTStatic描画コンポーネント " alt="basecross::BcPNTnTStaticDraw" shape="rect" coords="297,504,584,528"/>
+<area href="classbasecross_1_1_bc_p_n_tn_t_static_model_draw.html" title="BasicPNTnTモデル描画コンポーネント " alt="basecross::BcPNTnTStaticModelDraw" shape="rect" coords="297,560,584,584"/>
+<area href="classbasecross_1_1_bc_p_n_t_static_draw.html" title="BcPNTStatic描画コンポーネント " alt="basecross::BcPNTStaticDraw" shape="rect" coords="297,616,584,640"/>
+<area href="classbasecross_1_1_bc_p_n_t_static_model_draw.html" title="BasicPNTStaticモデル描画コンポーネント " alt="basecross::BcPNTStaticModelDraw" shape="rect" coords="297,672,584,696"/>
+<area href="classbasecross_1_1_bc_p_t_static_draw.html" title="BasicPTStatic描画コンポーネント " alt="basecross::BcPTStaticDraw" shape="rect" coords="297,728,584,752"/>
+<area href="classbasecross_1_1_p_c_static_draw.html" title="PCStatic描画コンポーネント " alt="basecross::PCStaticDraw" shape="rect" coords="1188,280,1475,304"/>
+<area href="classbasecross_1_1_p_c_static_instance_draw.html" title="PCStaticInstance描画コンポーネント " alt="basecross::PCStaticInstanceDraw" shape="rect" coords="1188,336,1475,360"/>
+<area href="classbasecross_1_1_p_c_t_static_draw.html" title="PCTStatic描画コンポーネント " alt="basecross::PCTStaticDraw" shape="rect" coords="1188,392,1475,416"/>
+<area href="classbasecross_1_1_p_c_t_static_instance_draw.html" title="PCTStaticInstance描画コンポーネント " alt="basecross::PCTStaticInstanceDraw" shape="rect" coords="1188,448,1475,472"/>
+<area href="classbasecross_1_1_p_n_t_bone_model_draw.html" title="PNTBoneModel描画コンポーネント（ボーンモデル描画用） " alt="basecross::PNTBoneModelDraw" shape="rect" coords="1188,504,1475,528"/>
+<area href="classbasecross_1_1_p_n_t_static_draw.html" title="PNTStatic描画コンポーネント " alt="basecross::PNTStaticDraw" shape="rect" coords="1188,560,1475,584"/>
+<area href="classbasecross_1_1_p_n_t_static_instance_draw.html" title="PNTStaticInstance描画コンポーネント " alt="basecross::PNTStaticInstanceDraw" shape="rect" coords="1188,616,1475,640"/>
+<area href="classbasecross_1_1_p_n_t_static_model_draw.html" title="PNTStaticModel描画コンポーネント " alt="basecross::PNTStaticModelDraw" shape="rect" coords="1188,672,1475,696"/>
+<area href="classbasecross_1_1_p_t_static_draw.html" title="PTStatic描画コンポーネント " alt="basecross::PTStaticDraw" shape="rect" coords="1188,728,1475,752"/>
+<area href="classbasecross_1_1_p_t_static_instance_draw.html" title="PTStaticInstance描画コンポーネント " alt="basecross::PTStaticInstanceDraw" shape="rect" coords="1188,784,1475,808"/>
+<area href="classbasecross_1_1_p_c_sprite_draw.html" title="PCSprite描画コンポーネント " alt="basecross::PCSpriteDraw" shape="rect" coords="1782,280,2069,304"/>
+<area href="classbasecross_1_1_p_c_t_sprite_draw.html" title="PCTSprite描画コンポーネント " alt="basecross::PCTSpriteDraw" shape="rect" coords="1782,336,2069,360"/>
+<area href="classbasecross_1_1_p_t_sprite_draw.html" title="PTSprite描画コンポーネント " alt="basecross::PTSpriteDraw" shape="rect" coords="1782,392,2069,416"/>
+</map>
+ </div></div>
+<table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+公開メンバ関数</h2></td></tr>
+<tr class="memitem:a35524fe3de62661981f8f56940711057"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_device_resources_8h.html#a076d68b9a57c6ee5e2d277d2da61050b">BlendState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a35524fe3de62661981f8f56940711057">GetBlendState</a> () const </td></tr>
+<tr class="memdesc:a35524fe3de62661981f8f56940711057"><td class="mdescLeft">&#160;</td><td class="mdescRight">ブレンドステートの取得  <a href="#a35524fe3de62661981f8f56940711057">[詳解]</a><br /></td></tr>
+<tr class="separator:a35524fe3de62661981f8f56940711057"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ef8bdb6e328691a30038881d1c09415"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_device_resources_8h.html#a93ff14551a943405192929376ea937cc">DepthStencilState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a2ef8bdb6e328691a30038881d1c09415">GetDepthStencilState</a> () const </td></tr>
+<tr class="memdesc:a2ef8bdb6e328691a30038881d1c09415"><td class="mdescLeft">&#160;</td><td class="mdescRight">デプスステンシルステートの取得  <a href="#a2ef8bdb6e328691a30038881d1c09415">[詳解]</a><br /></td></tr>
+<tr class="separator:a2ef8bdb6e328691a30038881d1c09415"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a63c7da810c595b26676f24d2697900c1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_device_resources_8h.html#aa2a0f6c8bb8fc603f845cae30b33aa00">RasterizerState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a63c7da810c595b26676f24d2697900c1">GetRasterizerState</a> () const </td></tr>
+<tr class="memdesc:a63c7da810c595b26676f24d2697900c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">ラスタライザステートの取得  <a href="#a63c7da810c595b26676f24d2697900c1">[詳解]</a><br /></td></tr>
+<tr class="separator:a63c7da810c595b26676f24d2697900c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5af80ef12f2239a8bf5b46f697c50579"><td class="memItemLeft" align="right" valign="top"><a class="el" href="_device_resources_8h.html#ae279438fb36ac7fa0594b326fd9a6976">SamplerState</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a5af80ef12f2239a8bf5b46f697c50579">GetSamplerState</a> () const </td></tr>
+<tr class="memdesc:a5af80ef12f2239a8bf5b46f697c50579"><td class="mdescLeft">&#160;</td><td class="mdescRight">サンプラーステートの取得  <a href="#a5af80ef12f2239a8bf5b46f697c50579">[詳解]</a><br /></td></tr>
+<tr class="separator:a5af80ef12f2239a8bf5b46f697c50579"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a88348c8660d240c301b001f88eb5cbfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a88348c8660d240c301b001f88eb5cbfd">SetBlendState</a> (const <a class="el" href="_device_resources_8h.html#a076d68b9a57c6ee5e2d277d2da61050b">BlendState</a> state)</td></tr>
+<tr class="memdesc:a88348c8660d240c301b001f88eb5cbfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">ブレンドステートの設定  <a href="#a88348c8660d240c301b001f88eb5cbfd">[詳解]</a><br /></td></tr>
+<tr class="separator:a88348c8660d240c301b001f88eb5cbfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8c4b6ceb20efd0b42d050649cfa60c2d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a8c4b6ceb20efd0b42d050649cfa60c2d">SetDeviceBlendState</a> ()</td></tr>
+<tr class="memdesc:a8c4b6ceb20efd0b42d050649cfa60c2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">ブレンドステートのデバイスへの設定。  <a href="#a8c4b6ceb20efd0b42d050649cfa60c2d">[詳解]</a><br /></td></tr>
+<tr class="separator:a8c4b6ceb20efd0b42d050649cfa60c2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa8272533280d2c5691f2f6f07b029d55"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#aa8272533280d2c5691f2f6f07b029d55">SetDepthStencilState</a> (const <a class="el" href="_device_resources_8h.html#a93ff14551a943405192929376ea937cc">DepthStencilState</a> state)</td></tr>
+<tr class="memdesc:aa8272533280d2c5691f2f6f07b029d55"><td class="mdescLeft">&#160;</td><td class="mdescRight">デプスステンシルステートの設定  <a href="#aa8272533280d2c5691f2f6f07b029d55">[詳解]</a><br /></td></tr>
+<tr class="separator:aa8272533280d2c5691f2f6f07b029d55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a914d33f9ff7c7cf299687f6972ad6726"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a914d33f9ff7c7cf299687f6972ad6726">SetDeviceDepthStencilState</a> ()</td></tr>
+<tr class="memdesc:a914d33f9ff7c7cf299687f6972ad6726"><td class="mdescLeft">&#160;</td><td class="mdescRight">デプスステンシルステートのデバイスへの設定  <a href="#a914d33f9ff7c7cf299687f6972ad6726">[詳解]</a><br /></td></tr>
+<tr class="separator:a914d33f9ff7c7cf299687f6972ad6726"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0eaa932ab35ae13c089c71865ab743a8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a0eaa932ab35ae13c089c71865ab743a8">SetRasterizerState</a> (const <a class="el" href="_device_resources_8h.html#aa2a0f6c8bb8fc603f845cae30b33aa00">RasterizerState</a> state)</td></tr>
+<tr class="memdesc:a0eaa932ab35ae13c089c71865ab743a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">ラスタライザステートの設定  <a href="#a0eaa932ab35ae13c089c71865ab743a8">[詳解]</a><br /></td></tr>
+<tr class="separator:a0eaa932ab35ae13c089c71865ab743a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace63e07b7d135a3bc04b55982c0738fa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#ace63e07b7d135a3bc04b55982c0738fa">SetDeviceRasterizerState</a> ()</td></tr>
+<tr class="memdesc:ace63e07b7d135a3bc04b55982c0738fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">ラスタライザステートのデバイスへの設定  <a href="#ace63e07b7d135a3bc04b55982c0738fa">[詳解]</a><br /></td></tr>
+<tr class="separator:ace63e07b7d135a3bc04b55982c0738fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93a09fe926ea90a4367341a8e9001b49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a93a09fe926ea90a4367341a8e9001b49">SetSamplerState</a> (const <a class="el" href="_device_resources_8h.html#ae279438fb36ac7fa0594b326fd9a6976">SamplerState</a> state)</td></tr>
+<tr class="memdesc:a93a09fe926ea90a4367341a8e9001b49"><td class="mdescLeft">&#160;</td><td class="mdescRight">サンプラーステートの設定  <a href="#a93a09fe926ea90a4367341a8e9001b49">[詳解]</a><br /></td></tr>
+<tr class="separator:a93a09fe926ea90a4367341a8e9001b49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a56b1a22bc94c440e4f10830470327cfd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a56b1a22bc94c440e4f10830470327cfd">SetDeviceSamplerState</a> ()</td></tr>
+<tr class="memdesc:a56b1a22bc94c440e4f10830470327cfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">サンプラーステートのデバイスへの設定  <a href="#a56b1a22bc94c440e4f10830470327cfd">[詳解]</a><br /></td></tr>
+<tr class="separator:a56b1a22bc94c440e4f10830470327cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af74fa4cf999a25fae3e4a50e08f31e7b"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#af74fa4cf999a25fae3e4a50e08f31e7b">GetMeshToTransformMatrix</a> () const </td></tr>
+<tr class="memdesc:af74fa4cf999a25fae3e4a50e08f31e7b"><td class="mdescLeft">&#160;</td><td class="mdescRight">メッシュとワールド行列の間を補完する行列の取得<br />
+ メッシュのサイズや向き、中心の位置がゲームオブジェクトのワールド行列と差異がある場合、<br />
+ その間を補完する行列を設定できる。  <a href="#af74fa4cf999a25fae3e4a50e08f31e7b">[詳解]</a><br /></td></tr>
+<tr class="separator:af74fa4cf999a25fae3e4a50e08f31e7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab665fb2fb18406e53686a84cd933fc95"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#ab665fb2fb18406e53686a84cd933fc95">SetMeshToTransformMatrix</a> (const <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp;Mat)</td></tr>
+<tr class="memdesc:ab665fb2fb18406e53686a84cd933fc95"><td class="mdescLeft">&#160;</td><td class="mdescRight">メッシュとワールド行列の間を補完する行列の取得<br />
+ メッシュのサイズや向き、中心の位置がゲームオブジェクトのワールド行列と差異がある場合、<br />
+ その間を補完する行列を設定できる。  <a href="#ab665fb2fb18406e53686a84cd933fc95">[詳解]</a><br /></td></tr>
+<tr class="separator:ab665fb2fb18406e53686a84cd933fc95"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adba71800efa40ee2b7ba2036e74f2715"><td class="memItemLeft" align="right" valign="top">virtual const vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#adba71800efa40ee2b7ba2036e74f2715">GetVecLocalBonesPtr</a> () const </td></tr>
+<tr class="memdesc:adba71800efa40ee2b7ba2036e74f2715"><td class="mdescLeft">&#160;</td><td class="mdescRight">各オブジェクトごとにボーンを所持しておくポインタ<br />
+ シャドウマップなどから参照できるように仮想関数にする<br />
+ 派生クラスでボーンを所持する場合は多重定義する  <a href="#adba71800efa40ee2b7ba2036e74f2715">[詳解]</a><br /></td></tr>
+<tr class="separator:adba71800efa40ee2b7ba2036e74f2715"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44b9aa45327d2eadcb803900e356c8e4"><td class="memItemLeft" align="right" valign="top">virtual const vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a44b9aa45327d2eadcb803900e356c8e4">GetVecMultiLocalBonesPtr</a> (size_t index) const </td></tr>
+<tr class="memdesc:a44b9aa45327d2eadcb803900e356c8e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">各オブジェクトごとにボーンを所持しておくポインタ（マルチメッシュ版）<br />
+ シャドウマップなどから参照できるように仮想関数にする<br />
+ 派生クラスでボーンを所持する場合は多重定義する  <a href="#a44b9aa45327d2eadcb803900e356c8e4">[詳解]</a><br /></td></tr>
+<tr class="separator:a44b9aa45327d2eadcb803900e356c8e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classbasecross_1_1_component"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classbasecross_1_1_component')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="classbasecross_1_1_component.html">basecross::Component</a> に属する継承公開メンバ関数</td></tr>
+<tr class="memitem:a4a690cccf35c17d8a626dab1a1fcee0d inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">shared_ptr&lt; <a class="el" href="classbasecross_1_1_game_object.html">GameObject</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#a4a690cccf35c17d8a626dab1a1fcee0d">GetGameObject</a> () const </td></tr>
+<tr class="memdesc:a4a690cccf35c17d8a626dab1a1fcee0d inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">ゲームオブジェクトの取得  <a href="#a4a690cccf35c17d8a626dab1a1fcee0d">[詳解]</a><br /></td></tr>
+<tr class="separator:a4a690cccf35c17d8a626dab1a1fcee0d inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee9781e7c0815f4993a07b8275194b62 inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#aee9781e7c0815f4993a07b8275194b62">AttachGameObject</a> (const shared_ptr&lt; <a class="el" href="classbasecross_1_1_game_object.html">GameObject</a> &gt; &amp;GameObjectPtr)</td></tr>
+<tr class="memdesc:aee9781e7c0815f4993a07b8275194b62 inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">ゲームオブジェクトを設定する  <a href="#aee9781e7c0815f4993a07b8275194b62">[詳解]</a><br /></td></tr>
+<tr class="separator:aee9781e7c0815f4993a07b8275194b62 inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4a6ee43381c2a30b01518951ed6f7359 inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">shared_ptr&lt; <a class="el" href="classbasecross_1_1_stage.html">Stage</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#a4a6ee43381c2a30b01518951ed6f7359">GetStage</a> () const </td></tr>
+<tr class="memdesc:a4a6ee43381c2a30b01518951ed6f7359 inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">ステージの取得<br />
+ ゲームオブジェクトがステージだった場合、そのステージが返る  <a href="#a4a6ee43381c2a30b01518951ed6f7359">[詳解]</a><br /></td></tr>
+<tr class="separator:a4a6ee43381c2a30b01518951ed6f7359 inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c12b832ed45e600e8568d491e4788ac inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#a7c12b832ed45e600e8568d491e4788ac">IsUpdateActive</a> () const </td></tr>
+<tr class="memdesc:a7c12b832ed45e600e8568d491e4788ac inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updateがアクティブかどうかを得る  <a href="#a7c12b832ed45e600e8568d491e4788ac">[詳解]</a><br /></td></tr>
+<tr class="separator:a7c12b832ed45e600e8568d491e4788ac inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ee92efe0e5a775bb90356578002b77d inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#a2ee92efe0e5a775bb90356578002b77d">GetUpdateActive</a> () const </td></tr>
+<tr class="memdesc:a2ee92efe0e5a775bb90356578002b77d inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updateがアクティブかどうかを得る  <a href="#a2ee92efe0e5a775bb90356578002b77d">[詳解]</a><br /></td></tr>
+<tr class="separator:a2ee92efe0e5a775bb90356578002b77d inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21e6b60142ec6f0dc09bee1868e86e44 inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#a21e6b60142ec6f0dc09bee1868e86e44">SetUpdateActive</a> (bool b)</td></tr>
+<tr class="memdesc:a21e6b60142ec6f0dc09bee1868e86e44 inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updateがアクティブかどうかを設定する  <a href="#a21e6b60142ec6f0dc09bee1868e86e44">[詳解]</a><br /></td></tr>
+<tr class="separator:a21e6b60142ec6f0dc09bee1868e86e44 inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab934fab1490331ac13de6193de6cc545 inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#ab934fab1490331ac13de6193de6cc545">IsDrawActive</a> () const </td></tr>
+<tr class="memdesc:ab934fab1490331ac13de6193de6cc545 inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drawがアクティブかどうかを得る  <a href="#ab934fab1490331ac13de6193de6cc545">[詳解]</a><br /></td></tr>
+<tr class="separator:ab934fab1490331ac13de6193de6cc545 inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8c5a803b2c1eaede0b3fe994fc39a98 inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#ab8c5a803b2c1eaede0b3fe994fc39a98">GetDrawActive</a> () const </td></tr>
+<tr class="memdesc:ab8c5a803b2c1eaede0b3fe994fc39a98 inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drawがアクティブかどうかを得る  <a href="#ab8c5a803b2c1eaede0b3fe994fc39a98">[詳解]</a><br /></td></tr>
+<tr class="separator:ab8c5a803b2c1eaede0b3fe994fc39a98 inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3e4ec16c85c16b1f022763b2a5c1e9f inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#ad3e4ec16c85c16b1f022763b2a5c1e9f">SetDrawActive</a> (bool b)</td></tr>
+<tr class="memdesc:ad3e4ec16c85c16b1f022763b2a5c1e9f inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drawがアクティブかどうかを設定する  <a href="#ad3e4ec16c85c16b1f022763b2a5c1e9f">[詳解]</a><br /></td></tr>
+<tr class="separator:ad3e4ec16c85c16b1f022763b2a5c1e9f inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a77a4704857f2a80619b13cce0c212d95 inherit pub_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#a77a4704857f2a80619b13cce0c212d95">OnCreate</a> ()</td></tr>
+<tr class="memdesc:a77a4704857f2a80619b13cce0c212d95 inherit pub_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">初期化を行う（仮想関数<br />
+ ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる<br />
+ ＊ここでは空関数にしておくので、必要な場合は派生クラスで多重定義する  <a href="#a77a4704857f2a80619b13cce0c212d95">[詳解]</a><br /></td></tr>
+<tr class="separator:a77a4704857f2a80619b13cce0c212d95 inherit pub_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classbasecross_1_1_object_interface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classbasecross_1_1_object_interface')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="classbasecross_1_1_object_interface.html">basecross::ObjectInterface</a> に属する継承公開メンバ関数</td></tr>
+<tr class="memitem:a99f4c5a47c335b1276803b1e718af57a inherit pub_methods_classbasecross_1_1_object_interface"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a99f4c5a47c335b1276803b1e718af57a inherit pub_methods_classbasecross_1_1_object_interface"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a99f4c5a47c335b1276803b1e718af57a">GetThis</a> ()</td></tr>
+<tr class="memdesc:a99f4c5a47c335b1276803b1e718af57a inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">thisポインタ取得  <a href="#a99f4c5a47c335b1276803b1e718af57a">[詳解]</a><br /></td></tr>
+<tr class="separator:a99f4c5a47c335b1276803b1e718af57a inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad48ec10eb86e0105b3ef8c7eb11688c4 inherit pub_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#ad48ec10eb86e0105b3ef8c7eb11688c4">OnPreCreate</a> ()</td></tr>
+<tr class="memdesc:ad48ec10eb86e0105b3ef8c7eb11688c4 inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">前初期化を行う（仮想関数）<br />
+ ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる  <a href="#ad48ec10eb86e0105b3ef8c7eb11688c4">[詳解]</a><br /></td></tr>
+<tr class="separator:ad48ec10eb86e0105b3ef8c7eb11688c4 inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a467719b4eb4bccccf01d287e9e335a5f inherit pub_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a467719b4eb4bccccf01d287e9e335a5f">IsCreated</a> ()</td></tr>
+<tr class="memdesc:a467719b4eb4bccccf01d287e9e335a5f inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">クリエイト済みかどうか  <a href="#a467719b4eb4bccccf01d287e9e335a5f">[詳解]</a><br /></td></tr>
+<tr class="separator:a467719b4eb4bccccf01d287e9e335a5f inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b106bffb9ea66941022cfbd07c7df8c inherit pub_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a9b106bffb9ea66941022cfbd07c7df8c">PostEvent</a> (float DispatchTime, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Receiver, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:a9b106bffb9ea66941022cfbd07c7df8c inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのPOST（キューに入れる）  <a href="#a9b106bffb9ea66941022cfbd07c7df8c">[詳解]</a><br /></td></tr>
+<tr class="separator:a9b106bffb9ea66941022cfbd07c7df8c inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1624c3c744a456abddb4359a4d96d26 inherit pub_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#af1624c3c744a456abddb4359a4d96d26">PostEvent</a> (float DispatchTime, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const wstring &amp;ReceiverKey, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:af1624c3c744a456abddb4359a4d96d26 inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのPOST（キューに入れる）  <a href="#af1624c3c744a456abddb4359a4d96d26">[詳解]</a><br /></td></tr>
+<tr class="separator:af1624c3c744a456abddb4359a4d96d26 inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9b3b1e37d88c11f5f7d2181b3c8b484a inherit pub_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a9b3b1e37d88c11f5f7d2181b3c8b484a">SendEvent</a> (const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Receiver, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:a9b3b1e37d88c11f5f7d2181b3c8b484a inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのSEND（キューに入れずにそのまま送る）  <a href="#a9b3b1e37d88c11f5f7d2181b3c8b484a">[詳解]</a><br /></td></tr>
+<tr class="separator:a9b3b1e37d88c11f5f7d2181b3c8b484a inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a26741734307b6f9c7dcaa1201fb4df05 inherit pub_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a26741734307b6f9c7dcaa1201fb4df05">SendEvent</a> (const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const wstring &amp;ReceiverKey, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
+<tr class="memdesc:a26741734307b6f9c7dcaa1201fb4df05 inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのSEND（キューに入れずにそのまま送る）  <a href="#a26741734307b6f9c7dcaa1201fb4df05">[詳解]</a><br /></td></tr>
+<tr class="separator:a26741734307b6f9c7dcaa1201fb4df05 inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adee5f75a7b001b394e086c3181842c6f inherit pub_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#adee5f75a7b001b394e086c3181842c6f">OnEvent</a> (const shared_ptr&lt; <a class="el" href="structbasecross_1_1_event.html">Event</a> &gt; &amp;event)</td></tr>
+<tr class="memdesc:adee5f75a7b001b394e086c3181842c6f inherit pub_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントを受け取る  <a href="#adee5f75a7b001b394e086c3181842c6f">[詳解]</a><br /></td></tr>
+<tr class="separator:adee5f75a7b001b394e086c3181842c6f inherit pub_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_classbasecross_1_1_shape_interface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classbasecross_1_1_shape_interface')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="classbasecross_1_1_shape_interface.html">basecross::ShapeInterface</a> に属する継承公開メンバ関数</td></tr>
+<tr class="memitem:a0fdcddc70f5d09d39d7b438961aa74df inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a0fdcddc70f5d09d39d7b438961aa74df"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_shape_interface.html#a0fdcddc70f5d09d39d7b438961aa74df">ShapeInterface</a> ()</td></tr>
+<tr class="memdesc:a0fdcddc70f5d09d39d7b438961aa74df inherit pub_methods_classbasecross_1_1_shape_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">コンストラクタ <br /></td></tr>
+<tr class="separator:a0fdcddc70f5d09d39d7b438961aa74df inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a797cf929b1b08ed1ad6713b7490afea8 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a797cf929b1b08ed1ad6713b7490afea8"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_shape_interface.html#a797cf929b1b08ed1ad6713b7490afea8">~ShapeInterface</a> ()</td></tr>
+<tr class="memdesc:a797cf929b1b08ed1ad6713b7490afea8 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">デストラクタ <br /></td></tr>
+<tr class="separator:a797cf929b1b08ed1ad6713b7490afea8 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac57ea59e6b29af440b502c3f0a0de901 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_shape_interface.html#ac57ea59e6b29af440b502c3f0a0de901">OnUpdate</a> ()=0</td></tr>
+<tr class="memdesc:ac57ea59e6b29af440b502c3f0a0de901 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">OnUpdate処理  <a href="#ac57ea59e6b29af440b502c3f0a0de901">[詳解]</a><br /></td></tr>
+<tr class="separator:ac57ea59e6b29af440b502c3f0a0de901 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97528cab80c9dce84b8de0215c2c01e5 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_shape_interface.html#a97528cab80c9dce84b8de0215c2c01e5">OnUpdate2</a> ()</td></tr>
+<tr class="memdesc:a97528cab80c9dce84b8de0215c2c01e5 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">OnUpdate2処理.<br />
+ ＊アップデート後処理 ＊純粋仮想関数にしない  <a href="#a97528cab80c9dce84b8de0215c2c01e5">[詳解]</a><br /></td></tr>
+<tr class="separator:a97528cab80c9dce84b8de0215c2c01e5 inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab3cc6e613ac354a7551fd26acac8304e inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_shape_interface.html#ab3cc6e613ac354a7551fd26acac8304e">OnDraw</a> ()=0</td></tr>
+<tr class="memdesc:ab3cc6e613ac354a7551fd26acac8304e inherit pub_methods_classbasecross_1_1_shape_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">OnDraw処理  <a href="#ab3cc6e613ac354a7551fd26acac8304e">[詳解]</a><br /></td></tr>
+<tr class="separator:ab3cc6e613ac354a7551fd26acac8304e inherit pub_methods_classbasecross_1_1_shape_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+限定公開メンバ関数</h2></td></tr>
+<tr class="memitem:ac18f8bf8a7141ce4f2421f1cb970d886"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#ac18f8bf8a7141ce4f2421f1cb970d886">DrawComponent</a> (const shared_ptr&lt; <a class="el" href="classbasecross_1_1_game_object.html">GameObject</a> &gt; &amp;GameObjectPtr)</td></tr>
+<tr class="memdesc:ac18f8bf8a7141ce4f2421f1cb970d886"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトコンストラクタ  <a href="#ac18f8bf8a7141ce4f2421f1cb970d886">[詳解]</a><br /></td></tr>
+<tr class="separator:ac18f8bf8a7141ce4f2421f1cb970d886"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c26b6a04aba9b3f4f4b311091da19cb"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1c26b6a04aba9b3f4f4b311091da19cb"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_draw_component.html#a1c26b6a04aba9b3f4f4b311091da19cb">~DrawComponent</a> ()</td></tr>
+<tr class="memdesc:a1c26b6a04aba9b3f4f4b311091da19cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトデストラクタ <br /></td></tr>
+<tr class="separator:a1c26b6a04aba9b3f4f4b311091da19cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classbasecross_1_1_component"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classbasecross_1_1_component')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="classbasecross_1_1_component.html">basecross::Component</a> に属する継承限定公開メンバ関数</td></tr>
+<tr class="memitem:aadd024ce562805404187d8eaecf48a1c inherit pro_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#aadd024ce562805404187d8eaecf48a1c">Component</a> (const shared_ptr&lt; <a class="el" href="classbasecross_1_1_game_object.html">GameObject</a> &gt; &amp;GameObjectPtr)</td></tr>
+<tr class="memdesc:aadd024ce562805404187d8eaecf48a1c inherit pro_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトコンストラクタ  <a href="#aadd024ce562805404187d8eaecf48a1c">[詳解]</a><br /></td></tr>
+<tr class="separator:aadd024ce562805404187d8eaecf48a1c inherit pro_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6c4a967f3205a1ed2e77ee6c95685fee inherit pro_methods_classbasecross_1_1_component"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a6c4a967f3205a1ed2e77ee6c95685fee"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_component.html#a6c4a967f3205a1ed2e77ee6c95685fee">~Component</a> ()</td></tr>
+<tr class="memdesc:a6c4a967f3205a1ed2e77ee6c95685fee inherit pro_methods_classbasecross_1_1_component"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトデストラクタ <br /></td></tr>
+<tr class="separator:a6c4a967f3205a1ed2e77ee6c95685fee inherit pro_methods_classbasecross_1_1_component"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pro_methods_classbasecross_1_1_object_interface"><td colspan="2" onclick="javascript:toggleInherit('pro_methods_classbasecross_1_1_object_interface')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="classbasecross_1_1_object_interface.html">basecross::ObjectInterface</a> に属する継承限定公開メンバ関数</td></tr>
+<tr class="memitem:a527197118b289e21f9f83ce6d403f61c inherit pro_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a527197118b289e21f9f83ce6d403f61c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a527197118b289e21f9f83ce6d403f61c">ObjectInterface</a> ()</td></tr>
+<tr class="memdesc:a527197118b289e21f9f83ce6d403f61c inherit pro_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトコンストラクタ <br /></td></tr>
+<tr class="separator:a527197118b289e21f9f83ce6d403f61c inherit pro_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a01cdf2e9a6205ec041170525a7d266eb inherit pro_methods_classbasecross_1_1_object_interface"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01cdf2e9a6205ec041170525a7d266eb"></a>
+virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a01cdf2e9a6205ec041170525a7d266eb">~ObjectInterface</a> ()</td></tr>
+<tr class="memdesc:a01cdf2e9a6205ec041170525a7d266eb inherit pro_methods_classbasecross_1_1_object_interface"><td class="mdescLeft">&#160;</td><td class="mdescRight">プロテクトデストラクタ <br /></td></tr>
+<tr class="separator:a01cdf2e9a6205ec041170525a7d266eb inherit pro_methods_classbasecross_1_1_object_interface"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
+<div class="textblock"><p>描画コンポーネントの親クラス </p>
+</div><h2 class="groupheader">構築子と解体子</h2>
+<a class="anchor" id="ac18f8bf8a7141ce4f2421f1cb970d886"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">basecross::DrawComponent::DrawComponent </td>
+          <td>(</td>
+          <td class="paramtype">const shared_ptr&lt; <a class="el" href="classbasecross_1_1_game_object.html">GameObject</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>GameObjectPtr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>プロテクトコンストラクタ </p>
+<p>描画コンポーネントの親クラス実体</p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">GameObjectPtr</td><td>ゲームオブジェクト </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">関数詳解</h2>
+<a class="anchor" id="a35524fe3de62661981f8f56940711057"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_device_resources_8h.html#a076d68b9a57c6ee5e2d277d2da61050b">BlendState</a> basecross::DrawComponent::GetBlendState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ブレンドステートの取得 </p>
+<dl class="section return"><dt>戻り値</dt><dd>ブレンドステート </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a2ef8bdb6e328691a30038881d1c09415"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_device_resources_8h.html#a93ff14551a943405192929376ea937cc">DepthStencilState</a> basecross::DrawComponent::GetDepthStencilState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>デプスステンシルステートの取得 </p>
+<dl class="section return"><dt>戻り値</dt><dd>デプスステンシルステート </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="af74fa4cf999a25fae3e4a50e08f31e7b"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp; basecross::DrawComponent::GetMeshToTransformMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>メッシュとワールド行列の間を補完する行列の取得<br />
+ メッシュのサイズや向き、中心の位置がゲームオブジェクトのワールド行列と差異がある場合、<br />
+ その間を補完する行列を設定できる。 </p>
+<dl class="section return"><dt>戻り値</dt><dd>メッシュとワールド行列の間を補完する行列 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a63c7da810c595b26676f24d2697900c1"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_device_resources_8h.html#aa2a0f6c8bb8fc603f845cae30b33aa00">RasterizerState</a> basecross::DrawComponent::GetRasterizerState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ラスタライザステートの取得 </p>
+<dl class="section return"><dt>戻り値</dt><dd>ラスタライザステート </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5af80ef12f2239a8bf5b46f697c50579"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="_device_resources_8h.html#ae279438fb36ac7fa0594b326fd9a6976">SamplerState</a> basecross::DrawComponent::GetSamplerState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>サンプラーステートの取得 </p>
+<dl class="section return"><dt>戻り値</dt><dd>サンプラーステート </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="adba71800efa40ee2b7ba2036e74f2715"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt;* basecross::DrawComponent::GetVecLocalBonesPtr </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>各オブジェクトごとにボーンを所持しておくポインタ<br />
+ シャドウマップなどから参照できるように仮想関数にする<br />
+ 派生クラスでボーンを所持する場合は多重定義する </p>
+<dl class="section return"><dt>戻り値</dt><dd>ボーン行列の配列のポインタ </dd></dl>
+
+<p><a class="el" href="classbasecross_1_1_sm_base_draw.html#a8568f84d077572cfc3f2c5c4cf88e73c">basecross::SmBaseDraw</a>, <a class="el" href="classbasecross_1_1_bc_base_draw.html#a8cb68aabde7f4df0cd9ff185b4697456">basecross::BcBaseDraw</a>で再実装されています。</p>
+
+</div>
+</div>
+<a class="anchor" id="a44b9aa45327d2eadcb803900e356c8e4"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual const vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt;* basecross::DrawComponent::GetVecMultiLocalBonesPtr </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>各オブジェクトごとにボーンを所持しておくポインタ（マルチメッシュ版）<br />
+ シャドウマップなどから参照できるように仮想関数にする<br />
+ 派生クラスでボーンを所持する場合は多重定義する </p>
+<dl class="section return"><dt>戻り値</dt><dd>ボーン行列の配列のポインタ </dd></dl>
+
+<p><a class="el" href="classbasecross_1_1_sm_base_draw.html#a4268608468126cb9a0b1105a9c82db70">basecross::SmBaseDraw</a>, <a class="el" href="classbasecross_1_1_bc_base_draw.html#ac88e04b9d603d74e89a1a36b366ea4b1">basecross::BcBaseDraw</a>で再実装されています。</p>
+
+</div>
+</div>
+<a class="anchor" id="a88348c8660d240c301b001f88eb5cbfd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetBlendState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="_device_resources_8h.html#a076d68b9a57c6ee5e2d277d2da61050b">BlendState</a>&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ブレンドステートの設定 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">state</td><td>ブレンドステート </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa8272533280d2c5691f2f6f07b029d55"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetDepthStencilState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="_device_resources_8h.html#a93ff14551a943405192929376ea937cc">DepthStencilState</a>&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>デプスステンシルステートの設定 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">state</td><td>デプスステンシルステート </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8c4b6ceb20efd0b42d050649cfa60c2d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetDeviceBlendState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ブレンドステートのデバイスへの設定。 </p>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a914d33f9ff7c7cf299687f6972ad6726"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetDeviceDepthStencilState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>デプスステンシルステートのデバイスへの設定 </p>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ace63e07b7d135a3bc04b55982c0738fa"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetDeviceRasterizerState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ラスタライザステートのデバイスへの設定 </p>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a56b1a22bc94c440e4f10830470327cfd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetDeviceSamplerState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>サンプラーステートのデバイスへの設定 </p>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ab665fb2fb18406e53686a84cd933fc95"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetMeshToTransformMatrix </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &amp;&#160;</td>
+          <td class="paramname"><em>Mat</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>メッシュとワールド行列の間を補完する行列の取得<br />
+ メッシュのサイズや向き、中心の位置がゲームオブジェクトのワールド行列と差異がある場合、<br />
+ その間を補完する行列を設定できる。 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">Mat</td><td>設定する行列 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0eaa932ab35ae13c089c71865ab743a8"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetRasterizerState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="_device_resources_8h.html#aa2a0f6c8bb8fc603f845cae30b33aa00">RasterizerState</a>&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ラスタライザステートの設定 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">state</td><td>ラスタライザステート </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a93a09fe926ea90a4367341a8e9001b49"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::DrawComponent::SetSamplerState </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="_device_resources_8h.html#ae279438fb36ac7fa0594b326fd9a6976">SamplerState</a>&#160;</td>
+          <td class="paramname"><em>state</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>サンプラーステートの設定 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">state</td><td>サンプラーステート </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<hr/>このクラス詳解は次のファイルから抽出されました:<ul>
+<li><a class="el" href="_draw_components_8h_source.html">DrawComponents.h</a></li>
+<li><a class="el" href="_draw_components_8cpp.html">DrawComponents.cpp</a></li>
+</ul>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+構築: &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.11
+</small></address>
+</body>
+</html>
