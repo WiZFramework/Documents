@@ -195,6 +195,12 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
  AccessWriteがtrueで作成されたリソースは、頂点の配列によって頂点を変更できる。<br />
  AccessWriteがtrueでない場合は、バックアップは空である。  <a href="#ad6fff103c2ab9c92e84142045df02d39">[詳解]</a><br /></td></tr>
 <tr class="separator:ad6fff103c2ab9c92e84142045df02d39"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a41c2c03b337e36721f1e50e364a433b6"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:a41c2c03b337e36721f1e50e364a433b6"><td class="memTemplItemLeft" align="right" valign="top">vector&lt; uint16_t &gt; &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_mesh_resource.html#a41c2c03b337e36721f1e50e364a433b6">GetBackupIndices</a> () const </td></tr>
+<tr class="memdesc:a41c2c03b337e36721f1e50e364a433b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">バックアップデータのインデックス取得<br />
+ AccessWriteがtrueで作成されたリソースは、頂点の配列によって頂点を変更できる。<br />
+ AccessWriteがtrueでない場合は、バックアップは空である。  <a href="#a41c2c03b337e36721f1e50e364a433b6">[詳解]</a><br /></td></tr>
+<tr class="separator:a41c2c03b337e36721f1e50e364a433b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa62606bd99b716e9b3957607a0384d81"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa62606bd99b716e9b3957607a0384d81"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_mesh_resource.html#aa62606bd99b716e9b3957607a0384d81">UpdateVirtexBuffer</a> (const vector&lt; T &gt; &amp;NewBuffer)</td></tr>
 <tr class="memdesc:aa62606bd99b716e9b3957607a0384d81"><td class="mdescLeft">&#160;</td><td class="mdescRight">頂点の変更.<br />
@@ -1840,6 +1846,48 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a41c2c03b337e36721f1e50e364a433b6"></a>
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt;uint16_t&gt;&amp; basecross::MeshResource::GetBackupIndices </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>バックアップデータのインデックス取得<br />
+ AccessWriteがtrueで作成されたリソースは、頂点の配列によって頂点を変更できる。<br />
+ AccessWriteがtrueでない場合は、バックアップは空である。 </p>
+<dl class="tparams"><dt>テンプレート引数</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>頂点の型 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">なし</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>バックアップデータインデックスの配列。 </dd></dl>
 
 </div>
 </div>

@@ -10,6 +10,7 @@ var searchData=
   ['inverse',['inverse',['../structbasecross_1_1bsm_1_1_quat.html#a725bc63e53bcd20069a78c1c96d58f45',1,'basecross::bsm::Quat::inverse()'],['../structbasecross_1_1bsm_1_1_mat3x3.html#a87c5352c37a236bb31079710849e591f',1,'basecross::bsm::Mat3x3::inverse()'],['../structbasecross_1_1bsm_1_1_mat4x4.html#afd6d3a7bf44d2f0b424f807dc6efbd2b',1,'basecross::bsm::Mat4x4::inverse()']]],
   ['isactive',['IsActive',['../classbasecross_1_1_ps_joint.html#af9dcaa223d5a51296460784a365332e3',1,'basecross::PsJoint']]],
   ['isaudioavailable',['IsAudioAvailable',['../classbasecross_1_1_audio_manager.html#a9492a3e9f4f3c2f155aa37cc7c013da8',1,'basecross::AudioManager']]],
+  ['isautogravity',['IsAutoGravity',['../classbasecross_1_1_base_physics.html#aa9d0b71bb92553238e0bfb198b627d60',1,'basecross::BasePhysics']]],
   ['iscreated',['IsCreated',['../classbasecross_1_1_object_interface.html#a467719b4eb4bccccf01d287e9e335a5f',1,'basecross::ObjectInterface']]],
   ['isfullscreen',['IsFullScreen',['../classbasecross_1_1_app.html#aac004eca4bf1619703b9f39dc41cd2cf',1,'basecross::App']]],
   ['isinstate',['IsInState',['../classbasecross_1_1_state_machine.html#a7c14e25c91df7a20fd067e3ce9d8c2f1',1,'basecross::StateMachine']]],

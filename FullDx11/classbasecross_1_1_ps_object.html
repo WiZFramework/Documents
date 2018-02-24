@@ -118,6 +118,21 @@ basecross::PsObject の継承関係図</div>
 <tr class="memitem:a3245a0f978b9a788ff309302eb563add"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_ps_object.html#a3245a0f978b9a788ff309302eb563add">GetIndex</a> () const </td></tr>
 <tr class="memdesc:a3245a0f978b9a788ff309302eb563add"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体インデックスの取得  <a href="#a3245a0f978b9a788ff309302eb563add">[詳解]</a><br /></td></tr>
 <tr class="separator:a3245a0f978b9a788ff309302eb563add"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1133951e229bf81f7fc998831488e7c5"><td class="memItemLeft" align="right" valign="top">virtual PsShapeType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_ps_object.html#a1133951e229bf81f7fc998831488e7c5">GetShapeType</a> () const </td></tr>
+<tr class="memdesc:a1133951e229bf81f7fc998831488e7c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">単体形状の場合の形状を得る  <a href="#a1133951e229bf81f7fc998831488e7c5">[詳解]</a><br /></td></tr>
+<tr class="separator:a1133951e229bf81f7fc998831488e7c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9767b6439ccb2a9ef24d5d7cbfc3fda2"><td class="memItemLeft" align="right" valign="top">const sce::PhysicsEffects::PfxRigidState &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_ps_object.html#a9767b6439ccb2a9ef24d5d7cbfc3fda2">getPfxRigidState</a> () const </td></tr>
+<tr class="memdesc:a9767b6439ccb2a9ef24d5d7cbfc3fda2"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体のステートを得る  <a href="#a9767b6439ccb2a9ef24d5d7cbfc3fda2">[詳解]</a><br /></td></tr>
+<tr class="separator:a9767b6439ccb2a9ef24d5d7cbfc3fda2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ea046754ce02c8bb204556180ca8de5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8ea046754ce02c8bb204556180ca8de5"></a>
+sce::PhysicsEffects::PfxRigidState &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getPfxRigidState</b> ()</td></tr>
+<tr class="separator:a8ea046754ce02c8bb204556180ca8de5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f2599c0f0faef26d74400f2bb9c37d2"><td class="memItemLeft" align="right" valign="top">const sce::PhysicsEffects::PfxRigidBody &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_ps_object.html#a5f2599c0f0faef26d74400f2bb9c37d2">getPfxRigidBody</a> () const </td></tr>
+<tr class="memdesc:a5f2599c0f0faef26d74400f2bb9c37d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体を得る  <a href="#a5f2599c0f0faef26d74400f2bb9c37d2">[詳解]</a><br /></td></tr>
+<tr class="separator:a5f2599c0f0faef26d74400f2bb9c37d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e448372d30c311333d97d5d050e89c5"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8e448372d30c311333d97d5d050e89c5"></a>
+sce::PhysicsEffects::PfxRigidBody &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>getPfxRigidBody</b> ()</td></tr>
+<tr class="separator:a8e448372d30c311333d97d5d050e89c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classbasecross_1_1_object_interface"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classbasecross_1_1_object_interface')"><img src="closed.png" alt="-"/>&#160;基底クラス <a class="el" href="classbasecross_1_1_object_interface.html">basecross::ObjectInterface</a> に属する継承公開メンバ関数</td></tr>
 <tr class="memitem:a99f4c5a47c335b1276803b1e718af57a inherit pub_methods_classbasecross_1_1_object_interface"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a99f4c5a47c335b1276803b1e718af57a inherit pub_methods_classbasecross_1_1_object_interface"><td class="memTemplItemLeft" align="right" valign="top">std::shared_ptr&lt; T &gt;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a99f4c5a47c335b1276803b1e718af57a">GetThis</a> ()</td></tr>
@@ -232,6 +247,82 @@ uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="
 
 <p>剛体インデックスの取得 </p>
 <dl class="section return"><dt>戻り値</dt><dd>剛体インデックス </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5f2599c0f0faef26d74400f2bb9c37d2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const sce::PhysicsEffects::PfxRigidBody &amp; basecross::PsObject::getPfxRigidBody </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>剛体を得る </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">body_index</td><td>ボディID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>　剛体の参照 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a9767b6439ccb2a9ef24d5d7cbfc3fda2"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const sce::PhysicsEffects::PfxRigidState &amp; basecross::PsObject::getPfxRigidState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>剛体のステートを得る </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">body_index</td><td>ボディID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>　剛体のステートの参照 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a1133951e229bf81f7fc998831488e7c5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual PsShapeType basecross::PsObject::GetShapeType </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>単体形状の場合の形状を得る </p>
+<dl class="section return"><dt>戻り値</dt><dd>形状 </dd></dl>
+
+<p><a class="el" href="classbasecross_1_1_ps_combined.html#ae86a478de8d18a80cf0c83cba0672817">basecross::PsCombined</a>, <a class="el" href="classbasecross_1_1_ps_convex.html#aadf3d04667944f033da3749b223fe273">basecross::PsConvex</a>, <a class="el" href="classbasecross_1_1_ps_cylinder.html#a41860548658de840b7ca651b632deb90">basecross::PsCylinder</a>, <a class="el" href="classbasecross_1_1_ps_capsule.html#a7a2944f2d3064f9bb4a3b6fac93a69a3">basecross::PsCapsule</a>, <a class="el" href="classbasecross_1_1_ps_sphere.html#a98450acb64cbd5e6795e90e4a35f0f31">basecross::PsSphere</a>, <a class="el" href="classbasecross_1_1_ps_box.html#a3351434f99e36ea2a54e7a2802952b63">basecross::PsBox</a>で再実装されています。</p>
 
 </div>
 </div>

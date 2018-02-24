@@ -15,7 +15,7 @@ var searchData=
   ['drawobjectbase',['DrawObjectBase',['../structbasecross_1_1_draw_object_base.html#aca641debbf41ee9de5f53f1758314c5e',1,'basecross::DrawObjectBase']]],
   ['drawshadowmap',['DrawShadowmap',['../classbasecross_1_1_game_object.html#aeda6ad82fbb04448a726430f951e4cf7',1,'basecross::GameObject']]],
   ['drawshadowmapstage',['DrawShadowmapStage',['../classbasecross_1_1_stage.html#a7750d991fad34e7a3da57124c2818c76',1,'basecross::Stage']]],
-  ['drawshapewireframe',['DrawShapeWireFrame',['../classbasecross_1_1_ps_body_component.html#aea43f40e22c891a7f7856ba7b4adc26d',1,'basecross::PsBodyComponent']]],
+  ['drawshapewireframe',['DrawShapeWireFrame',['../classbasecross_1_1_ps_body_component_base.html#a8f93475f6917b114ef96fa22ed9f04b0',1,'basecross::PsBodyComponentBase']]],
   ['drawsprite',['DrawSprite',['../classbasecross_1_1_sprite_base_draw.html#a8f64a6d18e6db1e0e938cd960587ace3',1,'basecross::SpriteBaseDraw']]],
   ['drawstage',['DrawStage',['../classbasecross_1_1_stage.html#ac514b204943cc8150ee018f0c736de0e',1,'basecross::Stage']]],
   ['drawstatic',['DrawStatic',['../classbasecross_1_1_sm_base_draw.html#a6995c393fa1b37fe2b99ba027031d44e',1,'basecross::SmBaseDraw::DrawStatic()'],['../classbasecross_1_1_bc_base_draw.html#a36c6399926f69fdec62cd4c2771d8956',1,'basecross::BcBaseDraw::DrawStatic()']]],

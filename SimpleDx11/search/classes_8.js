@@ -4,6 +4,7 @@ var searchData=
   ['impl',['Impl',['../structbasecross_1_1_shader_resource_1_1_impl.html',1,'basecross::ShaderResource']]],
   ['impl',['Impl',['../structbasecross_1_1_default_render_target_1_1_impl.html',1,'basecross::DefaultRenderTarget']]],
   ['impl',['Impl',['../structbasecross_1_1_device_resources_1_1_impl.html',1,'basecross::DeviceResources']]],
+  ['impl',['Impl',['../structbasecross_1_1_base_physics_1_1_impl.html',1,'basecross::BasePhysics']]],
   ['impl',['Impl',['../structbasecross_1_1_ps_universal_joint_1_1_impl.html',1,'basecross::PsUniversalJoint']]],
   ['impl',['Impl',['../structbasecross_1_1_ps_fix_joint_1_1_impl.html',1,'basecross::PsFixJoint']]],
   ['impl',['Impl',['../structbasecross_1_1_event_dispatcher_1_1_impl.html',1,'basecross::EventDispatcher']]],

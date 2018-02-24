@@ -5,6 +5,7 @@ var searchData=
   ['baseexception',['BaseException',['../classbasecross_1_1_base_exception.html',1,'basecross']]],
   ['basembexception',['BaseMBException',['../classbasecross_1_1_base_m_b_exception.html',1,'basecross']]],
   ['basephysics',['BasePhysics',['../classbasecross_1_1_base_physics.html',1,'basecross']]],
+  ['basephysicsimplparam',['BasePhysicsImplParam',['../structbasecross_1_1_base_physics_impl_param.html',1,'basecross']]],
   ['baseresource',['BaseResource',['../classbasecross_1_1_base_resource.html',1,'basecross']]],
   ['binaryreader',['BinaryReader',['../classbasecross_1_1_binary_reader.html',1,'basecross']]],
   ['blockheader',['BlockHeader',['../structbasecross_1_1_block_header.html',1,'basecross']]]

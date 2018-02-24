@@ -252,12 +252,18 @@ basecross::SmBaseDraw の継承関係図</div>
 <tr class="memitem:a87e1c4b9db3d536e8bd90143ca942a93"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_sm_base_draw.html#a87e1c4b9db3d536e8bd90143ca942a93">UpdateAnimation</a> (float ElapsedTime)</td></tr>
 <tr class="memdesc:a87e1c4b9db3d536e8bd90143ca942a93"><td class="mdescLeft">&#160;</td><td class="mdescRight">現在のアニメーションを進める  <a href="#a87e1c4b9db3d536e8bd90143ca942a93">[詳解]</a><br /></td></tr>
 <tr class="separator:a87e1c4b9db3d536e8bd90143ca942a93"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8568f84d077572cfc3f2c5c4cf88e73c"><td class="memItemLeft" align="right" valign="top">virtual const vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_sm_base_draw.html#a8568f84d077572cfc3f2c5c4cf88e73c">GetVecLocalBonesPtr</a> () const </td></tr>
-<tr class="memdesc:a8568f84d077572cfc3f2c5c4cf88e73c"><td class="mdescLeft">&#160;</td><td class="mdescRight">ローカルボーン行列配列を得る  <a href="#a8568f84d077572cfc3f2c5c4cf88e73c">[詳解]</a><br /></td></tr>
-<tr class="separator:a8568f84d077572cfc3f2c5c4cf88e73c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a127dc520c4911c3fb273dae210831829"><td class="memItemLeft" align="right" valign="top">virtual const vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_sm_base_draw.html#a127dc520c4911c3fb273dae210831829">GetVecLocalBonesPtr</a> () const  override</td></tr>
+<tr class="memdesc:a127dc520c4911c3fb273dae210831829"><td class="mdescLeft">&#160;</td><td class="mdescRight">ローカルボーン行列配列を得る  <a href="#a127dc520c4911c3fb273dae210831829">[詳解]</a><br /></td></tr>
+<tr class="separator:a127dc520c4911c3fb273dae210831829"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac78a88337816acf87d0c92e39e19730"><td class="memItemLeft" align="right" valign="top">vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_sm_base_draw.html#aac78a88337816acf87d0c92e39e19730">GetVecLocalBones</a> ()</td></tr>
+<tr class="memdesc:aac78a88337816acf87d0c92e39e19730"><td class="mdescLeft">&#160;</td><td class="mdescRight">ローカルボーン行列配列の参照を得る(書き換え可能)  <a href="#aac78a88337816acf87d0c92e39e19730">[詳解]</a><br /></td></tr>
+<tr class="separator:aac78a88337816acf87d0c92e39e19730"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4268608468126cb9a0b1105a9c82db70"><td class="memItemLeft" align="right" valign="top">virtual const vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_sm_base_draw.html#a4268608468126cb9a0b1105a9c82db70">GetVecMultiLocalBonesPtr</a> (size_t index) const  override</td></tr>
 <tr class="memdesc:a4268608468126cb9a0b1105a9c82db70"><td class="mdescLeft">&#160;</td><td class="mdescRight">ローカルボーン行列配列を得る（マルチメッシュ版）  <a href="#a4268608468126cb9a0b1105a9c82db70">[詳解]</a><br /></td></tr>
 <tr class="separator:a4268608468126cb9a0b1105a9c82db70"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2b5d9d5670f9f57ef4886b0a48d4c794"><td class="memItemLeft" align="right" valign="top">vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_sm_base_draw.html#a2b5d9d5670f9f57ef4886b0a48d4c794">GetVecMultiLocalBones</a> (size_t index)</td></tr>
+<tr class="memdesc:a2b5d9d5670f9f57ef4886b0a48d4c794"><td class="mdescLeft">&#160;</td><td class="mdescRight">ローカルボーン行列配列の参照を得る(マルチメッシュ版版、書き換え可能)  <a href="#a2b5d9d5670f9f57ef4886b0a48d4c794">[詳解]</a><br /></td></tr>
+<tr class="separator:a2b5d9d5670f9f57ef4886b0a48d4c794"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a29b3a17341fe8cfe2da61bac8dcea68e"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_sm_base_draw.html#a29b3a17341fe8cfe2da61bac8dcea68e">GetMaxInstance</a> () const </td></tr>
 <tr class="memdesc:a29b3a17341fe8cfe2da61bac8dcea68e"><td class="mdescLeft">&#160;</td><td class="mdescRight">行列の上限を得る  <a href="#a29b3a17341fe8cfe2da61bac8dcea68e">[詳解]</a><br /></td></tr>
 <tr class="separator:a29b3a17341fe8cfe2da61bac8dcea68e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1128,7 +1134,25 @@ template&lt;typename T_VShader , typename T_PShader &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a8568f84d077572cfc3f2c5c4cf88e73c"></a>
+<a class="anchor" id="aac78a88337816acf87d0c92e39e19730"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; &amp; basecross::SmBaseDraw::GetVecLocalBones </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ローカルボーン行列配列の参照を得る(書き換え可能) </p>
+<dl class="section return"><dt>戻り値</dt><dd>ローカルボーン行列配列の参照 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a127dc520c4911c3fb273dae210831829"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -1144,7 +1168,7 @@ template&lt;typename T_VShader , typename T_PShader &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -1153,6 +1177,25 @@ template&lt;typename T_VShader , typename T_PShader &gt; </div>
 <dl class="section return"><dt>戻り値</dt><dd>ローカルボーン行列配列の先頭ポインタ </dd></dl>
 
 <p><a class="el" href="classbasecross_1_1_draw_component.html#adba71800efa40ee2b7ba2036e74f2715">basecross::DrawComponent</a>を再実装しています。</p>
+
+</div>
+</div>
+<a class="anchor" id="a2b5d9d5670f9f57ef4886b0a48d4c794"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">bsm::Mat4x4</a> &gt; &amp; basecross::SmBaseDraw::GetVecMultiLocalBones </td>
+          <td>(</td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>ローカルボーン行列配列の参照を得る(マルチメッシュ版版、書き換え可能) </p>
+<dl class="section return"><dt>戻り値</dt><dd>ローカルボーン行列配列の参照（範囲外なら例外） </dd></dl>
 
 </div>
 </div>

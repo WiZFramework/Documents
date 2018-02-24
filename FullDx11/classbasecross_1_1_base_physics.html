@@ -86,6 +86,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">クラス</a> &#124;
 <a href="#pub-methods">公開メンバ関数</a> &#124;
 <a href="#pub-static-methods">静的公開メンバ関数</a> &#124;
 <a href="classbasecross_1_1_base_physics-members.html">全メンバ一覧</a>  </div>
@@ -97,6 +98,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <p>物理計算用のインターフェイス  
  <a href="classbasecross_1_1_base_physics.html#details">[詳解]</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+クラス</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1_base_physics_1_1_impl.html">Impl</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">物理計算用のインターフェイスImpl  <a href="structbasecross_1_1_base_physics_1_1_impl.html#details">[詳解]</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 公開メンバ関数</h2></td></tr>
 <tr class="memitem:a7733bb19dc797d3b846d128b61c25e2c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#a7733bb19dc797d3b846d128b61c25e2c">BasePhysics</a> ()</td></tr>
@@ -161,6 +168,12 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a2ac3b352f99aefb020992176591bd5f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#a2ac3b352f99aefb020992176591bd5f5">WakeUpBody</a> (uint16_t body_index)</td></tr>
 <tr class="memdesc:a2ac3b352f99aefb020992176591bd5f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体を起こす（sleepが有効の場合）  <a href="#a2ac3b352f99aefb020992176591bd5f5">[詳解]</a><br /></td></tr>
 <tr class="separator:a2ac3b352f99aefb020992176591bd5f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa9d0b71bb92553238e0bfb198b627d60"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#aa9d0b71bb92553238e0bfb198b627d60">IsAutoGravity</a> (uint16_t body_index) const </td></tr>
+<tr class="memdesc:aa9d0b71bb92553238e0bfb198b627d60"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体が重力を計算するかどうかを得る  <a href="#aa9d0b71bb92553238e0bfb198b627d60">[詳解]</a><br /></td></tr>
+<tr class="separator:aa9d0b71bb92553238e0bfb198b627d60"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aed18f6e08c74aa41eb0ceac802ea7061"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#aed18f6e08c74aa41eb0ceac802ea7061">SetAutoGravity</a> (uint16_t body_index, bool b)</td></tr>
+<tr class="memdesc:aed18f6e08c74aa41eb0ceac802ea7061"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体が重力を計算するかどうかを設定する  <a href="#aed18f6e08c74aa41eb0ceac802ea7061">[詳解]</a><br /></td></tr>
+<tr class="separator:aed18f6e08c74aa41eb0ceac802ea7061"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af2979a35f2f7cc9bcea7e95c41960382"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#af2979a35f2f7cc9bcea7e95c41960382">GetBodyPosition</a> (uint16_t body_index) const </td></tr>
 <tr class="memdesc:af2979a35f2f7cc9bcea7e95c41960382"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体の位置を得る  <a href="#af2979a35f2f7cc9bcea7e95c41960382">[詳解]</a><br /></td></tr>
 <tr class="separator:af2979a35f2f7cc9bcea7e95c41960382"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1743,6 +1756,31 @@ sce::PhysicsEffects::PfxContactManifold &amp;&#160;</td><td class="memItemRight"
 
 </div>
 </div>
+<a class="anchor" id="aa9d0b71bb92553238e0bfb198b627d60"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool basecross::BasePhysics::IsAutoGravity </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>body_index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>剛体が重力を計算するかどうかを得る </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">body_index</td><td>ボディID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>重力を計算すればtrue </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a7e878b6e0da0f8a2b64f773f8190158b"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1843,6 +1881,42 @@ sce::PhysicsEffects::PfxContactManifold &amp;&#160;</td><td class="memItemRight"
 </div><div class="memdoc">
 
 <p>初期化（すべてのオブジェクトが無くなる） </p>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aed18f6e08c74aa41eb0ceac802ea7061"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::BasePhysics::SetAutoGravity </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>body_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>剛体が重力を計算するかどうかを設定する </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">body_index</td><td>ボディID </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">b</td><td>設定する値 </td></tr>
+  </table>
+  </dd>
+</dl>
 <dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
 
 </div>
