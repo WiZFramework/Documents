@@ -9,7 +9,6 @@ var searchData=
   ['actioncomponent',['ActionComponent',['../classbasecross_1_1_action_component.html#a4cf86b3a93e4b9aa635eb6ff88a0fa6c',1,'basecross::ActionComponent']]],
   ['actioninterval',['ActionInterval',['../classbasecross_1_1_action_interval.html#a1596c25591512cfa0a68d11fcc3f3429',1,'basecross::ActionInterval']]],
   ['addanimation',['AddAnimation',['../structbasecross_1_1_draw_object_base.html#a28f1d2e18d4bacde610b1b0a438f5327',1,'basecross::DrawObjectBase::AddAnimation()'],['../classbasecross_1_1_sm_base_draw.html#acccc51ab368079a092ac7aa51866aa45',1,'basecross::SmBaseDraw::AddAnimation()'],['../classbasecross_1_1_bc_base_draw.html#aa8351173e2edba95139899128a002c84',1,'basecross::BcBaseDraw::AddAnimation()']]],
-  ['addaudioresource',['AddAudioResource',['../classbasecross_1_1_multi_audio_object.html#a877eab2d331ff08e297bc65c1b383a7b',1,'basecross::MultiAudioObject::AddAudioResource()'],['../classbasecross_1_1_multi_sound_effect.html#a3b75c7c61d914b8b442ce84fa5248d51',1,'basecross::MultiSoundEffect::AddAudioResource()']]],
   ['addballjoint',['AddBallJoint',['../classbasecross_1_1_base_physics.html#a7266dc792351be064f4882ad306f519d',1,'basecross::BasePhysics::AddBallJoint()'],['../classbasecross_1_1_ps_multi_body.html#aae8ad4ca0ce5240757062768ca190901',1,'basecross::PsMultiBody::AddBallJoint()']]],
   ['addbox',['AddBox',['../classbasecross_1_1_base_physics.html#a6fa0862691e36f7ce13ad6c9b059ff86',1,'basecross::BasePhysics::AddBox()'],['../classbasecross_1_1_ps_multi_body.html#a50766f4daf64bd571ffff20504daaeda',1,'basecross::PsMultiBody::AddBox()']]],
   ['addcapsule',['AddCapsule',['../classbasecross_1_1_base_physics.html#ae09c28716d88d947660340fed68f1dd3',1,'basecross::BasePhysics::AddCapsule()'],['../classbasecross_1_1_ps_multi_body.html#a11ffc59ea4e31928ff887099b2b0e73a',1,'basecross::PsMultiBody::AddCapsule()']]],
@@ -67,6 +66,5 @@ var searchData=
   ['arrivesteering',['ArriveSteering',['../classbasecross_1_1_arrive_steering.html#a7dcf0ffac58b056cfd7e4ec2c7e21649',1,'basecross::ArriveSteering']]],
   ['at',['at',['../classbasecross_1_1_game_object_group.html#a6091221c26254f7fddfb5e94eea67ef0',1,'basecross::GameObjectGroup']]],
   ['attachgameobject',['AttachGameObject',['../classbasecross_1_1_component.html#aee9781e7c0815f4993a07b8275194b62',1,'basecross::Component']]],
-  ['audiomanager',['AudioManager',['../classbasecross_1_1_audio_manager.html#a98d673b10a654ea94cc43f5110936161',1,'basecross::AudioManager']]],
   ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html#ac559258f3513e81bf7cc885a8997a156',1,'basecross::AudioResource']]]
 ];

@@ -17,7 +17,6 @@ var searchData=
   ['singleview',['SingleView',['../classbasecross_1_1_single_view.html',1,'basecross']]],
   ['smbasedraw',['SmBaseDraw',['../classbasecross_1_1_sm_base_draw.html',1,'basecross']]],
   ['smdrawobject',['SmDrawObject',['../structbasecross_1_1_sm_draw_object.html',1,'basecross']]],
-  ['soundeffect',['SoundEffect',['../classbasecross_1_1_sound_effect.html',1,'basecross']]],
   ['sounditem',['SoundItem',['../structbasecross_1_1_sound_item.html',1,'basecross']]],
   ['sphere',['SPHERE',['../structbasecross_1_1_s_p_h_e_r_e.html',1,'basecross']]],
   ['sphere_5farr',['SPHERE_ARR',['../structbasecross_1_1_s_p_h_e_r_e___a_r_r.html',1,'basecross']]],

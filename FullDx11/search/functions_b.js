@@ -15,11 +15,9 @@ var searchData=
   ['moveorientation',['MoveOrientation',['../classbasecross_1_1_ps_body_component.html#a921f72d20af5885836d44b88d0467984',1,'basecross::PsBodyComponent::MoveOrientation()'],['../classbasecross_1_1_ps_multi_body.html#ad9a20a98ff9327e6309661560928c8dd',1,'basecross::PsMultiBody::MoveOrientation()']]],
   ['moveposition',['MovePosition',['../classbasecross_1_1_ps_body_component.html#a926e5a28a8bd224e0f10700866a96477',1,'basecross::PsBodyComponent::MovePosition()'],['../classbasecross_1_1_ps_multi_body.html#af56f20c92e7e305be05a1db65dca1e25',1,'basecross::PsMultiBody::MovePosition()']]],
   ['moveto',['MoveTo',['../classbasecross_1_1_move_to.html#aa8c838c1ad6d7b178e7f1eaf25c4f8b8',1,'basecross::MoveTo']]],
-  ['multiaudioobject',['MultiAudioObject',['../classbasecross_1_1_multi_audio_object.html#a94a18e6b9d36757f69400a90c5c3968e',1,'basecross::MultiAudioObject']]],
   ['multilight',['MultiLight',['../classbasecross_1_1_multi_light.html#aa71a1a0e363caba40f0f128b8228a581',1,'basecross::MultiLight']]],
   ['multimeshresource',['MultiMeshResource',['../classbasecross_1_1_multi_mesh_resource.html#ad09d02612567abc504ed1e3c2b24b24b',1,'basecross::MultiMeshResource']]],
   ['multiparticle',['MultiParticle',['../classbasecross_1_1_multi_particle.html#a4aa0ec565d60b6e05e34571e1b69d539',1,'basecross::MultiParticle']]],
-  ['multisoundeffect',['MultiSoundEffect',['../classbasecross_1_1_multi_sound_effect.html#affa4987497ddc1f75e0ec82069a6d9ad',1,'basecross::MultiSoundEffect']]],
   ['multistringsprite',['MultiStringSprite',['../classbasecross_1_1_multi_string_sprite.html#abc9578cca18eb6f1226bad1eed05cbe2',1,'basecross::MultiStringSprite']]],
   ['multiview',['MultiView',['../classbasecross_1_1_multi_view.html#aeb14c9b4a309b3c08931a6456ec8f426',1,'basecross::MultiView']]]
 ];

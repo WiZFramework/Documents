@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.11"/>
-<title>FullDx11: basecross::PlayMusic::Impl 構造体</title>
+<title>FullDx11: basecross::XAudio2Manager::Impl 構造体</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,36 +81,45 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>basecross</b></li><li class="navelem"><a class="el" href="classbasecross_1_1_play_music.html">PlayMusic</a></li><li class="navelem"><a class="el" href="structbasecross_1_1_play_music_1_1_impl.html">Impl</a></li>  </ul>
+<li class="navelem"><b>basecross</b></li><li class="navelem"><a class="el" href="classbasecross_1_1_x_audio2_manager.html">XAudio2Manager</a></li><li class="navelem"><a class="el" href="structbasecross_1_1_x_audio2_manager_1_1_impl.html">Impl</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">公開メンバ関数</a> &#124;
 <a href="#pub-attribs">公開変数類</a> &#124;
-<a href="structbasecross_1_1_play_music_1_1_impl-members.html">全メンバ一覧</a>  </div>
+<a href="structbasecross_1_1_x_audio2_manager_1_1_impl-members.html">全メンバ一覧</a>  </div>
   <div class="headertitle">
-<div class="title">basecross::PlayMusic::Impl 構造体</div>  </div>
+<div class="title">basecross::XAudio2Manager::Impl 構造体</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 公開メンバ関数</h2></td></tr>
-<tr class="memitem:a3157203af7ed91b046459c2b4581a27c"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3157203af7ed91b046459c2b4581a27c"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Impl</b> (const wstring &amp;ResKey)</td></tr>
-<tr class="separator:a3157203af7ed91b046459c2b4581a27c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5c9789d184c045742bb32cc0f4acbff3"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5c9789d184c045742bb32cc0f4acbff3"></a>
+shared_ptr&lt; <a class="el" href="structbasecross_1_1_sound_item.html">SoundItem</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ChkAndPushBackItem</b> (const <a class="el" href="structbasecross_1_1_sound_item.html">SoundItem</a> &amp;Item)</td></tr>
+<tr class="separator:a5c9789d184c045742bb32cc0f4acbff3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3edd4e430359d37e9fa70c044a09b77f"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a3edd4e430359d37e9fa70c044a09b77f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>OnUpdate</b> ()</td></tr>
+<tr class="separator:a3edd4e430359d37e9fa70c044a09b77f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8b994382b75f826ab1d62fb4a41fab6d"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a8b994382b75f826ab1d62fb4a41fab6d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>IsItemActive</b> (const shared_ptr&lt; <a class="el" href="structbasecross_1_1_sound_item.html">SoundItem</a> &gt; &amp;ChkItem)</td></tr>
+<tr class="separator:a8b994382b75f826ab1d62fb4a41fab6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 公開変数類</h2></td></tr>
-<tr class="memitem:a227ab5e450f9a71f081f4378bbca457b"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a227ab5e450f9a71f081f4378bbca457b"></a>
-weak_ptr&lt; <a class="el" href="classbasecross_1_1_audio_resource.html">AudioResource</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_AudioResource</b></td></tr>
-<tr class="separator:a227ab5e450f9a71f081f4378bbca457b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a94e74877580ce00860f15b5ee90d4bcc"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a94e74877580ce00860f15b5ee90d4bcc"></a>
-IXAudio2SourceVoice *&#160;</td><td class="memItemRight" valign="bottom"><b>m_pSourceVoice</b></td></tr>
-<tr class="separator:a94e74877580ce00860f15b5ee90d4bcc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01b03fae40b9f2d056b6f42be95dbe33"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a01b03fae40b9f2d056b6f42be95dbe33"></a>
-wstring&#160;</td><td class="memItemRight" valign="bottom"><b>m_ResKey</b></td></tr>
-<tr class="separator:a01b03fae40b9f2d056b6f42be95dbe33"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a689995ac1bbe224f2eb1fb5334e5d011"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a689995ac1bbe224f2eb1fb5334e5d011"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>m_IsAudioActive</b></td></tr>
+<tr class="separator:a689995ac1bbe224f2eb1fb5334e5d011"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a15425f6436da2807ae8b99f354310207"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a15425f6436da2807ae8b99f354310207"></a>
+ComPtr&lt; IXAudio2 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_IXAudio2</b></td></tr>
+<tr class="separator:a15425f6436da2807ae8b99f354310207"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d304d07df126eed03de58e0af089098"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a5d304d07df126eed03de58e0af089098"></a>
+IXAudio2MasteringVoice *&#160;</td><td class="memItemRight" valign="bottom"><b>m_MasteringVoice</b></td></tr>
+<tr class="separator:a5d304d07df126eed03de58e0af089098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1138c9009013ecbc00d50fa6d02065fe"><td class="memItemLeft" align="right" valign="top"><a class="anchor" id="a1138c9009013ecbc00d50fa6d02065fe"></a>
+vector&lt; shared_ptr&lt; <a class="el" href="structbasecross_1_1_sound_item.html">SoundItem</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>m_SoundItemVec</b></td></tr>
+<tr class="separator:a1138c9009013ecbc00d50fa6d02065fe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

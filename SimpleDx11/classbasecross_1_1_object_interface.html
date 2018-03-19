@@ -104,10 +104,10 @@ basecross::ObjectInterface の継承関係図</div>
   <img src="classbasecross_1_1_object_interface.png" usemap="#basecross::ObjectInterface_map" alt=""/>
   <map id="basecross::ObjectInterface_map" name="basecross::ObjectInterface_map">
 <area href="classbasecross_1_1_base_resource.html" title="メモリ上に保持するリソースの親クラス " alt="basecross::BaseResource" shape="rect" coords="0,112,287,136"/>
-<area href="classbasecross_1_1_multi_audio_object.html" alt="basecross::MultiAudioObject" shape="rect" coords="297,112,584,136"/>
 <area href="classbasecross_1_1_ps_joint.html" title="ジョイントの親 " alt="basecross::PsJoint" shape="rect" coords="594,112,881,136"/>
 <area href="classbasecross_1_1_ps_object.html" title="物理オブジェクトの親 " alt="basecross::PsObject" shape="rect" coords="1188,112,1475,136"/>
 <area href="classbasecross_1_1_scene_interface.html" title="シーンインターフェイス " alt="basecross::SceneInterface" shape="rect" coords="1485,112,1772,136"/>
+<area href="classbasecross_1_1_x_audio2_manager.html" title="XAudio2マネージャクラス " alt="basecross::XAudio2Manager" shape="rect" coords="1782,112,2069,136"/>
 <area href="classbasecross_1_1_audio_resource.html" title="オーディオリソース（wav）クラス " alt="basecross::AudioResource" shape="rect" coords="297,168,584,192"/>
 <area href="classbasecross_1_1_mesh_resource.html" title="メッシュリソース " alt="basecross::MeshResource" shape="rect" coords="297,224,584,248"/>
 <area href="classbasecross_1_1_multi_mesh_resource.html" title="マルチメッシュリソース " alt="basecross::MultiMeshResource" shape="rect" coords="297,280,584,304"/>
@@ -142,9 +142,9 @@ basecross::ObjectInterface の継承関係図</div>
 <tr class="memdesc:aa1a959e5205b6205f5c03e21f40929e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">初期化を行う（仮想関数）<br />
  ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる  <a href="#aa1a959e5205b6205f5c03e21f40929e8">[詳解]</a><br /></td></tr>
 <tr class="separator:aa1a959e5205b6205f5c03e21f40929e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a467719b4eb4bccccf01d287e9e335a5f"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a467719b4eb4bccccf01d287e9e335a5f">IsCreated</a> ()</td></tr>
-<tr class="memdesc:a467719b4eb4bccccf01d287e9e335a5f"><td class="mdescLeft">&#160;</td><td class="mdescRight">クリエイト済みかどうか  <a href="#a467719b4eb4bccccf01d287e9e335a5f">[詳解]</a><br /></td></tr>
-<tr class="separator:a467719b4eb4bccccf01d287e9e335a5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae964a022a187165e70573e2f9b531529"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#ae964a022a187165e70573e2f9b531529">IsCreated</a> () const </td></tr>
+<tr class="memdesc:ae964a022a187165e70573e2f9b531529"><td class="mdescLeft">&#160;</td><td class="mdescRight">クリエイト済みかどうか  <a href="#ae964a022a187165e70573e2f9b531529">[詳解]</a><br /></td></tr>
+<tr class="separator:ae964a022a187165e70573e2f9b531529"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9b106bffb9ea66941022cfbd07c7df8c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_object_interface.html#a9b106bffb9ea66941022cfbd07c7df8c">PostEvent</a> (float DispatchTime, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Sender, const shared_ptr&lt; <a class="el" href="classbasecross_1_1_object_interface.html">ObjectInterface</a> &gt; &amp;Receiver, const wstring &amp;MsgStr, shared_ptr&lt; void &gt; &amp;Info=shared_ptr&lt; void &gt;())</td></tr>
 <tr class="memdesc:a9b106bffb9ea66941022cfbd07c7df8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">イベントのPOST（キューに入れる）  <a href="#a9b106bffb9ea66941022cfbd07c7df8c">[詳解]</a><br /></td></tr>
 <tr class="separator:a9b106bffb9ea66941022cfbd07c7df8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -215,7 +215,7 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a467719b4eb4bccccf01d287e9e335a5f"></a>
+<a class="anchor" id="ae964a022a187165e70573e2f9b531529"></a>
 <div class="memitem">
 <div class="memproto">
 <table class="mlabels">
@@ -226,7 +226,7 @@ template&lt;typename T &gt; </div>
           <td class="memname">bool basecross::ObjectInterface::IsCreated </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td> const</td>
         </tr>
       </table>
   </td>
@@ -266,7 +266,7 @@ template&lt;typename T &gt; </div>
  ＊thisポインタが必要なオブジェクトはこの関数を多重定義して、取得できる </p>
 <dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
 
-<p><a class="el" href="classbasecross_1_1_base_resource.html#a603133e32436b286bde5be3f1a081a2d">basecross::BaseResource</a>, <a class="el" href="classbasecross_1_1_multi_audio_object.html#a6490e23f012b36603d6bd926b2183eca">basecross::MultiAudioObject</a>, <a class="el" href="classbasecross_1_1_ps_universal_joint.html#ac28eb28159dbffb6840ff76f6715a0be">basecross::PsUniversalJoint</a>, <a class="el" href="classbasecross_1_1_ps_fix_joint.html#a2765d34b2ae7de46364502ca76f3eea0">basecross::PsFixJoint</a>, <a class="el" href="classbasecross_1_1_ps_slider_joint.html#a79c5aafcb2b560983d3f7c69759ed757">basecross::PsSliderJoint</a>, <a class="el" href="classbasecross_1_1_ps_hinge_joint.html#af001395fbf74670fca4a4ac101ebbbea">basecross::PsHingeJoint</a>, <a class="el" href="classbasecross_1_1_ps_swing_twist_joint.html#a9a06e3586cef1e7ad1dcd86fb10e9e24">basecross::PsSwingTwistJoint</a>, <a class="el" href="classbasecross_1_1_ps_ball_joint.html#a37ac93cd8efb2c1698dccfd62f103b9f">basecross::PsBallJoint</a>, <a class="el" href="classbasecross_1_1_ps_combined.html#a83f41c67cbde626f47ae1913d8ed7673">basecross::PsCombined</a>, <a class="el" href="classbasecross_1_1_ps_convex.html#a643c247b5f331600de091d3c9b5ccb65">basecross::PsConvex</a>, <a class="el" href="classbasecross_1_1_ps_cylinder.html#a25cf1f2486cd402d53ec7cb01fe6fc92">basecross::PsCylinder</a>, <a class="el" href="classbasecross_1_1_ps_capsule.html#a9ba02b8c76eb57f0a185ec444676cc8a">basecross::PsCapsule</a>, <a class="el" href="classbasecross_1_1_ps_sphere.html#a30c55123ef16930c4e981b2fe5c7dfca">basecross::PsSphere</a>, <a class="el" href="classbasecross_1_1_ps_box.html#a84a39408817442f572da965363273195">basecross::PsBox</a>で実装されています。</p>
+<p><a class="el" href="classbasecross_1_1_base_resource.html#a603133e32436b286bde5be3f1a081a2d">basecross::BaseResource</a>, <a class="el" href="classbasecross_1_1_ps_universal_joint.html#ac28eb28159dbffb6840ff76f6715a0be">basecross::PsUniversalJoint</a>, <a class="el" href="classbasecross_1_1_ps_fix_joint.html#a2765d34b2ae7de46364502ca76f3eea0">basecross::PsFixJoint</a>, <a class="el" href="classbasecross_1_1_ps_slider_joint.html#a79c5aafcb2b560983d3f7c69759ed757">basecross::PsSliderJoint</a>, <a class="el" href="classbasecross_1_1_ps_hinge_joint.html#af001395fbf74670fca4a4ac101ebbbea">basecross::PsHingeJoint</a>, <a class="el" href="classbasecross_1_1_ps_swing_twist_joint.html#a9a06e3586cef1e7ad1dcd86fb10e9e24">basecross::PsSwingTwistJoint</a>, <a class="el" href="classbasecross_1_1_ps_ball_joint.html#a37ac93cd8efb2c1698dccfd62f103b9f">basecross::PsBallJoint</a>, <a class="el" href="classbasecross_1_1_ps_combined.html#a83f41c67cbde626f47ae1913d8ed7673">basecross::PsCombined</a>, <a class="el" href="classbasecross_1_1_ps_convex.html#a643c247b5f331600de091d3c9b5ccb65">basecross::PsConvex</a>, <a class="el" href="classbasecross_1_1_ps_cylinder.html#a25cf1f2486cd402d53ec7cb01fe6fc92">basecross::PsCylinder</a>, <a class="el" href="classbasecross_1_1_ps_capsule.html#a9ba02b8c76eb57f0a185ec444676cc8a">basecross::PsCapsule</a>, <a class="el" href="classbasecross_1_1_ps_sphere.html#a30c55123ef16930c4e981b2fe5c7dfca">basecross::PsSphere</a>, <a class="el" href="classbasecross_1_1_ps_box.html#a84a39408817442f572da965363273195">basecross::PsBox</a>, <a class="el" href="classbasecross_1_1_x_audio2_manager.html#a669cdeafabfcd9ded70827b81848c9ae">basecross::XAudio2Manager</a>で実装されています。</p>
 
 </div>
 </div>

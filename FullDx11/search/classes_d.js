@@ -14,7 +14,6 @@ var searchData=
   ['pctstaticinstancedraw',['PCTStaticInstanceDraw',['../classbasecross_1_1_p_c_t_static_instance_draw.html',1,'basecross']]],
   ['pixelshader',['PixelShader',['../classbasecross_1_1_pixel_shader.html',1,'basecross']]],
   ['plane',['PLANE',['../structbasecross_1_1_p_l_a_n_e.html',1,'basecross']]],
-  ['playmusic',['PlayMusic',['../classbasecross_1_1_play_music.html',1,'basecross']]],
   ['pntbonemodeldraw',['PNTBoneModelDraw',['../classbasecross_1_1_p_n_t_bone_model_draw.html',1,'basecross']]],
   ['pntstaticdraw',['PNTStaticDraw',['../classbasecross_1_1_p_n_t_static_draw.html',1,'basecross']]],
   ['pntstaticinstancedraw',['PNTStaticInstanceDraw',['../classbasecross_1_1_p_n_t_static_instance_draw.html',1,'basecross']]],

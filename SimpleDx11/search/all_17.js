@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['_7eaudiomanager',['~AudioManager',['../classbasecross_1_1_audio_manager.html#a02d97c72ecf6bef1bbb31806ba3e905a',1,'basecross::AudioManager']]],
   ['_7eaudioresource',['~AudioResource',['../classbasecross_1_1_audio_resource.html#aa814cb8934764a08d9d96e01ed5b9bdb',1,'basecross::AudioResource']]],
   ['_7ebasephysics',['~BasePhysics',['../classbasecross_1_1_base_physics.html#ad16dd16d799e7347967bcbcdbf130c33',1,'basecross::BasePhysics']]],
   ['_7ebaseresource',['~BaseResource',['../classbasecross_1_1_base_resource.html#acb3f322c7fa1f696edd723ec95b66997',1,'basecross::BaseResource']]],
@@ -15,7 +14,6 @@ var searchData=
   ['_7einputdevice',['~InputDevice',['../classbasecross_1_1_input_device.html#a456f96133eacb124d2495c02887a9812',1,'basecross::InputDevice']]],
   ['_7elayeredstatemachine',['~LayeredStateMachine',['../classbasecross_1_1_layered_state_machine.html#afec608324cd2e5125ce8354501ed5a60',1,'basecross::LayeredStateMachine']]],
   ['_7emeshresource',['~MeshResource',['../classbasecross_1_1_mesh_resource.html#a7c83ff7d649a454a43946e45afdf1bad',1,'basecross::MeshResource']]],
-  ['_7emultiaudioobject',['~MultiAudioObject',['../classbasecross_1_1_multi_audio_object.html#ac45bf45cbb61b992c2596ffb553e1a45',1,'basecross::MultiAudioObject']]],
   ['_7emultimeshresource',['~MultiMeshResource',['../classbasecross_1_1_multi_mesh_resource.html#ac39b3a9613875e3998206abb71738981',1,'basecross::MultiMeshResource']]],
   ['_7eobjectinterface',['~ObjectInterface',['../classbasecross_1_1_object_interface.html#a01cdf2e9a6205ec041170525a7d266eb',1,'basecross::ObjectInterface']]],
   ['_7eobjstate',['~ObjState',['../classbasecross_1_1_obj_state.html#a6e3b70b4388872a39f0efc2cd66cc6d2',1,'basecross::ObjState']]],
@@ -44,6 +42,7 @@ var searchData=
   ['_7estatemachine',['~StateMachine',['../classbasecross_1_1_state_machine.html#a67d338b560282606c96466e6468899f9',1,'basecross::StateMachine']]],
   ['_7etextureresource',['~TextureResource',['../classbasecross_1_1_texture_resource.html#a1d4e2248f85240ec3ae089055d9bf240',1,'basecross::TextureResource']]],
   ['_7evshader',['~VShader',['../classbasecross_1_1_v_shader.html#a2ccc2e997a4186758614fcf8eed22f20',1,'basecross::VShader']]],
+  ['_7exaudio2manager',['~XAudio2Manager',['../classbasecross_1_1_x_audio2_manager.html#a2726a9bcaccbc1d8112b466aa743ef25',1,'basecross::XAudio2Manager']]],
   ['_7exmldoc',['~XmlDoc',['../classbasecross_1_1_xml_doc.html#a25ce401d4942473efb49f02fe79c2ef9',1,'basecross::XmlDoc']]],
   ['_7exmldocreader',['~XmlDocReader',['../classbasecross_1_1_xml_doc_reader.html#acd7979c6abeb3ccb93453402065b017d',1,'basecross::XmlDocReader']]]
 ];

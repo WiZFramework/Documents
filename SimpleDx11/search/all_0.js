@@ -6,7 +6,6 @@ var searchData=
   ['aabb_5faabb_5fnot_5fequal',['AABB_AABB_NOT_EQUAL',['../structbasecross_1_1_hit_test.html#ace0de51a950fe212625e934dad2af8b4',1,'basecross::HitTest']]],
   ['aabb_5fin_5faabb',['AABB_IN_AABB',['../structbasecross_1_1_hit_test.html#af0e88465e18d63ca42f673a9149077cb',1,'basecross::HitTest']]],
   ['aabb_5for_5faabb',['AABB_OR_AABB',['../structbasecross_1_1_hit_test.html#a93b8aec531de178d4943fd0485df904f',1,'basecross::HitTest']]],
-  ['addaudioresource',['AddAudioResource',['../classbasecross_1_1_multi_audio_object.html#a877eab2d331ff08e297bc65c1b383a7b',1,'basecross::MultiAudioObject']]],
   ['addballjoint',['AddBallJoint',['../classbasecross_1_1_base_physics.html#a7266dc792351be064f4882ad306f519d',1,'basecross::BasePhysics']]],
   ['addbox',['AddBox',['../classbasecross_1_1_base_physics.html#a6fa0862691e36f7ce13ad6c9b059ff86',1,'basecross::BasePhysics']]],
   ['addcapsule',['AddCapsule',['../classbasecross_1_1_base_physics.html#ae09c28716d88d947660340fed68f1dd3',1,'basecross::BasePhysics']]],
@@ -30,8 +29,6 @@ var searchData=
   ['appcheck',['AppCheck',['../classbasecross_1_1_app.html#a4158bed2d8f90bf8c73b2a3c7147ed08',1,'basecross::App']]],
   ['applybodyforce',['ApplyBodyForce',['../classbasecross_1_1_base_physics.html#a4c9142e40378739a0717316396841f33',1,'basecross::BasePhysics']]],
   ['applybodytorque',['ApplyBodyTorque',['../classbasecross_1_1_base_physics.html#af124a9c3c6287c3968f534f89c3b0e9c',1,'basecross::BasePhysics']]],
-  ['audiomanager',['AudioManager',['../classbasecross_1_1_audio_manager.html',1,'basecross']]],
-  ['audiomanager',['AudioManager',['../classbasecross_1_1_audio_manager.html#a98d673b10a654ea94cc43f5110936161',1,'basecross::AudioManager']]],
   ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html',1,'basecross']]],
   ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html#ac559258f3513e81bf7cc885a8997a156',1,'basecross::AudioResource']]]
 ];

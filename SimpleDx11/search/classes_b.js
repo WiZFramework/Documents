@@ -8,6 +8,5 @@ var searchData=
   ['meshprimdata',['MeshPrimData',['../structbasecross_1_1_mesh_prim_data.html',1,'basecross']]],
   ['meshresource',['MeshResource',['../classbasecross_1_1_mesh_resource.html',1,'basecross']]],
   ['meshutill',['MeshUtill',['../classbasecross_1_1_mesh_utill.html',1,'basecross']]],
-  ['multiaudioobject',['MultiAudioObject',['../classbasecross_1_1_multi_audio_object.html',1,'basecross']]],
   ['multimeshresource',['MultiMeshResource',['../classbasecross_1_1_multi_mesh_resource.html',1,'basecross']]]
 ];

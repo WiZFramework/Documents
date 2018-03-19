@@ -9,6 +9,5 @@ var searchData=
   ['move',['Move',['../structbasecross_1_1_a_a_b_b.html#a9de4d0467989d2e751a6baf5e60907c4',1,'basecross::AABB']]],
   ['movebodyorientation',['MoveBodyOrientation',['../classbasecross_1_1_base_physics.html#a7e878b6e0da0f8a2b64f773f8190158b',1,'basecross::BasePhysics']]],
   ['movebodyposition',['MoveBodyPosition',['../classbasecross_1_1_base_physics.html#a9dd3b54aa51deb1f0d7c7810e3d657aa',1,'basecross::BasePhysics']]],
-  ['multiaudioobject',['MultiAudioObject',['../classbasecross_1_1_multi_audio_object.html#a94a18e6b9d36757f69400a90c5c3968e',1,'basecross::MultiAudioObject']]],
   ['multimeshresource',['MultiMeshResource',['../classbasecross_1_1_multi_mesh_resource.html#ad09d02612567abc504ed1e3c2b24b24b',1,'basecross::MultiMeshResource']]]
 ];

@@ -104,9 +104,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <tr class="memitem:ab585a72a5c28d6019882460ecf8395ed"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_app.html#ab585a72a5c28d6019882460ecf8395ed">AfterInitContents</a> (bool ShadowActive)</td></tr>
 <tr class="memdesc:ab585a72a5c28d6019882460ecf8395ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">追加初期化（レンダリングターゲットの準備など）  <a href="#ab585a72a5c28d6019882460ecf8395ed">[詳解]</a><br /></td></tr>
 <tr class="separator:ab585a72a5c28d6019882460ecf8395ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a97d7de5f32f70855a19e868b2d1cb1e1"><td class="memItemLeft" align="right" valign="top">unique_ptr&lt; <a class="el" href="classbasecross_1_1_audio_manager.html">AudioManager</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_app.html#a97d7de5f32f70855a19e868b2d1cb1e1">GetAudioManager</a> ()</td></tr>
-<tr class="memdesc:a97d7de5f32f70855a19e868b2d1cb1e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">オーディオマネージャの取得  <a href="#a97d7de5f32f70855a19e868b2d1cb1e1">[詳解]</a><br /></td></tr>
-<tr class="separator:a97d7de5f32f70855a19e868b2d1cb1e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a79db33cccf6271427d740a2644826dcd"><td class="memItemLeft" align="right" valign="top">shared_ptr&lt; <a class="el" href="classbasecross_1_1_x_audio2_manager.html">XAudio2Manager</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_app.html#a79db33cccf6271427d740a2644826dcd">GetXAudio2Manager</a> ()</td></tr>
+<tr class="memdesc:a79db33cccf6271427d740a2644826dcd"><td class="mdescLeft">&#160;</td><td class="mdescRight">オーディオマネージャの取得  <a href="#a79db33cccf6271427d740a2644826dcd">[詳解]</a><br /></td></tr>
+<tr class="separator:a79db33cccf6271427d740a2644826dcd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a802ae27c24be20fb9e88477f2e8c88d6"><td class="memItemLeft" align="right" valign="top">HINSTANCE&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_app.html#a802ae27c24be20fb9e88477f2e8c88d6">GetHInstance</a> () const </td></tr>
 <tr class="memdesc:a802ae27c24be20fb9e88477f2e8c88d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">アプリケーションのインスタンス取得  <a href="#a802ae27c24be20fb9e88477f2e8c88d6">[詳解]</a><br /></td></tr>
 <tr class="separator:a802ae27c24be20fb9e88477f2e8c88d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -567,24 +567,6 @@ template&lt;typename T , typename... Ts&gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>戻り値</dt><dd>なし（Dirに相対パスが入る） </dd></dl>
-
-</div>
-</div>
-<a class="anchor" id="a97d7de5f32f70855a19e868b2d1cb1e1"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">unique_ptr&lt; <a class="el" href="classbasecross_1_1_audio_manager.html">AudioManager</a> &gt; &amp; basecross::App::GetAudioManager </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>オーディオマネージャの取得 </p>
-<dl class="section return"><dt>戻り値</dt><dd>オーディオマネージャ </dd></dl>
 
 </div>
 </div>
@@ -1230,6 +1212,24 @@ template&lt;typename T &gt; </div>
 
 <p>タイマーの取得(設定アクセサはない) </p>
 <dl class="section return"><dt>戻り値</dt><dd>タイマー </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a79db33cccf6271427d740a2644826dcd"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">shared_ptr&lt; <a class="el" href="classbasecross_1_1_x_audio2_manager.html">XAudio2Manager</a> &gt; &amp; basecross::App::GetXAudio2Manager </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>オーディオマネージャの取得 </p>
+<dl class="section return"><dt>戻り値</dt><dd>オーディオマネージャ </dd></dl>
 
 </div>
 </div>

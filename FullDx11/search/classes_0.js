@@ -9,7 +9,6 @@ var searchData=
   ['animecell',['AnimeCell',['../structbasecross_1_1_anime_cell.html',1,'basecross']]],
   ['app',['App',['../classbasecross_1_1_app.html',1,'basecross']]],
   ['arrivesteering',['ArriveSteering',['../classbasecross_1_1_arrive_steering.html',1,'basecross']]],
-  ['audiomanager',['AudioManager',['../classbasecross_1_1_audio_manager.html',1,'basecross']]],
   ['audioresource',['AudioResource',['../classbasecross_1_1_audio_resource.html',1,'basecross']]],
   ['avoidancesegment',['AvoidanceSegment',['../structbasecross_1_1_avoidance_segment.html',1,'basecross']]]
 ];
