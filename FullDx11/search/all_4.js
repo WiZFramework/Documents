@@ -19,6 +19,7 @@ var searchData=
   ['deleter',['Deleter',['../structbasecross_1_1_geometry_shader_1_1_deleter.html',1,'basecross::GeometryShader']]],
   ['deleter',['Deleter',['../structbasecross_1_1_compute_shader_1_1_deleter.html',1,'basecross::ComputeShader']]],
   ['demandcreate',['DemandCreate',['../structbasecross_1_1_util.html#ad580699e1012c7355fd92ee9aa8e75a9',1,'basecross::Util']]],
+  ['destroygameobject',['DestroyGameObject',['../classbasecross_1_1_game_object.html#aecbb4308b21860b88f5f81f14f2da3ba',1,'basecross::GameObject']]],
   ['destroystage',['DestroyStage',['../classbasecross_1_1_stage.html#af9a3c35736b0fbe8adfbe9485cfee8b6',1,'basecross::Stage']]],
   ['deviceresources',['DeviceResources',['../classbasecross_1_1_device_resources.html#ad1270c4c8b6eac1af8d82782db23e3bc',1,'basecross::DeviceResources']]],
   ['deviceresources',['DeviceResources',['../classbasecross_1_1_device_resources.html',1,'basecross']]],

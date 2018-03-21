@@ -63,6 +63,7 @@ var searchData=
   ['getblendstate',['GetBlendState',['../classbasecross_1_1_draw_component.html#a35524fe3de62661981f8f56940711057',1,'basecross::DrawComponent']]],
   ['getbodyangularvelocity',['GetBodyAngularVelocity',['../classbasecross_1_1_base_physics.html#a6e1c6f4b83e493843000545741331606',1,'basecross::BasePhysics']]],
   ['getbodylinearvelocity',['GetBodyLinearVelocity',['../classbasecross_1_1_base_physics.html#a3efbf67e8a733b0b029621ce80982633',1,'basecross::BasePhysics']]],
+  ['getbodymotiontype',['GetBodyMotionType',['../classbasecross_1_1_base_physics.html#abdb3a576e40cf2f8677427e7bf943501',1,'basecross::BasePhysics']]],
   ['getbodyorientation',['GetBodyOrientation',['../classbasecross_1_1_base_physics.html#a942c34efe156a809ade5d2887039be85',1,'basecross::BasePhysics']]],
   ['getbodyposition',['GetBodyPosition',['../classbasecross_1_1_base_physics.html#af2979a35f2f7cc9bcea7e95c41960382',1,'basecross::BasePhysics']]],
   ['getbodystatus',['GetBodyStatus',['../classbasecross_1_1_base_physics.html#acbe1d002b33be755c479aee618849c53',1,'basecross::BasePhysics']]],
@@ -241,6 +242,7 @@ var searchData=
   ['getmodelemissivepriority',['GetModelEmissivePriority',['../classbasecross_1_1_sm_base_draw.html#ae6fc4dcdaa64c17d287c7d52d1cfd513',1,'basecross::SmBaseDraw::GetModelEmissivePriority()'],['../classbasecross_1_1_bc_base_draw.html#a9018e62a576850ac357ce113602dd9f5',1,'basecross::BcBaseDraw::GetModelEmissivePriority()']]],
   ['getmodeltextureenabled',['GetModelTextureEnabled',['../classbasecross_1_1_sm_base_draw.html#a9a624a9d32ca5c0c6afe8b02564a533a',1,'basecross::SmBaseDraw::GetModelTextureEnabled()'],['../classbasecross_1_1_bc_base_draw.html#af44282ffae788f3d8a7d5da948a9643a',1,'basecross::BcBaseDraw::GetModelTextureEnabled()']]],
   ['getmoduledirectory',['GetModuleDirectory',['../classbasecross_1_1_app.html#a3a635d3e50b53563a49f49b704df7f8b',1,'basecross::App']]],
+  ['getmotiontype',['GetMotionType',['../classbasecross_1_1_ps_body_component.html#a9a902d3b22c6ccc10f57267f478f9334',1,'basecross::PsBodyComponent::GetMotionType()'],['../classbasecross_1_1_ps_multi_body.html#a2c7212e55c226cb7c809e810f4130f26',1,'basecross::PsMultiBody::GetMotionType()']]],
   ['getmove',['GetMove',['../classbasecross_1_1_action.html#a1a937edfa35836d8d450de98e3ca0317',1,'basecross::Action']]],
   ['getmoveactiveindex',['GetMoveActiveIndex',['../classbasecross_1_1_action.html#ab2c17b1e18ce2499807bbc7b7646b5b3',1,'basecross::Action']]],
   ['getmovecomponent',['GetMoveComponent',['../classbasecross_1_1_action.html#af608460f90445f67eac129a700a571c4',1,'basecross::Action']]],
@@ -455,8 +457,8 @@ var searchData=
   ['gety',['getY',['../structbasecross_1_1bsm_1_1_flt2.html#a4abab5304973b232d1fd6c999b9d5447',1,'basecross::bsm::Flt2::getY()'],['../structbasecross_1_1bsm_1_1_flt3.html#ade08d089907fead5fedd0f22267f71ab',1,'basecross::bsm::Flt3::getY()'],['../structbasecross_1_1bsm_1_1_flt4.html#a795bf86692fd9ef3f1deac14c5d79354',1,'basecross::bsm::Flt4::getY()'],['../structbasecross_1_1bsm_1_1_quat.html#ae509e42ccce5c407bd418eb8524c6e59',1,'basecross::bsm::Quat::getY()']]],
   ['getz',['getZ',['../structbasecross_1_1bsm_1_1_flt3.html#a06a8a232cc2dc7bccd679de0db566a58',1,'basecross::bsm::Flt3::getZ()'],['../structbasecross_1_1bsm_1_1_flt4.html#a992c4d44c66d9951571440bee4909b1e',1,'basecross::bsm::Flt4::getZ()'],['../structbasecross_1_1bsm_1_1_quat.html#a3fadcd2f587b0e3862ab87484430a2a8',1,'basecross::bsm::Quat::getZ()']]],
   ['getzbufferuse',['GetZBufferUse',['../classbasecross_1_1_particle_manager.html#a0fef9b615a2ce4515f2824c4cac6abf0',1,'basecross::ParticleManager']]],
-  ['gravity',['Gravity',['../classbasecross_1_1_gravity.html#a207e994e108f8c5b30e8c9665702589a',1,'basecross::Gravity']]],
   ['gravity',['Gravity',['../classbasecross_1_1_gravity.html',1,'basecross']]],
-  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html',1,'basecross']]],
-  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html#a6cb6e68b1d11618089d44db43252b698',1,'basecross::GShader::GShader()'],['../classbasecross_1_1_g_shader.html#aa3b29a2aaef942ff62e1481d462db601',1,'basecross::GShader::GShader(const wstring &amp;Filename)']]]
+  ['gravity',['Gravity',['../classbasecross_1_1_gravity.html#a207e994e108f8c5b30e8c9665702589a',1,'basecross::Gravity']]],
+  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html#a6cb6e68b1d11618089d44db43252b698',1,'basecross::GShader::GShader()'],['../classbasecross_1_1_g_shader.html#aa3b29a2aaef942ff62e1481d462db601',1,'basecross::GShader::GShader(const wstring &amp;Filename)']]],
+  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html',1,'basecross']]]
 ];

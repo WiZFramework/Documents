@@ -13,6 +13,7 @@ var searchData=
   ['getbasename',['GetBaseName',['../classbasecross_1_1_xml_doc_reader.html#ac02cb8d005748eedd4af4463fc5e58e6',1,'basecross::XmlDocReader::GetBaseName()'],['../classbasecross_1_1_xml_doc.html#a34f145c01bf3962cef648ad18553c79f',1,'basecross::XmlDoc::GetBaseName()']]],
   ['getbodyangularvelocity',['GetBodyAngularVelocity',['../classbasecross_1_1_base_physics.html#a6e1c6f4b83e493843000545741331606',1,'basecross::BasePhysics']]],
   ['getbodylinearvelocity',['GetBodyLinearVelocity',['../classbasecross_1_1_base_physics.html#a3efbf67e8a733b0b029621ce80982633',1,'basecross::BasePhysics']]],
+  ['getbodymotiontype',['GetBodyMotionType',['../classbasecross_1_1_base_physics.html#abdb3a576e40cf2f8677427e7bf943501',1,'basecross::BasePhysics']]],
   ['getbodyorientation',['GetBodyOrientation',['../classbasecross_1_1_base_physics.html#a942c34efe156a809ade5d2887039be85',1,'basecross::BasePhysics']]],
   ['getbodyposition',['GetBodyPosition',['../classbasecross_1_1_base_physics.html#af2979a35f2f7cc9bcea7e95c41960382',1,'basecross::BasePhysics']]],
   ['getbodystatus',['GetBodyStatus',['../classbasecross_1_1_base_physics.html#acbe1d002b33be755c479aee618849c53',1,'basecross::BasePhysics']]],

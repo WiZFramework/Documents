@@ -4,6 +4,7 @@ var searchData=
   ['defaultrendertarget',['DefaultRenderTarget',['../classbasecross_1_1_default_render_target.html#abf3064a48a85da338f05cf74b6f8a29a',1,'basecross::DefaultRenderTarget']]],
   ['deleteapp',['DeleteApp',['../classbasecross_1_1_app.html#a80352cc3b0c2be3670889f6e0b82d34f',1,'basecross::App']]],
   ['demandcreate',['DemandCreate',['../structbasecross_1_1_util.html#ad580699e1012c7355fd92ee9aa8e75a9',1,'basecross::Util']]],
+  ['destroygameobject',['DestroyGameObject',['../classbasecross_1_1_game_object.html#aecbb4308b21860b88f5f81f14f2da3ba',1,'basecross::GameObject']]],
   ['destroystage',['DestroyStage',['../classbasecross_1_1_stage.html#af9a3c35736b0fbe8adfbe9485cfee8b6',1,'basecross::Stage']]],
   ['deviceresources',['DeviceResources',['../classbasecross_1_1_device_resources.html#ad1270c4c8b6eac1af8d82782db23e3bc',1,'basecross::DeviceResources']]],
   ['disablespecular',['DisableSpecular',['../classbasecross_1_1_bc_base_draw.html#af7b2337bde0f9fcd26e1977ad2ea8fe9',1,'basecross::BcBaseDraw']]],

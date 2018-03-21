@@ -14,6 +14,7 @@ var searchData=
   ['getbasename',['GetBaseName',['../classbasecross_1_1_xml_doc_reader.html#ac02cb8d005748eedd4af4463fc5e58e6',1,'basecross::XmlDocReader::GetBaseName()'],['../classbasecross_1_1_xml_doc.html#a34f145c01bf3962cef648ad18553c79f',1,'basecross::XmlDoc::GetBaseName()']]],
   ['getbodyangularvelocity',['GetBodyAngularVelocity',['../classbasecross_1_1_base_physics.html#a6e1c6f4b83e493843000545741331606',1,'basecross::BasePhysics']]],
   ['getbodylinearvelocity',['GetBodyLinearVelocity',['../classbasecross_1_1_base_physics.html#a3efbf67e8a733b0b029621ce80982633',1,'basecross::BasePhysics']]],
+  ['getbodymotiontype',['GetBodyMotionType',['../classbasecross_1_1_base_physics.html#abdb3a576e40cf2f8677427e7bf943501',1,'basecross::BasePhysics']]],
   ['getbodyorientation',['GetBodyOrientation',['../classbasecross_1_1_base_physics.html#a942c34efe156a809ade5d2887039be85',1,'basecross::BasePhysics']]],
   ['getbodyposition',['GetBodyPosition',['../classbasecross_1_1_base_physics.html#af2979a35f2f7cc9bcea7e95c41960382',1,'basecross::BasePhysics']]],
   ['getbodystatus',['GetBodyStatus',['../classbasecross_1_1_base_physics.html#acbe1d002b33be755c479aee618849c53',1,'basecross::BasePhysics']]],
@@ -190,6 +191,6 @@ var searchData=
   ['getxyz',['getXYZ',['../structbasecross_1_1bsm_1_1_quat.html#a749b8e62a98b35feb9c29e27d8e8c1e2',1,'basecross::bsm::Quat']]],
   ['gety',['getY',['../structbasecross_1_1bsm_1_1_flt2.html#a4abab5304973b232d1fd6c999b9d5447',1,'basecross::bsm::Flt2::getY()'],['../structbasecross_1_1bsm_1_1_flt3.html#ade08d089907fead5fedd0f22267f71ab',1,'basecross::bsm::Flt3::getY()'],['../structbasecross_1_1bsm_1_1_flt4.html#a795bf86692fd9ef3f1deac14c5d79354',1,'basecross::bsm::Flt4::getY()'],['../structbasecross_1_1bsm_1_1_quat.html#ae509e42ccce5c407bd418eb8524c6e59',1,'basecross::bsm::Quat::getY()']]],
   ['getz',['getZ',['../structbasecross_1_1bsm_1_1_flt3.html#a06a8a232cc2dc7bccd679de0db566a58',1,'basecross::bsm::Flt3::getZ()'],['../structbasecross_1_1bsm_1_1_flt4.html#a992c4d44c66d9951571440bee4909b1e',1,'basecross::bsm::Flt4::getZ()'],['../structbasecross_1_1bsm_1_1_quat.html#a3fadcd2f587b0e3862ab87484430a2a8',1,'basecross::bsm::Quat::getZ()']]],
-  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html',1,'basecross']]],
-  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html#a6cb6e68b1d11618089d44db43252b698',1,'basecross::GShader::GShader()'],['../classbasecross_1_1_g_shader.html#aa3b29a2aaef942ff62e1481d462db601',1,'basecross::GShader::GShader(const wstring &amp;Filename)']]]
+  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html#a6cb6e68b1d11618089d44db43252b698',1,'basecross::GShader::GShader()'],['../classbasecross_1_1_g_shader.html#aa3b29a2aaef942ff62e1481d462db601',1,'basecross::GShader::GShader(const wstring &amp;Filename)']]],
+  ['gshader',['GShader',['../classbasecross_1_1_g_shader.html',1,'basecross']]]
 ];

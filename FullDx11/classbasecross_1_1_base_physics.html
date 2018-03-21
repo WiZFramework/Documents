@@ -216,6 +216,12 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <tr class="memitem:a69df62e45a633ed5a7eb449910800de0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#a69df62e45a633ed5a7eb449910800de0">SetBodyContactFilterTarget</a> (uint16_t body_index, uint32_t val)</td></tr>
 <tr class="memdesc:a69df62e45a633ed5a7eb449910800de0"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体の衝突ターゲット衝突フィルターを設定する  <a href="#a69df62e45a633ed5a7eb449910800de0">[詳解]</a><br /></td></tr>
 <tr class="separator:a69df62e45a633ed5a7eb449910800de0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7a26c9f24d99c8953846c5d8a5dcdb29"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#a7a26c9f24d99c8953846c5d8a5dcdb29">SetBodyMotionType</a> (uint16_t body_index, PsMotionType t)</td></tr>
+<tr class="memdesc:a7a26c9f24d99c8953846c5d8a5dcdb29"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体のモーションタイプを設定する  <a href="#a7a26c9f24d99c8953846c5d8a5dcdb29">[詳解]</a><br /></td></tr>
+<tr class="separator:a7a26c9f24d99c8953846c5d8a5dcdb29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb3a576e40cf2f8677427e7bf943501"><td class="memItemLeft" align="right" valign="top">PsMotionType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#abdb3a576e40cf2f8677427e7bf943501">GetBodyMotionType</a> (uint16_t body_index) const </td></tr>
+<tr class="memdesc:abdb3a576e40cf2f8677427e7bf943501"><td class="mdescLeft">&#160;</td><td class="mdescRight">剛体のモーションタイプをを得る  <a href="#abdb3a576e40cf2f8677427e7bf943501">[詳解]</a><br /></td></tr>
+<tr class="separator:abdb3a576e40cf2f8677427e7bf943501"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a94b9842ad80452cb7be2589c04a3ee4d"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_base_physics.html#a94b9842ad80452cb7be2589c04a3ee4d">GetNumShapes</a> (uint16_t body_index) const </td></tr>
 <tr class="memdesc:a94b9842ad80452cb7be2589c04a3ee4d"><td class="mdescLeft">&#160;</td><td class="mdescRight">形状の数を得る  <a href="#a94b9842ad80452cb7be2589c04a3ee4d">[詳解]</a><br /></td></tr>
 <tr class="separator:a94b9842ad80452cb7be2589c04a3ee4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1172,6 +1178,31 @@ sce::PhysicsEffects::PfxContactManifold &amp;&#160;</td><td class="memItemRight"
 
 </div>
 </div>
+<a class="anchor" id="abdb3a576e40cf2f8677427e7bf943501"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">PsMotionType basecross::BasePhysics::GetBodyMotionType </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>body_index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>剛体のモーションタイプをを得る </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">body_index</td><td>ボディID </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>形状数 </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a942c34efe156a809ade5d2887039be85"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2058,6 +2089,42 @@ sce::PhysicsEffects::PfxContactManifold &amp;&#160;</td><td class="memItemRight"
   <table class="params">
     <tr><td class="paramdir">[in]</td><td class="paramname">body_index</td><td>ボディID </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">v</td><td>速度 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a7a26c9f24d99c8953846c5d8a5dcdb29"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::BasePhysics::SetBodyMotionType </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>body_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">PsMotionType&#160;</td>
+          <td class="paramname"><em>t</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>剛体のモーションタイプを設定する </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">body_index</td><td>ボディID </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">t</td><td>値 </td></tr>
   </table>
   </dd>
 </dl>
