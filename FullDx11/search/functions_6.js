@@ -10,7 +10,7 @@ var searchData=
   ['gameobjecttxmlbuilder',['GameObjecttXMLBuilder',['../classbasecross_1_1_game_objectt_x_m_l_builder.html#a37f45f4d29e9e314c813b733d42eaa4f',1,'basecross::GameObjecttXMLBuilder']]],
   ['genericdraw',['GenericDraw',['../classbasecross_1_1_generic_draw.html#a32efd27d52d4cd5c409bc2630657221c',1,'basecross::GenericDraw']]],
   ['get2dworldmatrix',['Get2DWorldMatrix',['../classbasecross_1_1_transform.html#a97740f05e6e66dd26b37f6567b4d6c59',1,'basecross::Transform']]],
-  ['getactivestage',['GetActiveStage',['../classbasecross_1_1_scene_base.html#ad00ad03e816627b4beba375655d4b428',1,'basecross::SceneBase']]],
+  ['getactivestage',['GetActiveStage',['../classbasecross_1_1_scene_base.html#af9aab0e9999c62d5edfa26b708b7e0bc',1,'basecross::SceneBase']]],
   ['getactivetypestage',['GetActiveTypeStage',['../classbasecross_1_1_scene_base.html#ad16f045fcfb8be5711e9d7e46fa75443',1,'basecross::SceneBase']]],
   ['getadditive',['GetAdditive',['../classbasecross_1_1_render_state.html#a26275773e573ae475f9d3fc1724df36b',1,'basecross::RenderState']]],
   ['getaddtype',['GetAddType',['../classbasecross_1_1_multi_particle.html#a6c3a203e9bbd60de031a12697ef090bf',1,'basecross::MultiParticle']]],

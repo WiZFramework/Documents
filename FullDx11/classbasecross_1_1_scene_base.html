@@ -115,9 +115,9 @@ basecross::SceneBase の継承関係図</div>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 公開メンバ関数</h2></td></tr>
-<tr class="memitem:ad00ad03e816627b4beba375655d4b428"><td class="memItemLeft" align="right" valign="top">shared_ptr&lt; <a class="el" href="classbasecross_1_1_stage.html">Stage</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_scene_base.html#ad00ad03e816627b4beba375655d4b428">GetActiveStage</a> () const </td></tr>
-<tr class="memdesc:ad00ad03e816627b4beba375655d4b428"><td class="mdescLeft">&#160;</td><td class="mdescRight">現在のステージを得る  <a href="#ad00ad03e816627b4beba375655d4b428">[詳解]</a><br /></td></tr>
-<tr class="separator:ad00ad03e816627b4beba375655d4b428"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9aab0e9999c62d5edfa26b708b7e0bc"><td class="memItemLeft" align="right" valign="top">shared_ptr&lt; <a class="el" href="classbasecross_1_1_stage.html">Stage</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_scene_base.html#af9aab0e9999c62d5edfa26b708b7e0bc">GetActiveStage</a> (bool ExceptionActive=true) const </td></tr>
+<tr class="memdesc:af9aab0e9999c62d5edfa26b708b7e0bc"><td class="mdescLeft">&#160;</td><td class="mdescRight">現在のステージを得る  <a href="#af9aab0e9999c62d5edfa26b708b7e0bc">[詳解]</a><br /></td></tr>
+<tr class="separator:af9aab0e9999c62d5edfa26b708b7e0bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcd1a28853aea3d4854903d589b59dd3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt4.html">bsm::Col4</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_scene_base.html#abcd1a28853aea3d4854903d589b59dd3">GetClearColor</a> () const </td></tr>
 <tr class="memdesc:abcd1a28853aea3d4854903d589b59dd3"><td class="mdescLeft">&#160;</td><td class="mdescRight">画面をクリアする色を得る  <a href="#abcd1a28853aea3d4854903d589b59dd3">[詳解]</a><br /></td></tr>
 <tr class="separator:abcd1a28853aea3d4854903d589b59dd3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,21 +205,28 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
 <a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
 <div class="textblock"><p>シーン親クラス </p>
 </div><h2 class="groupheader">関数詳解</h2>
-<a class="anchor" id="ad00ad03e816627b4beba375655d4b428"></a>
+<a class="anchor" id="af9aab0e9999c62d5edfa26b708b7e0bc"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">shared_ptr&lt; <a class="el" href="classbasecross_1_1_stage.html">Stage</a> &gt; basecross::SceneBase::GetActiveStage </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>ExceptionActive</em> = <code>true</code></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>現在のステージを得る </p>
-<dl class="section return"><dt>戻り値</dt><dd>現在のステージ（失敗事例外） </dd></dl>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">ExceptionActive</td><td>失敗事例外にするかどうか。 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>現在のステージ </dd></dl>
 
 </div>
 </div>
