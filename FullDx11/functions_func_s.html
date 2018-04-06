@@ -158,11 +158,20 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <li>SEGMENT_AABB()
 : <a class="el" href="structbasecross_1_1_hit_test.html#a4bb214b7230173f223f038067533eb34">basecross::HitTest</a>
 </li>
+<li>SEGMENT_CAPSULE()
+: <a class="el" href="structbasecross_1_1_hit_test.html#a84ececc8f1827376778d36bf3ae3a2f6">basecross::HitTest</a>
+</li>
+<li>SEGMENT_CYLINDER()
+: <a class="el" href="structbasecross_1_1_hit_test.html#ad00f07683b4224dc256cb4b5f1398670">basecross::HitTest</a>
+</li>
 <li>SEGMENT_OBB()
 : <a class="el" href="structbasecross_1_1_hit_test.html#a0f01af7786117eda14dbde1d819e6534">basecross::HitTest</a>
 </li>
 <li>SEGMENT_PLANE()
 : <a class="el" href="structbasecross_1_1_hit_test.html#a65f73d0930edc79574145a06d4eaa7a8">basecross::HitTest</a>
+</li>
+<li>SEGMENT_SPHERE()
+: <a class="el" href="structbasecross_1_1_hit_test.html#a01c2bd0baded43f5ad80edbcbefc07ba">basecross::HitTest</a>
 </li>
 <li>SendEvent()
 : <a class="el" href="classbasecross_1_1_event_dispatcher.html#aa7c2ac2badaacfd2139ca3117add4fab">basecross::EventDispatcher</a>
@@ -616,7 +625,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <li>SetMultiMeshResource()
 : <a class="el" href="classbasecross_1_1_bc_base_draw.html#a2ef9a8cd07180da377eeedf1cf473d4a">basecross::BcBaseDraw</a>
 , <a class="el" href="classbasecross_1_1_bc_p_n_t_bone_model_draw.html#a42f1a4d2f1137d0c566053a3ec362c47">basecross::BcPNTBoneModelDraw</a>
-, <a class="el" href="classbasecross_1_1_bc_p_n_tn_t_bone_model_draw.html#a8c948d7b5c907174b7322e5d4cfd7014">basecross::BcPNTnTBoneModelDraw</a>
+, <a class="el" href="classbasecross_1_1_bc_p_n_tn_t_bone_model_draw.html#a68bcd8b9776a24fc0d481b9aa66cbb31">basecross::BcPNTnTBoneModelDraw</a>
 , <a class="el" href="classbasecross_1_1_p_n_t_bone_model_draw.html#a5fc38282d924acb8bbfd8ec1144b649a">basecross::PNTBoneModelDraw</a>
 , <a class="el" href="classbasecross_1_1_shadowmap.html#a22bf7ef8bc463617ce0645814f9c3337">basecross::Shadowmap</a>
 , <a class="el" href="classbasecross_1_1_sm_base_draw.html#a4cc06b7d6dacf0cd54cfe88f0717b5e7">basecross::SmBaseDraw</a>
@@ -628,7 +637,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_bc_base_draw.html#aca5d73bc2f942ad5739a30f2e7811a84">basecross::BcBaseDraw</a>
 </li>
 <li>SetNormalTangent()
-: <a class="el" href="classbasecross_1_1_mesh_utill.html#a6a8a5dbbca5db7901b0d101799071f4e">basecross::MeshUtill</a>
+: <a class="el" href="classbasecross_1_1_mesh_utill.html#aa520c7b466a3a23c33c1a726aac3ac2d">basecross::MeshUtill</a>
 </li>
 <li>SetNowTime()
 : <a class="el" href="classbasecross_1_1_action_component.html#af701bd89884135e9fed0d64d41a8699c">basecross::ActionComponent</a>
@@ -688,7 +697,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_stage.html#a7bea64d830da35955685b97a6ddda533">basecross::Stage</a>
 </li>
 <li>SetPivot()
-: <a class="el" href="classbasecross_1_1_transform.html#aadc8b6ec53903bcc3d45924dce8f8557">basecross::Transform</a>
+: <a class="el" href="classbasecross_1_1_transform.html#a89f9a8d01a594a8b079bb95fb9590166">basecross::Transform</a>
 </li>
 <li>SetPlaneVec()
 : <a class="el" href="classbasecross_1_1_wall_avoidance_steering.html#a73adbd086d5836cac086610330911678">basecross::WallAvoidanceSteering</a>
@@ -699,7 +708,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 , <a class="el" href="classbasecross_1_1_transform.html#ab7768691e81a064b4eb44b8ac637b84b">basecross::Transform</a>
 </li>
 <li>SetPositionToDirectional()
-: <a class="el" href="structbasecross_1_1_light.html#a7f5cf41c99c723c6f1ba5fcdbc893045">basecross::Light</a>
+: <a class="el" href="structbasecross_1_1_light.html#a5fe8a1be70f7862fb2492d54d4845a50">basecross::Light</a>
 </li>
 <li>SetPreviousState()
 : <a class="el" href="classbasecross_1_1_state_machine.html#a2f521e8ea2025155045a533ca2dc12e6">basecross::StateMachine&lt; T &gt;</a>
@@ -796,14 +805,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_game_object.html#a37417ab65090ccb314006ec3ef8a22a1">basecross::GameObject</a>
 </li>
 <li>SetStartPosition()
-: <a class="el" href="classbasecross_1_1_move_component.html#ad4c2b700e11ccc87818e9ce80b3ec310">basecross::MoveComponent</a>
+: <a class="el" href="classbasecross_1_1_move_component.html#a4ed244957289f62a6af4dabf9cc314cc">basecross::MoveComponent</a>
 , <a class="el" href="classbasecross_1_1_string_sprite.html#a984b1ef44da76c08fec9152c9b26de9b">basecross::StringSprite</a>
 </li>
 <li>SetStartQuaternion()
 : <a class="el" href="classbasecross_1_1_rotate_component.html#a3a85219bf0dbbabb1c1d2b2356739df9">basecross::RotateComponent</a>
 </li>
 <li>SetStartRotate()
-: <a class="el" href="classbasecross_1_1_rotate_component.html#a475711fdefa6992b02c1e2a469015430">basecross::RotateComponent</a>
+: <a class="el" href="classbasecross_1_1_rotate_component.html#a1671c5b1784e704d970f6ec94de48d53">basecross::RotateComponent</a>
 </li>
 <li>SetStartScale()
 : <a class="el" href="classbasecross_1_1_scale_component.html#a18f678e6586d8f477590d13ecd9c7c4c">basecross::ScaleComponent</a>
@@ -825,7 +834,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_look_at_camera.html#a228d5dfdcd75df679c2faf5e9976fc8a">basecross::LookAtCamera</a>
 </li>
 <li>SetTargetPosition()
-: <a class="el" href="classbasecross_1_1_move_component.html#a21179b120a6a5980b1d9ac776df82efe">basecross::MoveComponent</a>
+: <a class="el" href="classbasecross_1_1_move_component.html#aec902adc0d0018715091ff4a2a0c39aa">basecross::MoveComponent</a>
 </li>
 <li>SetTargetQuaternion()
 : <a class="el" href="classbasecross_1_1_rotate_component.html#a2583bfc9182306166efdf6bb28f3bff5">basecross::RotateComponent</a>
@@ -834,7 +843,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_rotate_component.html#a2b6468fe548b699a52640082c8690116">basecross::RotateComponent</a>
 </li>
 <li>SetTargetScale()
-: <a class="el" href="classbasecross_1_1_scale_component.html#adc51064aac13f71f08da78e35446855d">basecross::ScaleComponent</a>
+: <a class="el" href="classbasecross_1_1_scale_component.html#acaca0e1c4d470235f1897f25404f114e">basecross::ScaleComponent</a>
 </li>
 <li>SetTargetToAt()
 : <a class="el" href="classbasecross_1_1_look_at_camera.html#ac8ab60e0fb94196b0b3228457ed1aaa0">basecross::LookAtCamera</a>
@@ -859,10 +868,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 </li>
 <li>SetTextureResource()
 : <a class="el" href="classbasecross_1_1_bc_base_draw.html#adbd54a4f0d2a02367aeb2b4853b88244">basecross::BcBaseDraw</a>
-, <a class="el" href="classbasecross_1_1_mesh_resource.html#ac47b5cc79e3dc80065f0cb229cffe668">basecross::MeshResource</a>
+, <a class="el" href="classbasecross_1_1_mesh_resource.html#a85458eb555f0573b3c368915a95f4d45">basecross::MeshResource</a>
 , <a class="el" href="classbasecross_1_1_multi_mesh_resource.html#ad1ea7889a710b2efb99c6b437d76a1ba">basecross::MultiMeshResource</a>
 , <a class="el" href="classbasecross_1_1_particle.html#a4637618688b9b3ab795fd4f4f30dddde">basecross::Particle</a>
-, <a class="el" href="classbasecross_1_1_sm_base_draw.html#ab1d8a99028669834219413543a9b53f8">basecross::SmBaseDraw</a>
+, <a class="el" href="classbasecross_1_1_sm_base_draw.html#a53a1e9ce92070da6c817e452f1b8fddc">basecross::SmBaseDraw</a>
 , <a class="el" href="classbasecross_1_1_sprite_base_draw.html#a3479802a68359ab8bdc30f66152cc89f">basecross::SpriteBaseDraw</a>
 </li>
 <li>SetToBefore()
@@ -885,7 +894,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_look_at_camera.html#a30b540913bc83aa2c7ebfba1c2d7bd42">basecross::LookAtCamera</a>
 </li>
 <li>SetUp()
-: <a class="el" href="classbasecross_1_1_camera.html#a87ffa5ba020dbcd8e8de794a6cdcfdec">basecross::Camera</a>
+: <a class="el" href="classbasecross_1_1_camera.html#a350b08ba4b20da909734aac6a33bab8f">basecross::Camera</a>
 </li>
 <li>SetUpdateActive()
 : <a class="el" href="classbasecross_1_1_component.html#a21e6b60142ec6f0dc09bee1868e86e44">basecross::Component</a>
@@ -1025,7 +1034,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="structbasecross_1_1_sound_item.html#a5f16218ee3250b52609d8a0d1fe1efa9">basecross::SoundItem</a>
 </li>
 <li>SPHERE()
-: <a class="el" href="structbasecross_1_1_s_p_h_e_r_e.html#a9608983007feb15e28f82e9e75c86e7e">basecross::SPHERE</a>
+: <a class="el" href="structbasecross_1_1_s_p_h_e_r_e.html#a4e3d311090e54f8b6667cd5cac145f9b">basecross::SPHERE</a>
 </li>
 <li>SPHERE_AABB()
 : <a class="el" href="structbasecross_1_1_hit_test.html#ae829a975caeef5e25fc69977538d791c">basecross::HitTest</a>
