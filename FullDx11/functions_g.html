@@ -746,6 +746,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <li>GetLinearWrap()
 : <a class="el" href="classbasecross_1_1_render_state.html#aea4bfc70d450d2de804b74e63fe39794">basecross::RenderState</a>
 </li>
+<li>GetLocalPositions()
+: <a class="el" href="classbasecross_1_1_mesh_resource.html#ab7c71c386d1103f8ec3cc4fc4867bbb8">basecross::MeshResource</a>
+</li>
 <li>GetLocalQuaternion()
 : <a class="el" href="classbasecross_1_1_rotate_by.html#aa3992329a1dc0dfdf28a74c55c26b586">basecross::RotateBy</a>
 </li>
@@ -949,7 +952,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_bc_base_draw.html#a3a95bbea982265dd5772206934a50784">basecross::BcBaseDraw</a>
 </li>
 <li>GetNormalMapTextureResourceVec()
-: <a class="el" href="classbasecross_1_1_bc_base_draw.html#a1488bce2019fa05bb72c93deb6dc160e">basecross::BcBaseDraw</a>
+: <a class="el" href="classbasecross_1_1_bc_base_draw.html#a78829b7720a85e9d1b0406fba06bacdd">basecross::BcBaseDraw</a>
 </li>
 <li>getNowPfxBroadphasePair()
 : <a class="el" href="classbasecross_1_1_base_physics.html#a893abda978309319b99a522e3577ffe9">basecross::BasePhysics</a>
@@ -1267,18 +1270,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_app.html#af1e50c8252f68c1a5fb70d10059a1b6e">basecross::App</a>
 </li>
 <li>GetSelect()
-: <a class="el" href="classbasecross_1_1_csv_file.html#a2779b75405c4f69e0c0865fad9dbc2f5">basecross::CsvFile</a>
+: <a class="el" href="classbasecross_1_1_csv_file.html#a56f1d53eb6fad386717ca2e52bfb481f">basecross::CsvFile</a>
 </li>
 <li>GetSelect2()
 : <a class="el" href="classbasecross_1_1_csv_file.html#a7a907d6635cbb8052be2cc4bea16684f">basecross::CsvFile</a>
 </li>
 <li>GetSelectNodes()
 : <a class="el" href="classbasecross_1_1_xml_doc.html#a2f83824806856db1902bf375796e17be">basecross::XmlDoc</a>
-, <a class="el" href="classbasecross_1_1_xml_doc_reader.html#a99d42e0f2dfdedec7abfb87a4255dd69">basecross::XmlDocReader</a>
+, <a class="el" href="classbasecross_1_1_xml_doc_reader.html#a6b29d9d479a4e74babd2ea38b670afe8">basecross::XmlDocReader</a>
 </li>
 <li>GetSelectSingleNode()
 : <a class="el" href="classbasecross_1_1_xml_doc.html#a3f0407b8586f97d2ddaafe6feefce16d">basecross::XmlDoc</a>
-, <a class="el" href="classbasecross_1_1_xml_doc_reader.html#a95ecbeedff1841ed6ebe8d0bba7a1eb9">basecross::XmlDocReader</a>
+, <a class="el" href="classbasecross_1_1_xml_doc_reader.html#a2bb42f626f39a3228866abbc9fa0c263">basecross::XmlDocReader</a>
 </li>
 <li>GetShader()
 : <a class="el" href="classbasecross_1_1_compute_shader.html#a5ff448a320c3ba97ff0d7bdb41dcea32">basecross::ComputeShader&lt; ShaderType &gt;</a>
@@ -1328,8 +1331,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 <li>GetSharedObjectGroup()
 : <a class="el" href="classbasecross_1_1_stage.html#a53426292249318e68faa6610a6b00591">basecross::Stage</a>
 </li>
-<li>GetSkinedVertices()
-: <a class="el" href="classbasecross_1_1_bc_base_draw.html#aae708ef4bd713460e81ffd63987e39d7">basecross::BcBaseDraw</a>
+<li>GetSkinedMeshLocalPositions()
+: <a class="el" href="classbasecross_1_1_bc_base_draw.html#acb8272f6f27cfc177251c8522555dece">basecross::BcBaseDraw</a>
+, <a class="el" href="classbasecross_1_1_sm_base_draw.html#a90334d26821aef94146a382518b95a03">basecross::SmBaseDraw</a>
+</li>
+<li>GetSkinedMeshWorldPositions()
+: <a class="el" href="classbasecross_1_1_bc_base_draw.html#a283a7ce54bce1cf82e8421c74952452e">basecross::BcBaseDraw</a>
+, <a class="el" href="classbasecross_1_1_sm_base_draw.html#a0ca48acd5149e917322c3956a2a4c1da">basecross::SmBaseDraw</a>
+</li>
+<li>GetSkins()
+: <a class="el" href="classbasecross_1_1_mesh_resource.html#acee5d0c56c49f615a76fe56aace7f48a">basecross::MeshResource</a>
 </li>
 <li>GetSoundData()
 : <a class="el" href="classbasecross_1_1_audio_resource.html#a9de349a49a2b667b7e4b480d38b8017d">basecross::AudioResource</a>
@@ -1376,6 +1387,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 </li>
 <li>GetStateName()
 : <a class="el" href="classbasecross_1_1_obj_state.html#ae85168a585a8ed986068d0456d8061f8">basecross::ObjState&lt; T &gt;</a>
+</li>
+<li>GetStaticMeshLocalPositions()
+: <a class="el" href="classbasecross_1_1_bc_base_draw.html#a7870198c2cf0fcc2d943d55c19a2a074">basecross::BcBaseDraw</a>
+, <a class="el" href="classbasecross_1_1_sm_base_draw.html#a4df1130420d0c125de7aa20f9d64988a">basecross::SmBaseDraw</a>
+</li>
+<li>GetStaticMeshWorldPositions()
+: <a class="el" href="classbasecross_1_1_bc_base_draw.html#a7f9cc4551003a489c1dbac71dc5cc1cf">basecross::BcBaseDraw</a>
+, <a class="el" href="classbasecross_1_1_sm_base_draw.html#a5a1c49605334def08f71fe5c81553c53">basecross::SmBaseDraw</a>
 </li>
 <li>GetStatus()
 : <a class="el" href="classbasecross_1_1_ps_body_component.html#aaada9af6a008a9d8c42bd45957c52246">basecross::PsBodyComponent</a>
@@ -1544,6 +1563,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 , <a class="el" href="classbasecross_1_1_rigidbody.html#a94a944c86e6fea6ae4fe13aa5e24519d">basecross::Rigidbody</a>
 , <a class="el" href="classbasecross_1_1_transform.html#a77f08d31b2d76e52c7766d48bc1e3b79">basecross::Transform</a>
 </li>
+<li>GetVerteces()
+: <a class="el" href="classbasecross_1_1_mesh_resource.html#a525ae36ee4732929b11c43a41bba46c3">basecross::MeshResource</a>
+</li>
 <li>GetVertexBuffer()
 : <a class="el" href="classbasecross_1_1_mesh_resource.html#af962dc3c6262633e143499f36d839e51">basecross::MeshResource</a>
 , <a class="el" href="classbasecross_1_1_multi_mesh_resource.html#a6e488dbd7e439a9e734b0ac7b2f6425d">basecross::MultiMeshResource</a>
@@ -1684,7 +1706,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'検索');
 : <a class="el" href="classbasecross_1_1_gravity.html#a207e994e108f8c5b30e8c9665702589a">basecross::Gravity</a>
 </li>
 <li>GShader()
-: <a class="el" href="classbasecross_1_1_g_shader.html#aa3b29a2aaef942ff62e1481d462db601">basecross::GShader</a>
+: <a class="el" href="classbasecross_1_1_g_shader.html#a6cb6e68b1d11618089d44db43252b698">basecross::GShader</a>
 </li>
 </ul>
 </div><!-- contents -->

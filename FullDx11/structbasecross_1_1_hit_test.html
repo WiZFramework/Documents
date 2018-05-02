@@ -203,6 +203,9 @@ static <a class="el" href="structbasecross_1_1_s_p_h_e_r_e.html">SPHERE</a>&#160
 <tr class="memitem:a988b90b73f3f7d9c0491dbfa42b057fb"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1_hit_test.html#a988b90b73f3f7d9c0491dbfa42b057fb">SPHERE_COLRECT</a> (const <a class="el" href="structbasecross_1_1_s_p_h_e_r_e.html">SPHERE</a> &amp;sp, const <a class="el" href="structbasecross_1_1_c_o_l_r_e_c_t.html">COLRECT</a> &amp;rect, <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;retvec)</td></tr>
 <tr class="memdesc:a988b90b73f3f7d9c0491dbfa42b057fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">球とCOLRECTとの衝突判定  <a href="#a988b90b73f3f7d9c0491dbfa42b057fb">[詳解]</a><br /></td></tr>
 <tr class="separator:a988b90b73f3f7d9c0491dbfa42b057fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8853e6a1d7c84f7502cc46a86f649b92"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1_hit_test.html#a8853e6a1d7c84f7502cc46a86f649b92">SEGMENT_TRIANGLE</a> (const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;p, const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;q, const <a class="el" href="structbasecross_1_1_t_r_i_a_n_g_l_e.html">TRIANGLE</a> &amp;tri, <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;uvw, float &amp;t)</td></tr>
+<tr class="memdesc:a8853e6a1d7c84f7502cc46a86f649b92"><td class="mdescLeft">&#160;</td><td class="mdescRight">三角形と線分との交差判定  <a href="#a8853e6a1d7c84f7502cc46a86f649b92">[詳解]</a><br /></td></tr>
+<tr class="separator:a8853e6a1d7c84f7502cc46a86f649b92"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af81983288b4efc35f08391629baa8275"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1_hit_test.html#af81983288b4efc35f08391629baa8275">CollisionTestSphereRect</a> (const <a class="el" href="structbasecross_1_1_s_p_h_e_r_e.html">SPHERE</a> &amp;SrcSp, const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;SrcVelocity, const <a class="el" href="structbasecross_1_1_c_o_l_r_e_c_t.html">COLRECT</a> &amp;DestRect, float StartTime, float EndTime, float &amp;HitTime)</td></tr>
 <tr class="memdesc:af81983288b4efc35f08391629baa8275"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sphereと動かないRectの衝突判定  <a href="#af81983288b4efc35f08391629baa8275">[詳解]</a><br /></td></tr>
 <tr class="separator:af81983288b4efc35f08391629baa8275"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -2968,6 +2971,71 @@ static <a class="el" href="structbasecross_1_1_s_p_h_e_r_e.html">SPHERE</a>&#160
     <tr><td class="paramdir">[in]</td><td class="paramname">p0</td><td>線分開始点 </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">p1</td><td>線分終了点 </td></tr>
     <tr><td class="paramdir">[in]</td><td class="paramname">s</td><td><a class="el" href="structbasecross_1_1_s_p_h_e_r_e.html" title="球ボリューム境界 ">SPHERE</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>交差していればtrue </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a8853e6a1d7c84f7502cc46a86f649b92"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool basecross::HitTest::SEGMENT_TRIANGLE </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>p</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>q</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="structbasecross_1_1_t_r_i_a_n_g_l_e.html">TRIANGLE</a> &amp;&#160;</td>
+          <td class="paramname"><em>tri</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &amp;&#160;</td>
+          <td class="paramname"><em>uvw</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">float &amp;&#160;</td>
+          <td class="paramname"><em>t</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>三角形と線分との交差判定 </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[in]</td><td class="paramname">p</td><td>線分の始点 </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">q</td><td>線分の終点 </td></tr>
+    <tr><td class="paramdir">[in]</td><td class="paramname">tri</td><td>三角形 </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">uvw</td><td>交差点が代入される参照 </td></tr>
+    <tr><td class="paramdir">[out]</td><td class="paramname">t</td><td>交差点の線分上の割合 </td></tr>
   </table>
   </dd>
 </dl>

@@ -201,6 +201,18 @@ virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="c
  AccessWriteがtrueで作成されたリソースは、頂点の配列によって頂点を変更できる。<br />
  AccessWriteがtrueでない場合は、バックアップは空である。  <a href="#a41c2c03b337e36721f1e50e364a433b6">[詳解]</a><br /></td></tr>
 <tr class="separator:a41c2c03b337e36721f1e50e364a433b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a525ae36ee4732929b11c43a41bba46c3"><td class="memItemLeft" align="right" valign="top">const vector&lt; <a class="el" href="structbasecross_1_1_vertex_position.html">VertexPosition</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_mesh_resource.html#a525ae36ee4732929b11c43a41bba46c3">GetVerteces</a> () const </td></tr>
+<tr class="memdesc:a525ae36ee4732929b11c43a41bba46c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">汎用に利用できる頂点の取得<br />
+  <a href="#a525ae36ee4732929b11c43a41bba46c3">[詳解]</a><br /></td></tr>
+<tr class="separator:a525ae36ee4732929b11c43a41bba46c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab7c71c386d1103f8ec3cc4fc4867bbb8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_mesh_resource.html#ab7c71c386d1103f8ec3cc4fc4867bbb8">GetLocalPositions</a> (vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &gt; &amp;ret) const </td></tr>
+<tr class="memdesc:ab7c71c386d1103f8ec3cc4fc4867bbb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">汎用に利用できるローカル頂点(Vec3)の取得<br />
+  <a href="#ab7c71c386d1103f8ec3cc4fc4867bbb8">[詳解]</a><br /></td></tr>
+<tr class="separator:ab7c71c386d1103f8ec3cc4fc4867bbb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acee5d0c56c49f615a76fe56aace7f48a"><td class="memItemLeft" align="right" valign="top">const vector&lt; <a class="el" href="structbasecross_1_1_skin_prim_data.html">SkinPrimData</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_mesh_resource.html#acee5d0c56c49f615a76fe56aace7f48a">GetSkins</a> () const </td></tr>
+<tr class="memdesc:acee5d0c56c49f615a76fe56aace7f48a"><td class="mdescLeft">&#160;</td><td class="mdescRight">汎用に利用できるスキン情報の取得<br />
+  <a href="#acee5d0c56c49f615a76fe56aace7f48a">[詳解]</a><br /></td></tr>
+<tr class="separator:acee5d0c56c49f615a76fe56aace7f48a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa62606bd99b716e9b3957607a0384d81"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:aa62606bd99b716e9b3957607a0384d81"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classbasecross_1_1_mesh_resource.html#aa62606bd99b716e9b3957607a0384d81">UpdateVirtexBuffer</a> (const vector&lt; T &gt; &amp;NewBuffer)</td></tr>
 <tr class="memdesc:aa62606bd99b716e9b3957607a0384d81"><td class="mdescLeft">&#160;</td><td class="mdescRight">頂点の変更.<br />
@@ -1985,6 +1997,40 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="ab7c71c386d1103f8ec3cc4fc4867bbb8"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void basecross::MeshResource::GetLocalPositions </td>
+          <td>(</td>
+          <td class="paramtype">vector&lt; <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">bsm::Vec3</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>ret</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>汎用に利用できるローカル頂点(Vec3)の取得<br />
+ </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramdir">[out]</td><td class="paramname">ret</td><td>代入される頂点の配列 </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>なし </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a6c2f7854b3f816781b39d6bf4fe8581f"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2247,6 +2293,39 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a class="anchor" id="acee5d0c56c49f615a76fe56aace7f48a"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const vector&lt;<a class="el" href="structbasecross_1_1_skin_prim_data.html">SkinPrimData</a>&gt;&amp; basecross::MeshResource::GetSkins </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>汎用に利用できるスキン情報の取得<br />
+ </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">なし</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>スキン情報の配列（空の場合あり）。 </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a4ce7f56c1b0eb459c33705de50b374e4"></a>
 <div class="memitem">
 <div class="memproto">
@@ -2296,6 +2375,39 @@ template&lt;typename T &gt; </div>
 
 <p>type_indexの取得 </p>
 <dl class="section return"><dt>戻り値</dt><dd>type_index </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a525ae36ee4732929b11c43a41bba46c3"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const vector&lt;<a class="el" href="structbasecross_1_1_vertex_position.html">VertexPosition</a>&gt;&amp; basecross::MeshResource::GetVerteces </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>汎用に利用できる頂点の取得<br />
+ </p>
+<dl class="params"><dt>引数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">なし</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>戻り値</dt><dd>頂点の配列。 </dd></dl>
 
 </div>
 </div>
