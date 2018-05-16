@@ -322,6 +322,15 @@ basecross::bsm::Mat4x4 の継承関係図</div>
 <tr class="memitem:a21ac2886d657bff23f5aff2e8093d25c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html">Mat4x4</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html#a21ac2886d657bff23f5aff2e8093d25c">strTransformation</a> (const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> &amp;scaleVec, const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> &amp;transVec, const <a class="el" href="structbasecross_1_1bsm_1_1_quat.html">Quat</a> &amp;unitQuat)</td></tr>
 <tr class="memdesc:a21ac2886d657bff23f5aff2e8093d25c"><td class="mdescLeft">&#160;</td><td class="mdescRight">str変換(Scele,translation,rotation)を実装する  <a href="#a21ac2886d657bff23f5aff2e8093d25c">[詳解]</a><br /></td></tr>
 <tr class="separator:a21ac2886d657bff23f5aff2e8093d25c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0feab7a0d1015c93ad379c47fb5f2a65"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html#a0feab7a0d1015c93ad379c47fb5f2a65">rotXInMatrix</a> () const </td></tr>
+<tr class="memdesc:a0feab7a0d1015c93ad379c47fb5f2a65"><td class="mdescLeft">&#160;</td><td class="mdescRight">this行列内のX軸傾きを取得する。スケーリングに0があった場合近似値になる  <a href="#a0feab7a0d1015c93ad379c47fb5f2a65">[詳解]</a><br /></td></tr>
+<tr class="separator:a0feab7a0d1015c93ad379c47fb5f2a65"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4bddc11d42996f8a18afaff834eb4ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html#aa4bddc11d42996f8a18afaff834eb4ed">rotYInMatrix</a> () const </td></tr>
+<tr class="memdesc:aa4bddc11d42996f8a18afaff834eb4ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">this行列内のY軸傾きを取得する。スケーリングに0があった場合近似値になる  <a href="#aa4bddc11d42996f8a18afaff834eb4ed">[詳解]</a><br /></td></tr>
+<tr class="separator:aa4bddc11d42996f8a18afaff834eb4ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adb74431061ecf45c97ea8a598ec4bb2d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html#adb74431061ecf45c97ea8a598ec4bb2d">rotZInMatrix</a> () const </td></tr>
+<tr class="memdesc:adb74431061ecf45c97ea8a598ec4bb2d"><td class="mdescLeft">&#160;</td><td class="mdescRight">this行列内のZ軸傾きを取得する。スケーリングに0があった場合近似値になる  <a href="#adb74431061ecf45c97ea8a598ec4bb2d">[詳解]</a><br /></td></tr>
+<tr class="separator:adb74431061ecf45c97ea8a598ec4bb2d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
 <div class="textblock"><p><a class="el" href="structbasecross_1_1bsm_1_1_mat4x4.html" title="Mat4x4 (「Major」優先の4x4行列) ">Mat4x4</a> (「Major」優先の4x4行列) </p>
@@ -2054,6 +2063,84 @@ basecross::bsm::Mat4x4 の継承関係図</div>
   </dd>
 </dl>
 <dl class="section return"><dt>戻り値</dt><dd>*thisの参照 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a0feab7a0d1015c93ad379c47fb5f2a65"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> basecross::bsm::Mat4x4::rotXInMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>this行列内のX軸傾きを取得する。スケーリングに0があった場合近似値になる </p>
+<dl class="section return"><dt>戻り値</dt><dd>X軸の傾き </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aa4bddc11d42996f8a18afaff834eb4ed"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> basecross::bsm::Mat4x4::rotYInMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>this行列内のY軸傾きを取得する。スケーリングに0があった場合近似値になる </p>
+<dl class="section return"><dt>戻り値</dt><dd>Y軸の傾き </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="adb74431061ecf45c97ea8a598ec4bb2d"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> basecross::bsm::Mat4x4::rotZInMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>this行列内のZ軸傾きを取得する。スケーリングに0があった場合近似値になる </p>
+<dl class="section return"><dt>戻り値</dt><dd>Z軸の傾き </dd></dl>
 
 </div>
 </div>

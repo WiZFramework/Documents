@@ -235,6 +235,15 @@ basecross::bsm::Mat3x3 の継承関係図</div>
 <tr class="memitem:ad42311c50f9f0d6a97db202f66549a85"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_mat3x3.html">Mat3x3</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat3x3.html#ad42311c50f9f0d6a97db202f66549a85">crossMatrix</a> (const <a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> &amp;vec)</td></tr>
 <tr class="memdesc:ad42311c50f9f0d6a97db202f66549a85"><td class="mdescLeft">&#160;</td><td class="mdescRight">クロス行列を作成する  <a href="#ad42311c50f9f0d6a97db202f66549a85">[詳解]</a><br /></td></tr>
 <tr class="separator:ad42311c50f9f0d6a97db202f66549a85"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3b38d7a6f93e08515013850fc1df293"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat3x3.html#ae3b38d7a6f93e08515013850fc1df293">rotXInMatrix</a> () const </td></tr>
+<tr class="memdesc:ae3b38d7a6f93e08515013850fc1df293"><td class="mdescLeft">&#160;</td><td class="mdescRight">this行列内のX軸傾きを取得する。  <a href="#ae3b38d7a6f93e08515013850fc1df293">[詳解]</a><br /></td></tr>
+<tr class="separator:ae3b38d7a6f93e08515013850fc1df293"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a656ac9b67f74884bf1724d22a1f22e64"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat3x3.html#a656ac9b67f74884bf1724d22a1f22e64">rotYInMatrix</a> () const </td></tr>
+<tr class="memdesc:a656ac9b67f74884bf1724d22a1f22e64"><td class="mdescLeft">&#160;</td><td class="mdescRight">this行列内のY軸傾きを取得する。  <a href="#a656ac9b67f74884bf1724d22a1f22e64">[詳解]</a><br /></td></tr>
+<tr class="separator:a656ac9b67f74884bf1724d22a1f22e64"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a03a264e4f4978651d09b333c5306efc5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structbasecross_1_1bsm_1_1_mat3x3.html#a03a264e4f4978651d09b333c5306efc5">rotZInMatrix</a> () const </td></tr>
+<tr class="memdesc:a03a264e4f4978651d09b333c5306efc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">this行列内のZ軸傾きを取得する。  <a href="#a03a264e4f4978651d09b333c5306efc5">[詳解]</a><br /></td></tr>
+<tr class="separator:a03a264e4f4978651d09b333c5306efc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">詳解</h2>
 <div class="textblock"><p><a class="el" href="structbasecross_1_1bsm_1_1_mat3x3.html" title="Mat3x3 (「Major」優先の3x3行列) ">Mat3x3</a> (「Major」優先の3x3行列) </p>
@@ -1359,6 +1368,84 @@ basecross::bsm::Mat3x3 の継承関係図</div>
   </dd>
 </dl>
 <dl class="section return"><dt>戻り値</dt><dd>*thisの参照 </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="ae3b38d7a6f93e08515013850fc1df293"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> basecross::bsm::Mat3x3::rotXInMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>this行列内のX軸傾きを取得する。 </p>
+<dl class="section return"><dt>戻り値</dt><dd>X軸の傾き </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a656ac9b67f74884bf1724d22a1f22e64"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> basecross::bsm::Mat3x3::rotYInMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>this行列内のY軸傾きを取得する。 </p>
+<dl class="section return"><dt>戻り値</dt><dd>Y軸の傾き </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a03a264e4f4978651d09b333c5306efc5"></a>
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structbasecross_1_1bsm_1_1_flt3.html">Flt3</a> basecross::bsm::Mat3x3::rotZInMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>this行列内のZ軸傾きを取得する。 </p>
+<dl class="section return"><dt>戻り値</dt><dd>Z軸の傾き </dd></dl>
 
 </div>
 </div>

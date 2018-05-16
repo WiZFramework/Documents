@@ -27,5 +27,8 @@ var searchData=
   ['rotationrollpitchyawfromvector',['rotationRollPitchYawFromVector',['../structbasecross_1_1bsm_1_1_quat.html#a8855a7eb1b9c6fc7bb37e7a91e588c22',1,'basecross::bsm::Quat']]],
   ['rotationx',['rotationX',['../structbasecross_1_1bsm_1_1_quat.html#a0b32a10e4a70b554e4f1efd08cccec8f',1,'basecross::bsm::Quat']]],
   ['rotationy',['rotationY',['../structbasecross_1_1bsm_1_1_quat.html#a08e2286496e2356a92626ef55506bf72',1,'basecross::bsm::Quat']]],
-  ['rotationz',['rotationZ',['../structbasecross_1_1bsm_1_1_quat.html#a064ae24eeeb2ac863cabd99fb00cd37c',1,'basecross::bsm::Quat']]]
+  ['rotationz',['rotationZ',['../structbasecross_1_1bsm_1_1_quat.html#a064ae24eeeb2ac863cabd99fb00cd37c',1,'basecross::bsm::Quat']]],
+  ['rotxinmatrix',['rotXInMatrix',['../structbasecross_1_1bsm_1_1_mat3x3.html#ae3b38d7a6f93e08515013850fc1df293',1,'basecross::bsm::Mat3x3::rotXInMatrix()'],['../structbasecross_1_1bsm_1_1_mat4x4.html#a0feab7a0d1015c93ad379c47fb5f2a65',1,'basecross::bsm::Mat4x4::rotXInMatrix()']]],
+  ['rotyinmatrix',['rotYInMatrix',['../structbasecross_1_1bsm_1_1_mat3x3.html#a656ac9b67f74884bf1724d22a1f22e64',1,'basecross::bsm::Mat3x3::rotYInMatrix()'],['../structbasecross_1_1bsm_1_1_mat4x4.html#aa4bddc11d42996f8a18afaff834eb4ed',1,'basecross::bsm::Mat4x4::rotYInMatrix()']]],
+  ['rotzinmatrix',['rotZInMatrix',['../structbasecross_1_1bsm_1_1_mat3x3.html#a03a264e4f4978651d09b333c5306efc5',1,'basecross::bsm::Mat3x3::rotZInMatrix()'],['../structbasecross_1_1bsm_1_1_mat4x4.html#adb74431061ecf45c97ea8a598ec4bb2d',1,'basecross::bsm::Mat4x4::rotZInMatrix()']]]
 ];
