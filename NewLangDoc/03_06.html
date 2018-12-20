@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語の作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－０６．変数の実装</h3>
+　この項では<b>変数</b>を実装します。<br />
+　まず、<b>変数</b>の定義を思い出しましょう。<b>oreProject</b>では変数に<b>特別な記号</b>はつきません。<br />
+　たとえばPHPであれば
+<div class="box1">
+<pre>
+$val = 5;
+</pre>
+</div>
+　のように頭に<b>$</b>が付きます。しかし、<b>oreProject</b>では、
+<div class="box1">
+<pre>
+val = 5;
+</pre>
+</div>
+　という記述ができます。<br />
+　また、将来的には<b>関数</b>も実装しますから
+<div class="box1">
+<pre>
+val = func(3);
+</pre>
+</div>
+　のような記述も、可能にしなければいけません。<br />
+　ここでは<b>valは変数でfuncは関数名</b>であるという区別をつける必要があります。<br />
+<br />
+　関数名についてはここはおいておくとして、つまりは、<b>文字列の並び（識別子）</b>が重要になるということです。<br />
+　<b>識別子</b>は英語で<b>identifier</b>といいます。<b>oreProject</b>における<b>identifier</b>は
+<div class="box1">
+<pre>
+１、最初の文字がアルファベットか _　（アンダースコア）で始まり、
+２、２文字以降は、アルファベットか _　（アンダースコア）か、数字が並ぶ
+３、255文字以内の文字列
+</pre>
+</div>
+　となります。これを正規表現として記述すると、１と２については
+<div class="box1">
+<pre>
+[A-Za-z_][A-Za-z_0-9]*
+</pre>
+</div>
+　となります。３については次項で説明します。
+<h4>oreProject.lの書き換え</h4>
+　まず<b>oreProject.l</b>を書き換えます。以下、全ソースです。
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include "oreProject.tab.h"
+#include "../oreProject/proc.h"
+#define YY_SKIP_YYWRAP 1
+int gLine = 1;
+int yywrap(void){ return 1; }
+
+%}
+%s COMMENT
+%s LINE_COMMENT
+%%
+&lt;INITIAL>{
+    ";"     return SEMICOLON;
+    "*="    return MULASS;
+    "/="    return DIVASS;
+    "+="    return ADDASS;
+    "-="    return SUBASS;
+    "+"     return ADD;
+    "-"     return SUB;
+    "*"     return MUL;
+    "/"     return DIV;
+    "="     return ASS;
+    "pn"    return PRINTN;
+    "p"     return PRINT;
+    "/*"    { BEGIN(COMMENT);}
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+    [1-9][0-9]* {
+        yylval.double_literal = ore::getDblLiteral(yytext);
+        return DOUBLE_LITERAL;
+    }
+    [0-9]*\.[0-9]* {
+        yylval.double_literal = ore::getDblLiteral(yytext);
+        return DOUBLE_LITERAL;
+    }
+    [A-Za-z_][A-Za-z_0-9]* {
+        yylval.identifier = ore::getIdent(yytext);
+        return IDENTIFIER;
+    }
+    "\n"    {gLine++;}
+    [ \t]   ;
+    .   { return 0;}
+}
+&lt;COMMENT>{
+    "\n"    {gLine++;}
+    "*/" {BEGIN(INITIAL);}
+    .   ;
+}
+&lt;LINE_COMMENT>{
+    "\n" { gLine++; BEGIN(INITIAL);}
+    .   ;
+}
+%%
+</pre>
+</div>
+　細かく修正がありますが、次項で解説します。
+<h4>oreProject.yの書き換え</h4>
+　続いて<b>oreProject.y</b>を書き換えます。以下、全ソースです。
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include "../oreProject/proc.h"
+#define YYDEBUG 1
+extern int yylex(void);
+int yyerror(char const *str){
+    extern char *yytext;
+    extern int gLine;
+    fprintf(stderr,"%s, line: %d, near %s\n",str, gLine, yytext);
+    return 0;
+}
+%}
+%union {
+    const char* identifier;
+    double  double_literal;
+}
+%token &lt;identifier>  IDENTIFIER
+%token &lt;double_literal>  DOUBLE_LITERAL
+%token  SEMICOLON ADD SUB MUL DIV CR MULASS DIVASS  ADDASS SUBASS ASS PRINTN PRINT
+%type &lt;double_literal> expression add_expression mul_expression primary_expression
+%%
+statement_list
+    : statement
+    | statement_list statement
+    ;
+statement
+    : SEMICOLON
+    | expression SEMICOLON
+    {
+        ore::procEmpty();
+    }
+    | PRINTN expression SEMICOLON
+    {
+        ore::procPrintn($2);
+    }
+    | PRINT expression SEMICOLON
+    {
+        ore::procPrint($2);
+    }
+    ;
+expression
+    : add_expression
+    | IDENTIFIER MULASS expression
+    {
+        $$ = ore::procMulAcc($1,$3);
+    }
+    | IDENTIFIER DIVASS expression
+    {
+        $$ = ore::procDivAcc($1,$3);
+    }
+    | IDENTIFIER ADDASS expression
+    {
+        $$ = ore::procAddAcc($1,$3);
+    }
+    | IDENTIFIER SUBASS expression
+    {
+        $$ = ore::procSubAcc($1,$3);
+    }
+    | IDENTIFIER ASS expression
+    {
+        $$ = ore::procAcc($1,$3);
+    }
+    ;
+add_expression
+    : mul_expression
+    | add_expression ADD mul_expression
+    {
+        $$ = ore::procAdd($1,$3);
+    }
+    | add_expression SUB mul_expression
+    {
+        $$ = ore::procSub($1,$3);
+    }
+    ;
+mul_expression
+    : primary_expression
+    | mul_expression MUL primary_expression
+    {
+        $$ = ore::procMul($1,$3);
+    }
+    | mul_expression DIV primary_expression
+    {
+        $$ = ore::procDiv($1,$3);
+    }
+    ;
+primary_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = $1;
+    }
+    | IDENTIFIER
+    {
+        $$ = ore::getValue($1);
+    }
+    ;
+%%
+</pre>
+</div>
+<h4>proc.hの書き換え</h4>
+　続いて<b>oreProjectプロジェクト</b>側です。<b>proc.h</b>を書き換えます。以下、全ソースです。
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    ///識別子のポインタを得る（無ければ作成する）
+    const char* getIdent(const char* ext);
+
+    ///doubleリテラルの値を得る
+    double getDblLiteral(const char* ext);
+
+    ///変数の値を得る
+    double getValue(const char* ext);
+
+    ///何もしない処理
+    void procEmpty();
+
+    ///代入処理
+    double procAcc(const char* val,double a);
+
+    ///追加代入処理（乗算）
+    double procMulAcc(const char* val, double a);
+
+    ///追加代入処理（除算）
+    double procDivAcc(const char* val, double a);
+
+    ///追加代入処理（加算）
+    double procAddAcc(const char* val, double a);
+
+    ///追加代入処理（減算）
+    double procSubAcc(const char* val, double a);
+
+    ///出力処理
+    void procPrint(double a);
+
+    ///改行付き出力処理
+    void procPrintn(double a);
+
+    ///加算処理
+    double procAdd(double a, double b);
+
+    ///減算処理
+    double procSub(double a, double b);
+
+    ///乗算処理
+    double procMul(double a, double b);
+
+    ///除算処理
+    double procDiv(double a, double b);
+
+}
+//end namespace ore
+</pre>
+</div>
+<h4>proc.cppの書き換え</h4>
+　続いて<b>proc.cpp</b>です。以下、全ソースです。
+<div class="box1">
+<pre>
+#include &lt;cstdlib>
+#include &lt;iostream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include "proc.h"
+using namespace std;
+
+namespace ore {
+
+#define ORE_MAX_TOKEN_LEN 255
+
+    ///識別子のset
+    set&lt;string> IdentSet;
+
+    ///変数のmap
+    map&lt;string, double> ValueMap;
+
+    ///double形リテラルのmap
+    map&lt;string, double> DblLiteralMap;
+
+
+    ///stringを255文字に切り詰める
+    string clampToken(const char* ext) {
+        string str(ext);
+        if (str.size() > ORE_MAX_TOKEN_LEN) {
+            str.erase(ORE_MAX_TOKEN_LEN);
+        }
+        return str;
+    }
+
+
+    ///識別子のポインタを得る（無ければ作成する）
+    const char* getIdent(const char* ext) {
+        //255文字に切り詰める。
+        auto str = clampToken(ext);
+        //新規作成、すでにあればその参照を返す
+        auto st = IdentSet.insert(str);
+        return st.first->c_str();
+    }
+
+    ///doubleリテラルの値を得る
+    double getDblLiteral(const char* ext) {
+        //255文字に切り詰める。
+        auto str = clampToken(ext);
+        auto it = DblLiteralMap.find(str);
+        if (it != DblLiteralMap.end()) {
+            //見つかった
+            return it->second;
+        }
+        else {
+            //見つからないので作成（リテラルをルdouble型に変換）
+            double d = std::atof(str.c_str());
+            DblLiteralMap[str] = d;
+            return d;
+        }
+    }
+
+
+    ///変数の値を得る
+    double getValue(const char* ext) {
+        //255文字に切り詰める。
+        auto str = clampToken(ext);
+        auto it = ValueMap.find(str);
+        if (it != ValueMap.end()) {
+            //見つかった
+            return it->second;
+        }
+        else {
+            //見つからないので作成（double型の0.0）
+            ValueMap[str] = 0.0;
+            return 0.0;
+        }
+    }
+
+    ///何もしない
+    void procEmpty() {
+        ;
+    }
+
+    ///代入
+    double procAcc(const char* val, double a) {
+        //255文字に切り詰める。
+        auto str = clampToken(val);
+        ValueMap[str] = a;
+        return a;
+    }
+
+    ///追加代入処理（乗算）
+    double procMulAcc(const char* val, double a) {
+        //255文字に切り詰める。
+        auto str = clampToken(val);
+        ValueMap[str] *= a;
+        return a;
+    }
+
+    ///追加代入処理（除算）
+    double procDivAcc(const char* val, double a) {
+        //255文字に切り詰める。
+        auto str = clampToken(val);
+        ValueMap[str] /= a;
+        return a;
+    }
+
+    ///追加代入処理（加算）
+    double procAddAcc(const char* val, double a) {
+        //255文字に切り詰める。
+        auto str = clampToken(val);
+        ValueMap[str] += a;
+        return a;
+    }
+
+    ///追加代入処理（減算）
+    double procSubAcc(const char* val, double a) {
+        //255文字に切り詰める。
+        auto str = clampToken(val);
+        ValueMap[str] -= a;
+        return a;
+    }
+
+
+
+    ///改行付き出力
+    void procPrintn(double a) {
+        cout &lt;&lt; a &lt;&lt; endl;
+    }
+
+    ///出力
+    void procPrint(double a) {
+        cout &lt;&lt; a;
+    }
+
+    /// 加算処理
+    double procAdd(double a, double b) {
+        return a + b;
+    }
+
+    /// 減算処理
+    double procSub(double a, double b) {
+        return a - b;
+    }
+
+    /// 乗算処理
+    double procMul(double a, double b) {
+        return a * b;
+    }
+
+    /// 除算処理
+    double procDiv(double a, double b) {
+        //0除算は見ない
+        return a / b;
+    }
+
+}
+//end namespace ore
+</pre>
+</div>
+<h4>main.cppの書き換え</h4>
+　今項では<b>main.cpp</b>も書き換えます。以下のの形になります。
+<div class="box1">
+<pre>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;vector>
+#include &lt;string>
+using namespace std;
+
+
+class InputParser {
+    vector &lt;string> tokens;
+public:
+    InputParser(int &argc, char **argv) {
+        for (int i = 1; i &lt; argc; ++i) {
+            tokens.push_back(string(argv[i]));
+        }
+    }
+    const string& getCmdOption(const string &option) const {
+        vector&lt;string>::const_iterator itr;
+        itr = find(tokens.begin(), tokens.end(), option);
+        if (itr != tokens.end() && ++itr != tokens.end()) {
+            return *itr;
+        }
+        static const string empty_string("");
+        return empty_string;
+    }
+    bool cmdOptionExists(const string &option) const {
+        return find(tokens.begin(), tokens.end(), option)
+            != tokens.end();
+    }
+};
+
+
+int main(int argc, char **argv) {
+    InputParser input(argc, argv);
+    const string &filename = input.getCmdOption("-f");
+    if (filename.empty()) {
+        cerr &lt;&lt; "ファイルを指定してください" &lt;&lt; endl;
+        return 1;
+    }
+    extern int yyparse(void);
+    extern FILE* yyin;
+    errno_t err;
+    if ((err = fopen_s(&yyin,filename.c_str(), "r")) != 0) {
+        cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; std::endl;
+        return 1;
+    }
+    if (yyparse()) {
+        cerr &lt;&lt; "エラー終了" &lt;&lt; endl;
+        return 1;
+    }
+    return 0;
+}
+</pre>
+</div>
+<h4>index.oreの記述</h4>
+　最後にスクリプトです。<b>index.ore</b>を以下のように記述します。
+<div class="box1">
+<pre>
+abc = 5;
+pn a = 10;
+abc += a;
+pn abc;
+pn abc + 25 + a;
+</pre>
+</div>
+　リビルドして、以下の出力になれば成功です。
+<div class="box1">
+<pre>
+10
+15
+50
+
+...\oreProject.exe (プロセス 13368) は、コード 0 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　今項では、大きな変更を行ったので、解説は次項で行います。<br />
+　今回の修正で、<b>２－１．FlexとBisonで計算機（VS2017版）</b>もしくは<b>２－１．FlexとBisonで計算機（VS2017版）</b>で設定した<b>oreProject</b>の<b>プロパティ</b>の<b>詳細設定で指定の警告を無効にする</b>の設定を外す（つまり元の状態にする）ことができます。<br />
+　設定した<b>4996</b>という数値を消しておきましょう。<br />
+　それでは次項で解説します。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="03_05.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="03_07.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

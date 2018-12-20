@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語の作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－０３．ステートメント</h3>
+　これまで、スクリプトファイルである<b>index.ore</b>では
+<div class="box1">
+<pre>
+10 - 3
+10 / 3
+
+</pre>
+</div>
+　といった記述で<b>計算結果を出力</b>していました。<br />
+　しかし、一般的なプログラミング言語の場合、この記述だけでは<b>結果を出力</b>しません。<br />
+　つまり<b>命令</b>にはなっていないのです。<br />
+　例えば
+<div class="box1">
+<pre>
+print 10 - 3
+</pre>
+</div>
+　と書けば立派な命令文です。つまり<b>計算結果を出力しなさい</b>という<b>文</b>になります。<br />
+　こういう、1つの命令文を<b>ステートメント</b>といいます。<br />
+　上記の<b>print</b>や、PHPの<b>echo</b>、あるいはC言語の<b>printf</b>などは、基本的な標準出力をつかさどる命令です。<br />
+　言語の多くは基本的な出力命令を言語の仕様として持ってます。しかし<b>C言語</b>のように、すべてライブラリ（関数）という形で用意し、言語からは切り離す場合もあります。（たとえば、驚くべきことにmain()関数はC言語の一部ではない）<br />
+　それでは<b>oreProject</b>では<b>文（ステートメント）</b>をどう定義したらよいでしょうか？<br />
+　たとえば
+<div class="box1">
+<pre>
+p 10 + 23
+</pre>
+</div>
+　という記述で、
+<div class="box1">
+<pre>
+33
+</pre>
+</div>
+　と表示するようにします。この<b> p </b>というのは<b>Ruby</b>でも使われている予約語です。<br />
+　これで、10進数の出力が得られます。<br />
+<br />
+<h4>FlexBisonプロジェクトの修正</h4>
+　それでは実装してみましょう。<b>oreProject.l</b>のトークン定義部に
+<div class="box1">
+<pre>
+%%
+"+"     return ADD;
+"-"     return SUB;
+"*"     return MUL;
+"/"     return DIV;
+"\n"    return CR;
+<span class="red">"p"    return PRINT;</span>
+</pre>
+</div>
+　のように<b>"p"</b>の定義を追加します。<br />
+　続いて<b>oreProject.y</b>の<b>%token</b>の項に
+<div class="box1">
+<pre>
+%token ADD SUB MUL DIV CR <span class="red">PRINT</span>
+</pre>
+</div>
+　と追加します。<br />
+　続いて<b>line</b>の定義に
+<div class="box1">
+<pre>
+line
+    : expression CR
+    {
+        <span class="red">ore::procEmpty();</span>
+    }
+    <span class="red">| PRINT expression CR
+    {
+        ore::procPrint($2);
+    }</span>
+</pre>
+</div>
+　と実装方法を定義します。ついでに<b>expression CR</b>の部分も書き換えます。
+<h4>メインプロジェクトの修正</h4>
+　<b>oreProject</b>側の修正は、まず<b>proc.h</b>に
+<div class="box1">
+<pre>
+    <span class="red">//--------------------------------------------------------------------------------------
+    /*!
+    @brief  何もしない処理
+    @return なし
+    */
+    //--------------------------------------------------------------------------------------
+    void procEmpty();
+
+    //--------------------------------------------------------------------------------------
+    /*!
+    @brief  出力処理
+    @param[in]  a   値
+    @return なし
+    */
+    //--------------------------------------------------------------------------------------
+    void procPrint(double a);</span>
+
+    //--------------------------------------------------------------------------------------
+    /*!
+    @brief  加算処理
+    @param[in]  a   値1
+    @param[in]  b   値2
+    @return 加算の結果
+    */
+    //--------------------------------------------------------------------------------------
+    double procAdd(double a, double b);
+
+//以下略...
+</pre>
+</div>
+　のように追加します（赤くなっているところです）。<br />
+　続いて<b>proc.cpp</b>を以下のように書き換えます。
+<div class="box1">
+<pre>
+<span class="red">#include &lt;iostream></span>
+#include "proc.h"
+using namespace std;
+
+namespace ore {
+
+    <span class="red">///何もしない
+    void procEmpty() {
+        ;
+    }
+
+    ///出力
+    void procPrint(double a) {
+        cout &lt;&lt; a &lt;&lt; endl;
+    }</span>
+
+    //中略
+
+}
+//end namespace ore
+</pre>
+</div>
+<h4>index.oreの修正</h4>
+　最後にスクリプトを修正します。<b>index.ore</b>を以下のように変えます（全部変更します）。
+<div class="box1">
+<pre>
+p 10 - 3
+p 10 / 3
+p 30 * 45
+112 * 5
+p 45 + 23 * 15
+p 45 - 23 / 15
+</pre>
+</div>
+　それで、以下の出力になれば成功です。掛け算や割り算の優先順位が高いことを確認してください。
+<div class="box1">
+<pre>
+7
+3.33333
+1350
+390
+43.4667
+parser error near
+
+プログラム終了
+
+...oreProject\Debug\oreProject.exe (プロセス 1948) は、コード 0 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　また
+<div class="box1">
+<pre>
+112 * 5
+</pre>
+</div>
+　が、ちゃんと<b>無視</b>されることも確認しましょう。<br />
+　このように
+<div class="box1">
+<pre>
+        cout &lt;&lt; a &lt;&lt; endl;
+</pre>
+</div>
+　による出力は、prontfとはちょっと違います。浮動小数点以下が<b>.0000..</b>の場合は、整数値で出力します。
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="03_02.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="03_04.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+
+
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

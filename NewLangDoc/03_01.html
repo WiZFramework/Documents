@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語の作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－０１．プログラム入力インターフェイスの作成</h3>
+　ここでは前章で紹介した<b>oreProject</b>を<b>計算プログラミング言語</b>と見たてて、インターフェイスを作成します。<br />
+　ただ、この章では<b>インタプリタ言語</b>まではいきません。<b>上から下にすべて実行</b>する環境です。ループや分岐などはせずに全部実行するので<b>プログラミング言語</b>とはほど遠い内容です。<br />
+　しかし<b>言語作成の基本的な部分</b>が詰まっているので、飛ばさずに実装してみましょう。<br />
+<br />
+　例えば、言語プログラムが<b>oreProject</b>で、実行すべきプクリプトが<b>index.ore</b>だった場合、
+<div class="box1">
+<pre>
+$ oreProject -f index.ore
+</pre>
+</div>
+　というコマンド（プロンプト例はLinuxです）、で動作させるようにすると便利です。<br />
+　Windowsのコマンドラインに置き換えると
+<div class="box1">
+<pre>
+C:\>  oreProject.exe -f index.ore
+</pre>
+</div>
+　のような感じでしょう。(Windowsの実行ファイルの拡張子は<b>.exe</b>です)<br/>
+　ですので、いま作成している<b>oreProject.exe</b>に<b>-f</b>というオプションと<b>index.ore</b>という、ファイル名を受け付けるようにします。<br />
+<h4>index.oreの作成</h4>
+　この項では前項で作成した<b>計算機</b>を修正する形で説明します。<br />
+　まず、今項の修正で追加するファイルを説明します。以下の<b>作成するファイル</b>と色付けされているものです。
+<p>&nbsp;</p>
+<img src="img/030101.png" width="80%"/>
+<p>図030101</p>
+<p>&nbsp;</p>
+　まず、上図の<b>oreProjectディレクトリ内</b>に<b>index.ore</b>を作成します。<br />
+　<b>oreProject</b>を右クリックして<b>新しいフィルタ</b>を作成します
+<p>&nbsp;</p>
+<img src="img/030102.png" width="80%"/>
+<p>図030102</p>
+<p>&nbsp;</p>
+　フィルタの名前を<b>スクリプトファイル</b>とします。
+<p>&nbsp;</p>
+<img src="img/030103.png" width="60%"/>
+<p>図030103</p>
+<p>&nbsp;</p>
+　そのフィルタを右クリックして<b>新しい項目</b>を追加します。
+<p>&nbsp;</p>
+<img src="img/030104.png" width="80%"/>
+<p>図030104</p>
+<p>&nbsp;</p>
+　<b>C++ファイル</b>を選び、ファイル名を<b>index.ore</b>として、<b>oreProject</b>の<b>プロジェクトディレクトリ内</b>に<b>追加</b>します。
+<p>&nbsp;</p>
+<img src="img/030105.png" width="80%"/>
+<p>図030105</p>
+<p>&nbsp;</p>
+　出来たファイルに記述する内容は以下の通りです。
+<div class="box1">
+<pre>
+10 + 3
+10 * 3
+
+</pre>
+</div>
+　最後の<b>何も書かない行</b>も必要です。記述したら保存します。<br />
+<h4>main()関数の移動</h4>
+　ここでは、現在<b>oreProject.y</b>に記述がある<b>main()関数</b>を移動します。<br />
+　まず<b>oreProject.y</b>に記述がある<b>main()関数</b>をコメントアウトします。<br />
+　具体的には、<b>oreProject.y</b>の<b>63行付近</b>の
+<div class="box1">
+<pre>
+int main(void)
+{
+    extern int yyparse(void);
+    extern FILE *yyin;
+
+    yyin = stdin;
+    if (yyparse()) {
+        fprintf(stderr, "Error ! Error ! Error !\n");
+        exit(1);
+    }
+}
+</pre>
+</div>
+　を
+<div class="box1">
+<pre>
+<span class="lite_blue">/*
+int main(void)
+{
+    extern int yyparse(void);
+    extern FILE *yyin;
+
+    yyin = stdin;
+    if (yyparse()) {
+        fprintf(stderr, "Error ! Error ! Error !\n");
+        exit(1);
+    }
+}
+*/</span>
+</pre>
+</div>
+　とします。青くなっているところが<b>C/C++のコメントの範囲</b>です。<br/>
+　そして、<b>oreProject</b>の<b>ソースファイル</b>で<b>追加－新しい項目</b>で<b>main.cpp</b>を追加します。追加するディレクトリは上図のように<b>oreProjectプロジェクトのディレクトリ</b>です。
+<p>&nbsp;</p>
+<img src="img/030106.png" width="80%"/>
+<p>図030106</p>
+<p>&nbsp;</p>
+　ファイル名を<b>main.cpp</b>とします。
+<p>&nbsp;</p>
+<img src="img/030107.png" width="80%"/>
+<p>図030107</p>
+<p>&nbsp;</p>
+　そしてそこに以下を記述します。
+<div class="box1">
+<pre>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;vector>
+#include &lt;string>
+using namespace std;
+
+
+class InputParser {
+    vector &lt;string> tokens;
+public:
+    InputParser(int &argc, char **argv) {
+        for (int i = 1; i &lt; argc; ++i) {
+            tokens.push_back(string(argv[i]));
+        }
+    }
+    const string& getCmdOption(const string &option) const {
+        vector&lt;string>::const_iterator itr;
+        itr = find(tokens.begin(), tokens.end(), option);
+        if (itr != tokens.end() && ++itr != tokens.end()) {
+            return *itr;
+        }
+        static const string empty_string("");
+        return empty_string;
+    }
+    bool cmdOptionExists(const string &option) const {
+        return find(tokens.begin(), tokens.end(), option)
+            != tokens.end();
+    }
+};
+
+
+int main(int argc, char **argv) {
+    InputParser input(argc, argv);
+    const string &filename = input.getCmdOption("-f");
+    if (filename.empty()) {
+        cerr &lt;&lt; "ファイルを指定してください" &lt;&lt; endl;
+        return 1;
+    }
+    extern int yyparse(void);
+    extern FILE *yyin;
+    if ((yyin = fopen(filename.c_str(), "r")) == NULL) {
+        cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; std::endl;
+        return 1;
+    }
+    if (yyparse()) {
+        cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
+    }
+    return 0;
+}
+</pre>
+</div>
+　<b>oreProject</b>の<b>プロパティ</b>を選択します。<br />
+<p>&nbsp;</p>
+<img src="img/030108.png" width="60%"/>
+<p>図030108</p>
+<p>&nbsp;</p>
+　<b>構成プロパティ－デバッグ</b>の<b>コマンド引数</b>に
+<div class="box1">
+<pre>
+-f index.ore
+</pre>
+</div>
+　と記述します。
+<p>&nbsp;</p>
+<img src="img/030109.png" width="80%"/>
+<p>図030109</p>
+<p>&nbsp;</p>
+　記述したら、<b>ビルド－ソリューションのリビルド</b>します。以下の様な出力があれば成功です。
+<p>&nbsp;</p>
+<img src="img/030110.png" width="60%"/>
+<p>図030110</p>
+<p>&nbsp;</p>
+　<b>デバッグ－デバッグなしで実行</b>してみましょう。コンソールに以下の出力が得られるはずです。（VS2017の場合）
+<div class="box1">
+<pre>
+>>13.000000
+>>30.000000
+parser error near
+
+プログラム終了
+
+...\oreProject\Debug\oreProject.exe (プロセス 10176) は、コード 0 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　この出力が得られれば成功です。<br />
+　それでは、<b>index.ore</b>の内容を以下のように書き換えて、実行してみましょう。
+<div class="box1">
+<pre>
+10 - 3
+10 / 3
+
+</pre>
+</div>
+　今度は引き算と割り算です。
+<div class="box1">
+<pre>
+>>7.000000
+>>3.333333
+parser error near
+
+プログラム終了
+
+...\oreProject\Debug\oreProject.exe (プロセス 8508) は、コード 0 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　と出力されるはずです。つまりは<b>index.ore</b>を書き換えれば<b>別の計算ができる</b>ということです。<br />
+　言い換えれば<b>index.ore</b>に実行してほしい内容を記述すれば、<b>そのスクリプトを実行できる</b>ということです。<br />
+<br/>
+　ようやく開発の環境が整いました。<br />
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="02_02.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="03_02.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+
+
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
