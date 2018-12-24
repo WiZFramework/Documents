@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０４．インタプリタの作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０４－０２．oreProject.l</h3>
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include "oreProject.tab.h"
+#include "../oreProject/proc.h"
+#define YY_SKIP_YYWRAP 1
+int gLine = 1;
+int yywrap(void){ return 1; }
+%}
+%s COMMENT
+%s LINE_COMMENT
+%s STR_LITERAL_ST_D
+%s STR_LITERAL_ST_S
+%%
+&lt;INITIAL>{
+    "tru" return TRUE_T;
+    "fls" return FALSE_T;
+    "("    return LP;
+    ")"    return RP;
+    "{"    return LC;
+    "}"    return RC;
+    ";"     return SEMICOLON;
+    "*="    return MULASS;
+    "/="    return DIVASS;
+    "+="    return ADDASS;
+    "-="    return SUBASS;
+    "+"     return ADD;
+    "-"     return SUB;
+    "*"     return MUL;
+    "/"     return DIV;
+    "="     return ASS;
+    "pn"    return PRINTN;
+    "p"     return PRINT;
+    "/*"   { BEGIN(COMMENT);}
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+    "\""    {
+                ore::Interpreter::getInp()->startStringLiteral();
+                BEGIN(STR_LITERAL_ST_D);
+            }
+    "\'"    {
+                ore::Interpreter::getInp()->startStringLiteral();
+                BEGIN(STR_LITERAL_ST_S);
+            }
+    [0-9][0-9]* {
+        yylval.expression = ore::Interpreter::getInp()->createIntValueExp(yytext);
+        return INT_LITERAL;
+    }
+    [0-9]*\.[0-9]* {
+        yylval.expression = ore::Interpreter::getInp()->createDoubleValueExp(yytext);
+        return DOUBLE_LITERAL;
+    }
+    [A-Za-z_][A-Za-z_0-9]* {
+        yylval.fixedString = ore::Interpreter::getInp()->createFixedString(yytext);
+        return IDENTIFIER;
+    }
+    "\n"    { gLine++; }
+    [ \t]   ;
+    .       { return 0; }
+}
+&lt;COMMENT>{
+    "\n"    { gLine++;}
+    "*/"    { BEGIN(INITIAL); }
+    .       ;
+}
+&lt;LINE_COMMENT>{
+    "\n"    { gLine++; BEGIN(INITIAL); }
+    .       ;
+}
+&lt;STR_LITERAL_ST_D>{
+    "\n"    { gLine++; ore::Interpreter::getInp()->addStringLiteral('\n'); }
+    "\""    { BEGIN(INITIAL); return STR_LITERAL; }
+    .       { ore::Interpreter::getInp()->addStringLiteral(yytext[0]); }
+}
+&lt;STR_LITERAL_ST_S>{
+    "\n"    { gLine++; ore::Interpreter::getInp()->addStringLiteral('\n'); }
+    "\'"    { BEGIN(INITIAL); return STR_LITERAL; }
+    .       { ore::Interpreter::getInp()->addStringLiteral(yytext[0]); }
+}
+%%
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="04_02.html">戻る</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

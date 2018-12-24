@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０４．インタプリタの作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０４－０２．oreProject.y</h3>
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include "../oreProject/proc.h"
+#define YYDEBUG 1
+extern int yylex(void);
+int yyerror(char const *str){
+    extern char *yytext;
+    extern int gLine;
+    ore::Interpreter::getInp()->syntaxExit(1003, gLine, yytext);
+    return 0;
+}
+%}
+%code requires {
+#include "../oreProject/proc.h"
+}
+%union {
+    const char* fixedString;
+    ore::Expression* expression;
+    ore::Statement *statement;
+    ore::StatementList* statement_list;
+    ore::Root* root;
+}
+%token &lt;fixedString> IDENTIFIER
+%token &lt;expression>  TRUE_T FALSE_T INT_LITERAL DOUBLE_LITERAL STR_LITERAL
+%token  LP RP LC RC SEMICOLON ADD SUB MUL DIV CR  
+%token  MULASS DIVASS  ADDASS SUBASS ASS PRINTN PRINT
+%type &lt;expression> expression primary_expression add_expression mul_expression
+%type &lt;statement> statement
+%type &lt;statement_list> statement_list
+%type &lt;root> root
+%%
+root
+    :statement_list
+    {
+        $$ = ore::Interpreter::getInp()->createRoot($1);
+    }
+    ;
+statement_list
+    : statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatementList($1);
+    }
+    | statement_list statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatementList($1,$2);
+    }
+    ;
+statement
+    : SEMICOLON
+    | expression SEMICOLON
+    {
+        $$ = ore::Interpreter::getInp()->createExpressionStm($1);
+    }
+    | LC statement_list RC
+    {
+        $$ = ore::Interpreter::getInp()->createBlockStm($2);
+    }
+    | LC RC
+    {
+        $$ = ore::Interpreter::getInp()->createBlockStm();
+    }
+    ;
+expression
+    : add_expression
+    | PRINTN expression
+    {
+        $$ = ore::Interpreter::getInp()->createPrintExp($2,true);
+    }
+    | PRINT expression
+    {
+        $$ = ore::Interpreter::getInp()->createPrintExp($2,false);
+    }
+    | IDENTIFIER MULASS expression
+    {
+        $$ = ore::Interpreter::getInp()->createMulAss($1,$3);
+    }
+    | IDENTIFIER DIVASS expression
+    {
+        $$ = ore::Interpreter::getInp()->createDivAss($1,$3);
+    }
+    | IDENTIFIER ADDASS expression
+    {
+        $$ = ore::Interpreter::getInp()->createAddAss($1,$3);
+    }
+    | IDENTIFIER SUBASS expression
+    {
+        $$ = ore::Interpreter::getInp()->createSubAss($1,$3);
+    }
+    | IDENTIFIER ASS expression
+    {
+        $$ = ore::Interpreter::getInp()->createAss($1,$3);
+    }
+    ;
+add_expression
+    : mul_expression
+    | add_expression ADD mul_expression
+    {
+        $$ = ore::Interpreter::getInp()->createAdd($1,$3);
+    }
+    | add_expression SUB mul_expression
+    {
+        $$ = ore::Interpreter::getInp()->createSub($1,$3);
+    }
+    ;
+mul_expression
+    : primary_expression
+    | mul_expression MUL primary_expression
+    {
+        $$ = ore::Interpreter::getInp()->createMul($1,$3);
+    }
+    | mul_expression DIV primary_expression
+    {
+        $$ = ore::Interpreter::getInp()->createDiv($1,$3);
+    }
+    ;
+primary_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = $1;
+    }
+    | INT_LITERAL
+    {
+        $$ = $1;
+    }
+    | TRUE_T
+    {
+        $$ = ore::Interpreter::getInp()->createBoolValueExp(true);
+    }
+    | FALSE_T
+    {
+        $$ = ore::Interpreter::getInp()->createBoolValueExp(false);
+    }
+    | STR_LITERAL
+    {
+        $$ = ore::Interpreter::getInp()->createStringLiteralExp();
+    }
+    | IDENTIFIER
+    {
+        $$ = ore::Interpreter::getInp()->createVariableExp($1);
+    }
+    | LP expression RP
+    {
+        $$ = ore::Interpreter::getInp()->createPriorityExp($2);
+    }
+    ;
+%%
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="04_02.html">戻る</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

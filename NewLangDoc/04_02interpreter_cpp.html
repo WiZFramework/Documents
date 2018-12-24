@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０４．インタプリタの作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０４－０２．interpreter.cpp</h3>
+
+<div class="box1">
+<pre>
+#include &lt;cstdlib>
+#include &lt;iostream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+#include "util.h"
+#include "proc.h"
+using namespace std;
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  ランタイムオブジェクト
+    //--------------------------------------------------------------------------------------
+    struct RuntimeObject:  public std::enable_shared_from_this&lt;RuntimeObject> {
+        //変数のmap
+        map&lt;string, Value> m_VariableMap;
+        //ツリー構造
+        weak_ptr&lt;RuntimeObject> m_Parent;
+        shared_ptr&lt;RuntimeObject> m_Child;
+        //現在実行中のステートメント
+        const Statement* m_Statement;
+        RuntimeObject(shared_ptr&lt;RuntimeObject> parent) :
+            m_Parent(parent), m_Child(nullptr){}
+        ~RuntimeObject() {}
+        ///ツリーをさかのぼって変数の値を探す。
+        //あれば、その値の参照を返す。なければ、ローカルに作成して値を返す
+        Value& getValiableValueRefOnTree(const string& key);
+    };
+
+    Value& RuntimeObject::getValiableValueRefOnTree(const string& key) {
+        auto it = m_VariableMap.find(key);
+        if (it != m_VariableMap.end()) {
+            //見つかった
+            return it->second;
+        }
+        shared_ptr&lt;RuntimeObject> temp = m_Parent.lock();
+        while (temp) {
+            it = temp->m_VariableMap.find(key);
+            if (it != temp->m_VariableMap.end()) {
+                //見つかった
+                return it->second;
+            }
+            temp = temp->m_Parent.lock();
+        }
+        //無かったので作成
+        //intで作成
+        m_VariableMap[key] = Value(0);
+        return m_VariableMap[key];
+    }
+
+    //--------------------------------------------------------------------------------------
+    ///  インタープリタクラス
+    //--------------------------------------------------------------------------------------
+    Interpreter* Interpreter::getInp() {
+        static Interpreter* instance = nullptr;
+        if (!instance) {
+            instance = new Interpreter;
+        }
+        return instance;
+    }
+
+    struct Interpreter::Impl {
+        set&lt;string> m_FixedStringPool;
+        vector&lt;ObjeBase*> m_ObjectPool;
+        //文字列リテラル作成用
+        string m_LiteralTemp;
+        Root* m_Root;
+        shared_ptr&lt;RuntimeObject> m_CurrentRuntime;
+        //エラーのマップ
+        map&lt;int,string> m_ErrMap;
+    };
+
+    Interpreter::Interpreter() :
+        ObjeBase(ObjType::InterpreterType),
+        pImpl(new Impl)
+    {
+        pImpl->m_Root = nullptr;
+        pImpl->m_ErrMap =
+        {
+            { 1001, "ファイル名が指定されてないぞい。" },
+            { 1002, "ファイル読み込みに失敗したぞい。" },
+            { 1003, "文法エラーだぞい。" },
+            { 2001, "実行文がないぞい。" },
+            { 2002, "特定できないエラーだぞい" },
+            { 2003, "0では割れねぞい。" },
+            { 2004, "演算でぎねぞい"},
+            { 2005, "右辺が負の数だと文字列の掛け算はでぎねぞい。" },
+            { 2006, "左辺が文字列だと引き算でぎねぞい。" },
+            { 2007, "左辺が文字列だと割り算でぎねぞい。" },
+        };
+    }
+    Interpreter::~Interpreter() {
+        delete pImpl;
+    }
+
+    int Interpreter::Compile(FILE *fp) {
+        extern int yyparse(void);
+        extern FILE* yyin;
+        yyin = fp;
+        if (yyparse()) {
+            return 1;
+        }
+        return 0;
+    }
+
+    void Interpreter::Exec() {
+        if (pImpl->m_Root) {
+            pImpl->m_CurrentRuntime = make_shared&lt;RuntimeObject>(nullptr);
+            pImpl->m_Root->Excute();
+        }
+        else {
+            Interpreter::getInp()->runtimeExit(2001,getLineNumber());
+        }
+    }
+
+    void Interpreter::Delete() {
+        for (auto v : pImpl->m_ObjectPool) {
+            delete v;
+        }
+        pImpl->m_ObjectPool.clear();
+        pImpl->m_FixedStringPool.clear();
+    }
+
+    const char* Interpreter::createFixedString(const char* ext) {
+        //255文字に切り詰める。
+        auto str = clampToken(ext);
+        auto it = pImpl->m_FixedStringPool.insert(str);
+        return it.first->c_str();
+    }
+
+    Expression* Interpreter::createVariableExp(const char* ident) {
+        string str = clampToken(ident);
+        auto ptr = new VariableExp(str.c_str());
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createPriorityExp(const Expression* target) {
+        auto ptr = new PriorityExp(target);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createBoolValueExp(bool b) {
+        auto ptr = new BoolValueExp(b);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createIntValueExp(const char* ext) {
+        string str = clampToken(ext);
+        auto ptr = new IntValueExp(std::stoi(str));
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createDoubleValueExp(const char* ext) {
+        string str = clampToken(ext);
+        auto ptr = new DoubleValueExp(std::stod(str));
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createAdd(const Expression* left, const Expression* right) {
+        auto ptr = new BinaryExp(ExpressionType::addExp,left,right);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createSub(const Expression* left, const Expression* right) {
+        auto ptr = new BinaryExp(ExpressionType::subExp, left, right);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+
+    }
+
+    Expression* Interpreter::createMul(const Expression* left, const Expression* right) {
+        auto ptr = new BinaryExp(ExpressionType::mulExp, left, right);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+
+    }
+
+    Expression* Interpreter::createDiv(const Expression* left, const Expression* right) {
+        auto ptr = new BinaryExp(ExpressionType::divExp, left, right);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createAss(const char* ident, const Expression* right) {
+        string str = clampToken(ident);
+        auto ptr = new AssignExp(str.c_str(), right);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createMulAss(const char* ident, const Expression* right) {
+        string str = clampToken(ident);
+        auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::mulAssExp);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+
+    }
+
+    Expression* Interpreter::createDivAss(const char* ident, const Expression* right) {
+        string str = clampToken(ident);
+        auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::divAssExp);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+
+    }
+
+    Expression* Interpreter::createAddAss(const char* ident, const Expression* right) {
+        string str = clampToken(ident);
+        auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::addAssExp);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+
+    }
+
+    Expression* Interpreter::createSubAss(const char* ident, const Expression* right) {
+        string str = clampToken(ident);
+        auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::subAssExp);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+
+    }
+
+    Expression* Interpreter::createPrintExp(const Expression* exp, bool nflg) {
+        auto ptr = new PrintExp(exp, nflg);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    void Interpreter::startStringLiteral() {
+        pImpl->m_LiteralTemp = "";
+
+    }
+
+    void Interpreter::addStringLiteral(char ext) {
+        pImpl->m_LiteralTemp += ext;
+    }
+
+    Expression* Interpreter::createStringLiteralExp() {
+        auto ptr = new StringLiteralExp(pImpl->m_LiteralTemp.c_str());
+        pImpl->m_LiteralTemp = "";
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Statement* Interpreter::createExpressionStm(const Expression *exp) {
+        auto ptr = new ExpressionStm(exp);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    StatementList* Interpreter::createStatementList(const Statement* stm) {
+        auto ptr = new StatementList(stm);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    StatementList* Interpreter::createStatementList(StatementList* stml, const Statement* stm) {
+        StatementList *pos;
+        if (stml == nullptr)
+            return createStatementList(stm);
+        for (pos = stml; pos->getNext(); pos = pos->getNext())
+            ;
+        pos->setNext(createStatementList(stm));
+        return stml;
+    }
+
+    Statement* Interpreter::createBlockStm() {
+        auto ptr = new BlockStm;
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Statement* Interpreter::createBlockStm(StatementList* stml) {
+        auto ptr = new BlockStm(stml);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Root*  Interpreter::createRoot(const StatementList* stml) {
+        auto ptr = new Root(stml);
+        pImpl->m_ObjectPool.push_back(ptr);
+        //インタプリタのrootにセット
+        pImpl->m_Root = ptr;
+        return ptr;
+    }
+
+    ///変数の値を取得
+    Value& Interpreter::getValiableValue(const char* key) {
+        return pImpl->m_CurrentRuntime->getValiableValueRefOnTree(key);
+    }
+
+    void Interpreter::syntaxExit(int mess_id, int linnum, const char* detail) {
+        cerr &lt;&lt; "\n" 
+            &lt;&lt; pImpl->m_ErrMap[mess_id]
+            &lt;&lt; linnum 
+            &lt;&lt; " 行目: " 
+            &lt;&lt; detail 
+            &lt;&lt; " 付近。" 
+            &lt;&lt; endl;
+
+    }
+
+    void Interpreter::runtimeExit(int mess_id, int linnum) {
+        cerr &lt;&lt; "\nruntime error, " 
+            &lt;&lt; linnum 
+            &lt;&lt; " 行目: " 
+            &lt;&lt; pImpl->m_ErrMap[mess_id]
+            &lt;&lt; endl;
+    }
+
+}
+//end namespace ore
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="04_02.html">戻る</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

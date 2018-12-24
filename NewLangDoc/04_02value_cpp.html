@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０４．インタプリタの作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０４－０２．value.cpp</h3>
+
+<div class="box1">
+<pre>
+#include &lt;cstdlib>
+#include &lt;iostream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+#include &lt;typeinfo>
+#include "util.h"
+#include "proc.h"
+using namespace std;
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  値
+    //--------------------------------------------------------------------------------------
+    struct Value::Impl {
+        ValueType m_Type;
+        string strV;
+        //get用のstring
+        string tmpStr;
+        union {
+            bool boolV;
+            int intV;
+            double doubleV;
+        };
+    };
+
+    Value::Value() :
+        pImpl(new Impl)
+    {
+        pImpl->m_Type = ValueType::voidVal;
+        pImpl->intV = 0;
+    }
+
+    Value::Value(bool b) :
+        pImpl(new Impl)
+    {
+        pImpl->m_Type = ValueType::boolVal;
+        pImpl->boolV = b;
+    }
+
+    Value::Value(int i) :
+        pImpl(new Impl)
+    {
+        pImpl->m_Type = ValueType::intVal;
+        pImpl->intV = i;
+    }
+
+    Value::Value(double d) :
+        pImpl(new Impl)
+    {
+        pImpl->m_Type = ValueType::doubleVal;
+        pImpl->doubleV = d;
+    }
+
+    Value::Value(const char* s) :
+        pImpl(new Impl)
+    {
+        pImpl->m_Type = ValueType::stringVal;
+        pImpl->strV = s;
+    }
+
+    Value::Value(const Value& other) :
+        pImpl(new Impl)
+    {
+        *pImpl = *(other.pImpl);
+    }
+
+    Value& Value::operator=(bool b) {
+        pImpl->m_Type = ValueType::boolVal;
+        pImpl->boolV = b;
+        pImpl->strV = "";
+        pImpl->tmpStr = "";
+        return *this;
+    }
+
+    Value& Value::operator=(int i) {
+        pImpl->m_Type = ValueType::intVal;
+        pImpl->intV = i;
+        pImpl->strV = "";
+        pImpl->tmpStr = "";
+        return *this;
+    }
+
+    Value& Value::operator=(double d) {
+        pImpl->m_Type = ValueType::doubleVal;
+        pImpl->doubleV = d;
+        pImpl->strV = "";
+        pImpl->tmpStr = "";
+        return *this;
+    }
+
+    Value& Value::operator=(const char* s) {
+        pImpl->m_Type = ValueType::stringVal;
+        pImpl->intV = 0;
+        pImpl->strV = s;
+        pImpl->tmpStr = "";
+        return *this;
+    }
+
+    Value& Value::operator=(const Value& other) {
+        *pImpl = *(other.pImpl);
+        return *this;
+    }
+
+    Value::~Value() {
+        delete pImpl;
+        pImpl = nullptr;
+    }
+
+    ValueType Value::getType() const {
+        return pImpl->m_Type;
+    }
+
+    bool Value::getBool() const {
+        switch (getType())
+        {
+        case ValueType::boolVal:
+            return pImpl->boolV;
+            break;
+        case ValueType::intVal:
+            return toBoolValue(pImpl->intV);
+            break;
+        case ValueType::doubleVal:
+            return toBoolValue(pImpl->doubleV);
+            break;
+        case ValueType::stringVal:
+            return toBoolValue(pImpl->strV);
+            break;
+        }
+        return toBoolValue();
+    }
+
+    int Value::getInt() const {
+        switch (getType()) {
+        case ValueType::boolVal:
+            return toIntValue(pImpl->boolV);
+            break;
+        case ValueType::intVal:
+            return pImpl->intV;
+            break;
+        case ValueType::doubleVal:
+            return toIntValue(pImpl->doubleV);
+            break;
+        case ValueType::stringVal:
+            return toIntValue(pImpl->strV);
+            break;
+        }
+        return toIntValue();
+    }
+
+    double Value::getDouble() const {
+        switch (getType()) {
+        case ValueType::boolVal:
+            return toDoubleValue(pImpl->boolV);
+            break;
+        case ValueType::intVal:
+            return toDoubleValue(pImpl->intV);
+            break;
+        case ValueType::doubleVal:
+            return pImpl->doubleV;
+            break;
+        case ValueType::stringVal:
+            return toDoubleValue(pImpl->strV);
+            break;
+        }
+        return toDoubleValue();
+    }
+
+    const char* Value::getString() const {
+        switch (getType()) {
+        case ValueType::boolVal:
+            pImpl->tmpStr = toStringValue(pImpl->boolV);
+            break;
+        case ValueType::intVal:
+            pImpl->tmpStr = toStringValue(pImpl->intV);
+            break;
+        case ValueType::doubleVal:
+            pImpl->tmpStr = toStringValue(pImpl->doubleV);
+            break;
+        case ValueType::stringVal:
+            pImpl->tmpStr = pImpl->strV;
+            break;
+        default:
+            pImpl->tmpStr = toStringValue();
+            break;
+        }
+        return pImpl->tmpStr.c_str();
+    }
+
+    template&lt;typename TL>
+    Value ExecBinExpSub(TL left, const Value& right, ExpressionType typ) {
+        if (right.getType() == ValueType::boolVal) {
+            switch (typ) {
+            case ExpressionType::addExp:
+            {
+                //int型で計算
+                auto Result = left + right.getInt();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::subExp:
+            {
+                auto Result = left - right.getInt();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::mulExp:
+            {
+                auto Result = left * right.getInt();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::divExp:
+            {
+                if (right.getInt() == 0) {
+                    throw(2003);
+                }
+                auto Result = left / right.getInt();
+                return Value(Result);
+            }
+            break;
+            default:
+                break;
+            }
+        }
+        else if (right.getType() == ValueType::intVal) {
+            switch (typ) {
+            case ExpressionType::addExp:
+            {
+                auto Result = left + right.getInt();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::subExp:
+            {
+                auto Result = left - right.getInt();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::mulExp:
+            {
+                auto Result = left * right.getInt();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::divExp:
+            {
+                if (right.getInt() == 0) {
+                    throw(2003);
+                }
+                auto Result = left / right.getInt();
+                return Value(Result);
+            }
+            break;
+            default:
+                break;
+            }
+        }
+        else if (right.getType() == ValueType::doubleVal) {
+            switch (typ) {
+            case ExpressionType::addExp:
+            {
+                auto Result = left + right.getDouble();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::subExp:
+            {
+                auto Result = left - right.getDouble();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::mulExp:
+            {
+                auto Result = left * right.getDouble();
+                return Value(Result);
+            }
+            break;
+            case ExpressionType::divExp:
+            {
+                if (right.getDouble() == 0.0) {
+                    throw(2003);
+                }
+                auto Result = left / right.getDouble();
+                return Value(Result);
+            }
+            break;
+            default:
+                break;
+            }
+        }
+        return Value();
+    }
+
+    Value ExecBinExp(const Value& left, const Value& right, ExpressionType type) {
+        if (left.getType() == ValueType::boolVal) {
+            //int型で計算
+            return ExecBinExpSub(left.getInt(), right, type);
+        }
+        else if (left.getType() == ValueType::intVal) {
+            return ExecBinExpSub(left.getInt(), right, type);
+        }
+        else if (left.getType() == ValueType::doubleVal) {
+            return ExecBinExpSub(left.getDouble(), right, type);
+        }
+        else if (left.getType() == ValueType::stringVal) {
+            //左辺が文字列の場合
+            if (type == ExpressionType::addExp) {
+                //足し算
+                string strLeft = left.getString();
+                strLeft += right.getString();
+                return Value(strLeft.c_str());
+            }
+            else if (type == ExpressionType::mulExp) {
+                string strLeft = left.getString();
+                //掛け算
+                //右辺を整数に変換して実行
+                //左辺を右辺の回数増やす
+                int count = right.getInt();
+                if (count > 0) {
+                    string temp = strLeft;
+                    strLeft = "";
+                    while (count--) {
+                        strLeft += temp;
+                    }
+                }
+                else if (count == 0) {
+                    //右辺が0空白にする
+                    strLeft == "";
+                }
+                else {
+                    //右辺が負数
+                    throw(2005);
+                }
+                return Value(strLeft.c_str());
+            }
+        }
+        return Value();
+    }
+
+    Value Value::operator+(const Value& other) {
+        return ExecBinExp(*this, other, ExpressionType::addExp);
+    }
+
+    Value Value::operator-(const Value& other) {
+        if (pImpl->m_Type == ValueType::stringVal) {
+            throw(2006);
+        }
+        return ExecBinExp(*this, other, ExpressionType::subExp);
+    }
+
+    Value Value::operator*(const Value& other) {
+        return ExecBinExp(*this, other, ExpressionType::mulExp);
+    }
+
+    Value Value::operator/(const Value& other) {
+        if (pImpl->m_Type == ValueType::stringVal) {
+            throw(2007);
+        }
+        return ExecBinExp(*this, other, ExpressionType::divExp);
+    }
+
+    Value& Value::operator+=(const Value& other) {
+        *this = *this + other;
+        return *this;
+    }
+
+    Value& Value::operator-=(const Value& other) {
+        *this = *this - other;
+        return *this;
+
+    }
+
+    Value& Value::operator*=(const Value& other) {
+        *this = *this * other;
+        return *this;
+    }
+
+    Value& Value::operator/=(const Value& other) {
+        *this = *this / other;
+        return *this;
+    }
+
+}
+//end namespace ore
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="04_02.html">戻る</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
