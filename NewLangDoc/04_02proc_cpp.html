@@ -78,32 +78,29 @@ namespace ore {
     }
 
     //--------------------------------------------------------------------------------------
-    ///  bool値式クラス
+    ///  boolリテラル値式クラス
     //--------------------------------------------------------------------------------------
-    struct BoolValueExp::Impl {
+    struct BoolLiteralExp::Impl {
         bool m_BoolValue;
     };
 
-    BoolValueExp::BoolValueExp(bool b) :
-        Expression(ExpressionType::boolExp),
+    BoolLiteralExp::BoolLiteralExp(bool b) :
+        Expression(ExpressionType::boolLiteralExp),
         pImpl(new Impl)
     {
         pImpl->m_BoolValue = b;
     }
 
-    BoolValueExp::~BoolValueExp() {
+    BoolLiteralExp::~BoolLiteralExp() {
         delete pImpl;
     }
 
-    void BoolValueExp::setBoolValue(bool b) {
-        pImpl->m_BoolValue = b;
-    }
 
-    bool BoolValueExp::getBoolValue()const {
+    bool BoolLiteralExp::getBoolValue()const {
         return pImpl->m_BoolValue;
     }
 
-    Value BoolValueExp::Excute() const {
+    Value BoolLiteralExp::Excute() const {
         try {
             return Value(pImpl->m_BoolValue);
         }
@@ -117,31 +114,27 @@ namespace ore {
     }
 
     //--------------------------------------------------------------------------------------
-    ///  int値式クラス
+    ///  intリテラル式クラス
     //--------------------------------------------------------------------------------------
-    struct IntValueExp::Impl {
+    struct IntLiteralExp::Impl {
         int m_IntValue;
     };
 
-    IntValueExp::IntValueExp(int i) :
-        Expression(ExpressionType::intExp),
+    IntLiteralExp::IntLiteralExp(int i) :
+        Expression(ExpressionType::intLiteralExp),
         pImpl(new Impl)
     {
         pImpl->m_IntValue = i;
     }
-    IntValueExp::~IntValueExp() {
+    IntLiteralExp::~IntLiteralExp() {
         delete pImpl;
     }
 
-    void IntValueExp::setIntValue(int i) {
-        pImpl->m_IntValue = i;
-    }
-
-    int IntValueExp::getIntValue()const {
+    int IntLiteralExp::getIntValue()const {
         return pImpl->m_IntValue;
     }
 
-    Value IntValueExp::Excute() const {
+    Value IntLiteralExp::Excute() const {
         try {
             return Value(pImpl->m_IntValue);
         }
@@ -155,32 +148,29 @@ namespace ore {
     }
 
     //--------------------------------------------------------------------------------------
-    ///  double値式クラス
+    ///  doubleリテラル式クラス
     //--------------------------------------------------------------------------------------
-    struct DoubleValueExp::Impl {
+    struct DoubleLiteralExp::Impl {
         double m_DoubleValue;
     };
 
-    DoubleValueExp::DoubleValueExp(double d)
-        :Expression(ExpressionType::doubleExp),
+    DoubleLiteralExp::DoubleLiteralExp(double d)
+        :Expression(ExpressionType::doubleLiteralExp),
         pImpl(new Impl)
     {
         pImpl->m_DoubleValue = d;
     }
 
-    DoubleValueExp::~DoubleValueExp() {
+    DoubleLiteralExp::~DoubleLiteralExp() {
         delete pImpl;
     }
 
-    void DoubleValueExp::setDoubleValue(double d) {
-        pImpl->m_DoubleValue = d;
-    }
 
-    double DoubleValueExp::getDoubleValue()const {
+    double DoubleLiteralExp::getDoubleValue()const {
         return pImpl->m_DoubleValue;
     }
 
-    Value DoubleValueExp::Excute() const {
+    Value DoubleLiteralExp::Excute() const {
         try {
             return Value(pImpl->m_DoubleValue);
         }
@@ -305,7 +295,7 @@ namespace ore {
         const Expression* m_Operand;
     };
 
-    AssignExp::AssignExp(const char* variable,  const Expression* operand)
+    AssignExp::AssignExp(const char* variable, const Expression* operand)
         :Expression(ExpressionType::assignExp),
         pImpl(new Impl)
     {
@@ -419,7 +409,7 @@ namespace ore {
         const Expression* m_Right;
     };
 
-    BinaryExp::BinaryExp(ExpressionType type,const Expression* left,const Expression* right)
+    BinaryExp::BinaryExp(ExpressionType type, const Expression* left, const Expression* right)
         :Expression(type),
         pImpl(new Impl)
     {

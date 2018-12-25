@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2018年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０４．インタプリタの作成</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０４－０３．全体の構成とクラス図</h3>
+　現時点で、ファイルの構成は以下のようになっています。
+<p>&nbsp;</p>
+<img src="img/040301.png" width="80%"/>
+<p>図040301</p>
+<p>&nbsp;</p>
+<h4>クラス図</h4>
+　以下クラス図です。まず第２階層までです。
+<p>&nbsp;</p>
+<img src="img/040302.png" width="100%"/>
+<p>図040302</p>
+<p>&nbsp;</p>
+　ここで注意したいのは、それぞれ<b>Impl</b>という名の<b>子供クラス</b>を所持しているところです。<br />
+　このクラスは<b>構造体</b>で、cpp側に記述があります。<br />
+　この<b>Impl</b>はいったい何を行っているのでしょうか。実体は<b>メンバ変数をまとめる</b>オブジェクトです。<br />
+　メンバ変数は通常は<b>クラス宣言</b>に記述します。しかし、こうすると<b>libファイル</b>などで供給する場合、C/C++言語の場合は<b>ヘッダファイル</b>を一緒につけなければなりません。これは<b>libファイルを使う人</b>に対して構造を暴露する形になるので、最近ではセキュリティ上も好ましくない、とされています。<br />
+　しかしながら<b>oreProject</b>は別に<b>libファイル</b>で供給するものでもないし、ソースはこの通り全公開されているので、気にする必要はありません。<br/>
+　しかし<b>Impl（Implイディオムという人もいる）</b>を使うメリットは、もう一つあります。<br />
+　それは<b>cpp側で使用するライブラリを隠蔽する</b>ことができるのです。<br />
+　たとえば<b>proc.cpp</b>のインクルード部を見てみましょう。
+<div class="box1">
+<pre>
+#include &lt;cstdlib>
+#include &lt;iostream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+#include &lt;typeinfo>
+#include "util.h"
+#include "proc.h"
+using namespace std;
+</pre>
+</div>
+　という記述になっています。しかし、<b>proc.h</b>には何もインクルードされていません。<br />
+　以下、例えば、<b>stringリテラル式クラス</b>のImplですが
+<div class="box1">
+<pre>
+    struct StringLiteralExp::Impl {
+        <span class="red">string</span> m_StringLiteral;
+    };
+</pre>
+</div>
+　のようになっています。<b>STLの文字列クラス</b>の<b>string</b>が実装されています。<br />
+　<b>WinFlexBison</b>は<b>VisualStudio</b>で使用できる<b>cppの定義ファイル</b>を提供しています。<br />
+　通常、<b>プログラミング言語制作</b>は<b>C言語</b>で組まれます。<br />
+　しかし、この時期（つまり２０１８年時点）で、<b>C言語オンリー</b>というのはあまりにも古く、オブジェクト指向がなにも使えないのは、はっきり言ってきついです。<br />
+　そこで<b>oreProject</b>は<b>C++の機能</b>をふんだんに使って記述しようと思っています。<br />
+　<b>WinFlexBison</b>はそういう意味では大変ありがたい環境なのですが、<b>STL</b>を使用すると、<b>型のmax値</b>などのマクロで再定義される警告がでます。警告は<b>放っておいてもよい</b>という人がいますが、僕自身は<b>警告</b>はそのままにはしておけないたちなので、その打開策として<b>Impl</b>を使用することにしました。<br />
+　また、こうしておいたほうが、将来、例えば<b>Linuxに移植</b>したとしても、<b>BisonやFlexのインターフェイス</b>の部分を<b>C言語</b>に書き換えることも簡単になります。<br />
+　逆に<b>util.h</b>は、<b>STL使用を前提</b>とするヘッダファイルなので<b>BisonやFlexからは見えない</b>形でインクルードしています。<br />
+<br />
+　以下は<b>Expression</b>を親クラスとする階層です。<br />
+　今後も増える予定ですし、まだ全部は実装されていません。
+<p>&nbsp;</p>
+<img src="img/040303.png" width="100%"/>
+<p>図040303</p>
+<p>&nbsp;</p>
+　以下は<b>Statement</b>を親クラスとする階層です。<br />
+　今後も増える予定ですし、まだほとんど実装されていません。
+<p>&nbsp;</p>
+<img src="img/040304.png" width="100%"/>
+<p>図040304</p>
+<p>&nbsp;</p>
+　<b>クラス図</b>だけ<b>ポン</b>と渡されても、何のことやらかと思います。<br />
+　次項からは詳細に<b>oreProject</b>の仕組みについて解説します。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="04_02.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

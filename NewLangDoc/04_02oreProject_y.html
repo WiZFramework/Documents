@@ -91,45 +91,45 @@ expression
     }
     | IDENTIFIER MULASS expression
     {
-        $$ = ore::Interpreter::getInp()->createMulAss($1,$3);
+        $$ = ore::Interpreter::getInp()->createMulAssExp($1,$3);
     }
     | IDENTIFIER DIVASS expression
     {
-        $$ = ore::Interpreter::getInp()->createDivAss($1,$3);
+        $$ = ore::Interpreter::getInp()->createDivAssExp($1,$3);
     }
     | IDENTIFIER ADDASS expression
     {
-        $$ = ore::Interpreter::getInp()->createAddAss($1,$3);
+        $$ = ore::Interpreter::getInp()->createAddAssExp($1,$3);
     }
     | IDENTIFIER SUBASS expression
     {
-        $$ = ore::Interpreter::getInp()->createSubAss($1,$3);
+        $$ = ore::Interpreter::getInp()->createSubAssExp($1,$3);
     }
     | IDENTIFIER ASS expression
     {
-        $$ = ore::Interpreter::getInp()->createAss($1,$3);
+        $$ = ore::Interpreter::getInp()->createAssExp($1,$3);
     }
     ;
 add_expression
     : mul_expression
     | add_expression ADD mul_expression
     {
-        $$ = ore::Interpreter::getInp()->createAdd($1,$3);
+        $$ = ore::Interpreter::getInp()->createAddExp($1,$3);
     }
     | add_expression SUB mul_expression
     {
-        $$ = ore::Interpreter::getInp()->createSub($1,$3);
+        $$ = ore::Interpreter::getInp()->createSubExp($1,$3);
     }
     ;
 mul_expression
     : primary_expression
     | mul_expression MUL primary_expression
     {
-        $$ = ore::Interpreter::getInp()->createMul($1,$3);
+        $$ = ore::Interpreter::getInp()->createMulExp($1,$3);
     }
     | mul_expression DIV primary_expression
     {
-        $$ = ore::Interpreter::getInp()->createDiv($1,$3);
+        $$ = ore::Interpreter::getInp()->createDivExp($1,$3);
     }
     ;
 primary_expression
@@ -143,11 +143,11 @@ primary_expression
     }
     | TRUE_T
     {
-        $$ = ore::Interpreter::getInp()->createBoolValueExp(true);
+        $$ = ore::Interpreter::getInp()->createBoolLiteralExp(true);
     }
     | FALSE_T
     {
-        $$ = ore::Interpreter::getInp()->createBoolValueExp(false);
+        $$ = ore::Interpreter::getInp()->createBoolLiteralExp(false);
     }
     | STR_LITERAL
     {

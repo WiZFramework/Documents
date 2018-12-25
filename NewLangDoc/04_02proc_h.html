@@ -77,7 +77,6 @@ namespace ore {
         ExpType,
         StmType,
         StmListType,
-        BlockType,
         RootType,
         InterpreterType,
         objTypeCount
@@ -107,12 +106,11 @@ namespace ore {
     ///  式タイプ
     //--------------------------------------------------------------------------------------
     enum class ExpressionType {
-        boolExp = 0,
-        intExp,
-        doubleExp,
+        boolLiteralExp = 0,
+        intLiteralExp,
+        doubleLiteralExp,
         stringLiteralExp,
         voidExp,
-        valExpMax,
         variableExp,
         priorityExp,
         assignExp,
@@ -156,13 +154,12 @@ namespace ore {
     };
 
     //--------------------------------------------------------------------------------------
-    ///  bool値式クラス
+    ///  boolリテラル値式クラス
     //--------------------------------------------------------------------------------------
-    class BoolValueExp : public Expression {
+    class BoolLiteralExp : public Expression {
     public:
-        BoolValueExp(bool b = false);
-        virtual ~BoolValueExp();
-        void setBoolValue(bool b);
+        BoolLiteralExp(bool b = false);
+        virtual ~BoolLiteralExp();
         bool getBoolValue()const;
         virtual Value Excute() const  override;
     private:
@@ -172,13 +169,12 @@ namespace ore {
     };
 
     //--------------------------------------------------------------------------------------
-    ///  int値式クラス
+    ///  intリテラル式クラス
     //--------------------------------------------------------------------------------------
-    class IntValueExp : public Expression {
+    class IntLiteralExp : public Expression {
     public:
-        IntValueExp(int i = 0);
-        virtual ~IntValueExp();
-        void setIntValue(int i);
+        IntLiteralExp(int i = 0);
+        virtual ~IntLiteralExp();
         int getIntValue()const;
         virtual Value Excute() const  override;
     private:
@@ -188,13 +184,12 @@ namespace ore {
     };
 
     //--------------------------------------------------------------------------------------
-    ///  double値式クラス
+    ///  doubleリテラル式クラス
     //--------------------------------------------------------------------------------------
-    class DoubleValueExp : public Expression {
+    class DoubleLiteralExp : public Expression {
     public:
-        DoubleValueExp(double d = 0.0);
-        virtual ~DoubleValueExp();
-        void setDoubleValue(double d);
+        DoubleLiteralExp(double d = 0.0);
+        virtual ~DoubleLiteralExp();
         double getDoubleValue()const;
         virtual Value Excute() const  override;
     private:
@@ -286,7 +281,7 @@ namespace ore {
     //--------------------------------------------------------------------------------------
     class BinaryExp : public Expression {
     public:
-        BinaryExp(ExpressionType type,const Expression* left,const Expression* right);
+        BinaryExp(ExpressionType type, const Expression* left, const Expression* right);
         virtual ~BinaryExp();
         const Expression* getLeft()const;
         const Expression* getRight()const;
@@ -513,18 +508,18 @@ namespace ore {
         ///Expression
         Expression* createVariableExp(const char* ident);
         Expression* createPriorityExp(const Expression* target);
-        Expression* createBoolValueExp(bool b);
-        Expression* createIntValueExp(const char* ext);
-        Expression* createDoubleValueExp(const char* ext);
-        Expression* createAdd(const Expression* left, const Expression* right);
-        Expression* createSub(const Expression* left, const Expression* right);
-        Expression* createMul(const Expression* left, const Expression* right);
-        Expression* createDiv(const Expression* left, const Expression* right);
-        Expression* createAss(const char* ident, const Expression* right);
-        Expression* createMulAss(const char* ident, const Expression* right);
-        Expression* createDivAss(const char* ident, const Expression* right);
-        Expression* createAddAss(const char* ident, const Expression* right);
-        Expression* createSubAss(const char* ident, const Expression* right);
+        Expression* createBoolLiteralExp(bool b);
+        Expression* createIntLiteralExp(const char* ext);
+        Expression* createDoubleLiteralExp(const char* ext);
+        Expression* createAddExp(const Expression* left, const Expression* right);
+        Expression* createSubExp(const Expression* left, const Expression* right);
+        Expression* createMulExp(const Expression* left, const Expression* right);
+        Expression* createDivExp(const Expression* left, const Expression* right);
+        Expression* createAssExp(const char* ident, const Expression* right);
+        Expression* createMulAssExp(const char* ident, const Expression* right);
+        Expression* createDivAssExp(const char* ident, const Expression* right);
+        Expression* createAddAssExp(const char* ident, const Expression* right);
+        Expression* createSubAssExp(const char* ident, const Expression* right);
         Expression* createPrintExp(const Expression* exp, bool nflg);
         //文字列リテラル
         void startStringLiteral();

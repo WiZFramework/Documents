@@ -34,7 +34,7 @@ namespace ore {
     //--------------------------------------------------------------------------------------
     ///  ランタイムオブジェクト
     //--------------------------------------------------------------------------------------
-    struct RuntimeObject:  public std::enable_shared_from_this&lt;RuntimeObject> {
+    struct RuntimeObject : public std::enable_shared_from_this&lt;RuntimeObject> {
         //変数のmap
         map&lt;string, Value> m_VariableMap;
         //ツリー構造
@@ -43,7 +43,7 @@ namespace ore {
         //現在実行中のステートメント
         const Statement* m_Statement;
         RuntimeObject(shared_ptr&lt;RuntimeObject> parent) :
-            m_Parent(parent), m_Child(nullptr){}
+            m_Parent(parent), m_Child(nullptr) {}
         ~RuntimeObject() {}
         ///ツリーをさかのぼって変数の値を探す。
         //あれば、その値の参照を返す。なければ、ローカルに作成して値を返す
@@ -90,7 +90,7 @@ namespace ore {
         Root* m_Root;
         shared_ptr&lt;RuntimeObject> m_CurrentRuntime;
         //エラーのマップ
-        map&lt;int,string> m_ErrMap;
+        map&lt;int, string> m_ErrMap;
     };
 
     Interpreter::Interpreter() :
@@ -132,7 +132,7 @@ namespace ore {
             pImpl->m_Root->Excute();
         }
         else {
-            Interpreter::getInp()->runtimeExit(2001,getLineNumber());
+            Interpreter::getInp()->runtimeExit(2001, getLineNumber());
         }
     }
 
@@ -164,60 +164,60 @@ namespace ore {
         return ptr;
     }
 
-    Expression* Interpreter::createBoolValueExp(bool b) {
-        auto ptr = new BoolValueExp(b);
+    Expression* Interpreter::createBoolLiteralExp(bool b) {
+        auto ptr = new BoolLiteralExp(b);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
 
-    Expression* Interpreter::createIntValueExp(const char* ext) {
+    Expression* Interpreter::createIntLiteralExp(const char* ext) {
         string str = clampToken(ext);
-        auto ptr = new IntValueExp(std::stoi(str));
+        auto ptr = new IntLiteralExp(std::stoi(str));
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
 
-    Expression* Interpreter::createDoubleValueExp(const char* ext) {
+    Expression* Interpreter::createDoubleLiteralExp(const char* ext) {
         string str = clampToken(ext);
-        auto ptr = new DoubleValueExp(std::stod(str));
+        auto ptr = new DoubleLiteralExp(std::stod(str));
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
 
-    Expression* Interpreter::createAdd(const Expression* left, const Expression* right) {
-        auto ptr = new BinaryExp(ExpressionType::addExp,left,right);
+    Expression* Interpreter::createAddExp(const Expression* left, const Expression* right) {
+        auto ptr = new BinaryExp(ExpressionType::addExp, left, right);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
 
-    Expression* Interpreter::createSub(const Expression* left, const Expression* right) {
+    Expression* Interpreter::createSubExp(const Expression* left, const Expression* right) {
         auto ptr = new BinaryExp(ExpressionType::subExp, left, right);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
 
     }
 
-    Expression* Interpreter::createMul(const Expression* left, const Expression* right) {
+    Expression* Interpreter::createMulExp(const Expression* left, const Expression* right) {
         auto ptr = new BinaryExp(ExpressionType::mulExp, left, right);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
 
     }
 
-    Expression* Interpreter::createDiv(const Expression* left, const Expression* right) {
+    Expression* Interpreter::createDivExp(const Expression* left, const Expression* right) {
         auto ptr = new BinaryExp(ExpressionType::divExp, left, right);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
 
-    Expression* Interpreter::createAss(const char* ident, const Expression* right) {
+    Expression* Interpreter::createAssExp(const char* ident, const Expression* right) {
         string str = clampToken(ident);
         auto ptr = new AssignExp(str.c_str(), right);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
 
-    Expression* Interpreter::createMulAss(const char* ident, const Expression* right) {
+    Expression* Interpreter::createMulAssExp(const char* ident, const Expression* right) {
         string str = clampToken(ident);
         auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::mulAssExp);
         pImpl->m_ObjectPool.push_back(ptr);
@@ -225,7 +225,7 @@ namespace ore {
 
     }
 
-    Expression* Interpreter::createDivAss(const char* ident, const Expression* right) {
+    Expression* Interpreter::createDivAssExp(const char* ident, const Expression* right) {
         string str = clampToken(ident);
         auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::divAssExp);
         pImpl->m_ObjectPool.push_back(ptr);
@@ -233,7 +233,7 @@ namespace ore {
 
     }
 
-    Expression* Interpreter::createAddAss(const char* ident, const Expression* right) {
+    Expression* Interpreter::createAddAssExp(const char* ident, const Expression* right) {
         string str = clampToken(ident);
         auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::addAssExp);
         pImpl->m_ObjectPool.push_back(ptr);
@@ -241,7 +241,7 @@ namespace ore {
 
     }
 
-    Expression* Interpreter::createSubAss(const char* ident, const Expression* right) {
+    Expression* Interpreter::createSubAssExp(const char* ident, const Expression* right) {
         string str = clampToken(ident);
         auto ptr = new ToAssExp(str.c_str(), right, ExpressionType::subAssExp);
         pImpl->m_ObjectPool.push_back(ptr);
@@ -319,20 +319,20 @@ namespace ore {
     }
 
     void Interpreter::syntaxExit(int mess_id, int linnum, const char* detail) {
-        cerr &lt;&lt; "\n" 
+        cerr &lt;&lt; "\n"
             &lt;&lt; pImpl->m_ErrMap[mess_id]
-            &lt;&lt; linnum 
-            &lt;&lt; " 行目: " 
-            &lt;&lt; detail 
-            &lt;&lt; " 付近。" 
+            &lt;&lt; linnum
+            &lt;&lt; " 行目: "
+            &lt;&lt; detail
+            &lt;&lt; " 付近。"
             &lt;&lt; endl;
 
     }
 
     void Interpreter::runtimeExit(int mess_id, int linnum) {
-        cerr &lt;&lt; "\nruntime error, " 
-            &lt;&lt; linnum 
-            &lt;&lt; " 行目: " 
+        cerr &lt;&lt; "\nruntime error, "
+            &lt;&lt; linnum
+            &lt;&lt; " 行目: "
             &lt;&lt; pImpl->m_ErrMap[mess_id]
             &lt;&lt; endl;
     }

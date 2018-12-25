@@ -59,11 +59,11 @@ int yywrap(void){ return 1; }
                 BEGIN(STR_LITERAL_ST_S);
             }
     [0-9][0-9]* {
-        yylval.expression = ore::Interpreter::getInp()->createIntValueExp(yytext);
+        yylval.expression = ore::Interpreter::getInp()->createIntLiteralExp(yytext);
         return INT_LITERAL;
     }
     [0-9]*\.[0-9]* {
-        yylval.expression = ore::Interpreter::getInp()->createDoubleValueExp(yytext);
+        yylval.expression = ore::Interpreter::getInp()->createDoubleLiteralExp(yytext);
         return DOUBLE_LITERAL;
     }
     [A-Za-z_][A-Za-z_0-9]* {
