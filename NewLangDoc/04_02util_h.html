@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link href="css/main.css" rel="stylesheet" type="text/css">
-<title>言語を作ろうプロジェクト（2018年）</title>
+<title>言語を作ろうプロジェクト（2019年）</title>
 </head>
 <body>
 <!-- 全体コンテナ　-->
@@ -40,130 +40,6 @@ namespace ore {
         }
         return str;
     }
-
-
-    //--------------------------------------------------------------------------------------
-    ///  暗黙の型キャスト
-    //--------------------------------------------------------------------------------------
-    inline bool toBoolValue() {
-        return false;
-    }
-    inline bool toBoolValue(bool b) {
-        return b;
-    }
-    inline bool toBoolValue(int i) {
-        if (i != 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    inline bool toBoolValue(double b) {
-        if (b != 0.0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    inline bool toBoolValue(const string& str) {
-        //必ず10進数に変換
-        int i = std::stoi(str, nullptr, 10);
-        if (i != 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    inline int toIntValue() {
-        return 0;
-    }
-
-    inline int toIntValue(bool b) {
-        if (b != false) {
-            return 1;
-        }
-        else {
-            return 0;
-        }
-    }
-
-    inline int toIntValue(int i) {
-        return i;
-    }
-
-    inline int toIntValue(double d) {
-        //強制的な型返還
-        int i = (int)d;
-        return i;
-    }
-
-    inline int toIntValue(const string& str) {
-        //必ず10進数に変換
-        int i = std::stoi(str, nullptr, 10);
-        return i;
-    }
-
-    inline double toDoubleValue() {
-        return 0.0;
-    }
-
-    inline double toDoubleValue(bool b) {
-        if (b) {
-            return 1.0;
-        }
-        else {
-            return 0.0;
-        }
-    }
-
-    inline double toDoubleValue(int i) {
-        //C++に合わせた型返還
-        double d = i;
-        return d;
-    }
-
-    inline double toDoubleValue(double d) {
-        return d;
-    }
-
-
-    inline double toDoubleValue(const string& str) {
-        //10進のdoubleに変換
-        double d = std::stod(str);
-        return d;
-    }
-
-    inline string toStringValue() {
-        return string("");
-    }
-
-    inline string toStringValue(bool b) {
-        if (b) {
-            return string("1");
-        }
-        else {
-            return string("");
-        }
-    }
-
-    inline string toStringValue(int i) {
-        string str = std::to_string(i);
-        return str;
-    }
-
-    inline string toStringValue(double d) {
-        string str = std::to_string(d);
-        return str;
-    }
-
-    inline string toStringValue(const string& str) {
-        return str;
-    }
-
 
 }
 //end namespace ore

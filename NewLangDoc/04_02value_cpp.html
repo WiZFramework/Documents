@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <link href="css/main.css" rel="stylesheet" type="text/css">
-<title>言語を作ろうプロジェクト（2018年）</title>
+<title>言語を作ろうプロジェクト（2019年）</title>
 </head>
 <body>
 <!-- 全体コンテナ　-->
@@ -14,10 +14,11 @@
 <!-- コンテンツ　-->
 <div id="contents">
 <h3>０４－０２．value.cpp</h3>
-
 <div class="box1">
 <pre>
 #include &lt;cstdlib>
+#include &lt;cmath>
+#include &lt;cfenv>
 #include &lt;iostream>
 #include &lt;string>
 #include &lt;set>
@@ -31,6 +32,145 @@
 using namespace std;
 
 namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  暗黙の型キャスト
+    //--------------------------------------------------------------------------------------
+    inline bool toBoolValue() {
+        return false;
+    }
+    inline bool toBoolValue(bool b) {
+        return b;
+    }
+    inline bool toBoolValue(int i) {
+        if (i != 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    inline bool toBoolValue(double b) {
+        if (b != 0.0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    inline bool toBoolValue(const string& str) {
+        //必ず10進数に変換
+        int i;
+        try {
+            i = std::stoi(str, nullptr, 10);
+        }
+        catch (...) {
+            i = 0;
+        }
+        if (i != 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    inline int toIntValue() {
+        return 0;
+    }
+
+    inline int toIntValue(bool b) {
+        if (b != false) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    inline int toIntValue(int i) {
+        return i;
+    }
+
+    inline int toIntValue(double d) {
+        //強制的な型返還
+        int i = (int)d;
+        return i;
+    }
+
+    inline int toIntValue(const string& str) {
+        //必ず10進数に変換
+        int i;
+        try {
+            i = std::stoi(str, nullptr, 10);
+        }
+        catch (...) {
+            i = 0;
+        }
+        return i;
+    }
+
+    inline double toDoubleValue() {
+        return 0.0;
+    }
+
+    inline double toDoubleValue(bool b) {
+        if (b) {
+            return 1.0;
+        }
+        else {
+            return 0.0;
+        }
+    }
+
+    inline double toDoubleValue(int i) {
+        //C++に合わせた型返還
+        double d = i;
+        return d;
+    }
+
+    inline double toDoubleValue(double d) {
+        return d;
+    }
+
+    inline double toDoubleValue(const string& str) {
+        //10進のdoubleに変換
+        double d;
+        try {
+            d = std::stod(str);
+        }
+        catch (...) {
+            d = 0.0;
+        }
+        return d;
+    }
+
+    inline string toStringValue() {
+        return string("");
+    }
+
+    inline string toStringValue(bool b) {
+        if (b) {
+            return string("1");
+        }
+        else {
+            return string("");
+        }
+    }
+
+    inline string toStringValue(int i) {
+        string str = std::to_string(i);
+        return str;
+    }
+
+    inline string toStringValue(double d) {
+        string str = std::to_string(d);
+        return str;
+    }
+
+    inline string toStringValue(const string& str) {
+        return str;
+    }
 
     //--------------------------------------------------------------------------------------
     ///  値
@@ -210,177 +350,54 @@ namespace ore {
         return pImpl->tmpStr.c_str();
     }
 
-    template&lt;typename TL>
-    Value ExecBinExpSub(TL left, const Value& right, ExpressionType typ) {
-        if (right.getType() == ValueType::boolVal) {
-            switch (typ) {
-            case ExpressionType::addExp:
-            {
-                //int型で計算
-                auto Result = left + right.getInt();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::subExp:
-            {
-                auto Result = left - right.getInt();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::mulExp:
-            {
-                auto Result = left * right.getInt();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::divExp:
-            {
-                if (right.getInt() == 0) {
-                    throw(2003);
-                }
-                auto Result = left / right.getInt();
-                return Value(Result);
-            }
-            break;
-            default:
-                break;
-            }
+    Value getOptimalTypeValue(double ret) {
+        double mod = std::fmod(ret, 1.0);
+        Value eps = Interpreter::getInp()->getConfig("calc_epsilon");
+        double epsd = eps.getDouble();
+        if (abs(epsd) >= 0.1)epsd = 0.1;
+        if (std::fabs(mod) &lt;= epsd) {
+            return Value((int)ret);
         }
-        else if (right.getType() == ValueType::intVal) {
-            switch (typ) {
-            case ExpressionType::addExp:
-            {
-                auto Result = left + right.getInt();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::subExp:
-            {
-                auto Result = left - right.getInt();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::mulExp:
-            {
-                auto Result = left * right.getInt();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::divExp:
-            {
-                if (right.getInt() == 0) {
-                    throw(2003);
-                }
-                auto Result = left / right.getInt();
-                return Value(Result);
-            }
-            break;
-            default:
-                break;
-            }
-        }
-        else if (right.getType() == ValueType::doubleVal) {
-            switch (typ) {
-            case ExpressionType::addExp:
-            {
-                auto Result = left + right.getDouble();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::subExp:
-            {
-                auto Result = left - right.getDouble();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::mulExp:
-            {
-                auto Result = left * right.getDouble();
-                return Value(Result);
-            }
-            break;
-            case ExpressionType::divExp:
-            {
-                if (right.getDouble() == 0.0) {
-                    throw(2003);
-                }
-                auto Result = left / right.getDouble();
-                return Value(Result);
-            }
-            break;
-            default:
-                break;
-            }
-        }
-        return Value();
-    }
-
-    Value ExecBinExp(const Value& left, const Value& right, ExpressionType type) {
-        if (left.getType() == ValueType::boolVal) {
-            //int型で計算
-            return ExecBinExpSub(left.getInt(), right, type);
-        }
-        else if (left.getType() == ValueType::intVal) {
-            return ExecBinExpSub(left.getInt(), right, type);
-        }
-        else if (left.getType() == ValueType::doubleVal) {
-            return ExecBinExpSub(left.getDouble(), right, type);
-        }
-        else if (left.getType() == ValueType::stringVal) {
-            //左辺が文字列の場合
-            if (type == ExpressionType::addExp) {
-                //足し算
-                string strLeft = left.getString();
-                strLeft += right.getString();
-                return Value(strLeft.c_str());
-            }
-            else if (type == ExpressionType::mulExp) {
-                string strLeft = left.getString();
-                //掛け算
-                //右辺を整数に変換して実行
-                //左辺を右辺の回数増やす
-                int count = right.getInt();
-                if (count > 0) {
-                    string temp = strLeft;
-                    strLeft = "";
-                    while (count--) {
-                        strLeft += temp;
-                    }
-                }
-                else if (count == 0) {
-                    //右辺が0空白にする
-                    strLeft == "";
-                }
-                else {
-                    //右辺が負数
-                    throw(2005);
-                }
-                return Value(strLeft.c_str());
-            }
-        }
-        return Value();
+        return Value(ret);
     }
 
     Value Value::operator+(const Value& other) {
-        return ExecBinExp(*this, other, ExpressionType::addExp);
+        double ret((*this).getDouble());
+        ret += other.getDouble();
+        return getOptimalTypeValue(ret);
     }
 
     Value Value::operator-(const Value& other) {
-        if (pImpl->m_Type == ValueType::stringVal) {
-            throw(2006);
-        }
-        return ExecBinExp(*this, other, ExpressionType::subExp);
+        double ret((*this).getDouble());
+        ret -= other.getDouble();
+        return getOptimalTypeValue(ret);
     }
 
     Value Value::operator*(const Value& other) {
-        return ExecBinExp(*this, other, ExpressionType::mulExp);
+        double ret((*this).getDouble());
+        ret *= other.getDouble();
+        return getOptimalTypeValue(ret);
     }
 
     Value Value::operator/(const Value& other) {
-        if (pImpl->m_Type == ValueType::stringVal) {
-            throw(2007);
+        double other_double = other.getDouble();
+        if (other_double == 0.0) {
+            Interpreter::getInp()->runtimeExit(2003);
         }
-        return ExecBinExp(*this, other, ExpressionType::divExp);
+        double ret((*this).getDouble());
+        ret /= other_double;
+        return getOptimalTypeValue(ret);
+    }
+
+    Value Value::operator&(const Value& other) {
+        string ret((*this).getString());
+        ret += other.getString();
+        return Value(ret.c_str());
+    }
+
+    Value&  Value::operator&=(const Value& other) {
+        *this = *this & other;
+        return *this;
     }
 
     Value& Value::operator+=(const Value& other) {
@@ -404,11 +421,66 @@ namespace ore {
         return *this;
     }
 
+    bool  Value::operator == (const Value& other) {
+        if (this->getType() == ValueType::stringVal
+            && other.getType() == ValueType::stringVal) {
+            return (pImpl->strV == other.pImpl->strV);
+        }
+        if (this->getType() == ValueType::doubleVal
+            || other.getType() == ValueType::doubleVal) {
+            double left((*this).getDouble());
+            double right(other.getDouble());
+            return (left == right);
+        }
+        else if (this->getType() == ValueType::intVal
+            || other.getType() == ValueType::intVal){
+            int left((*this).getInt());
+            int right(other.getInt());
+            return (left == right);
+        }
+        else if (this->getType() == ValueType::boolVal
+            || other.getType() == ValueType::boolVal) {
+            bool left((*this).getBool());
+            bool right(other.getBool());
+            return (left == right);
+        }
+        else {
+            return false;
+        }
+    }
+
+    bool  Value::operator != (const Value& other) {
+        return !((*this) == other);
+    }
+
+    bool Value::operator &lt; (const Value& other) {
+        double left((*this).getDouble());
+        double right(other.getDouble());
+        return (left &lt; right);
+    }
+
+    bool Value::operator > (const Value& other) {
+        double left((*this).getDouble());
+        double right(other.getDouble());
+        return (left > right);
+    }
+
+    bool Value::operator &lt;= (const Value& other) {
+        double left((*this).getDouble());
+        double right(other.getDouble());
+        return (left &lt;= right);
+    }
+
+    bool Value::operator >= (const Value& other) {
+        double left((*this).getDouble());
+        double right(other.getDouble());
+        return (left >= right);
+    }
+
 }
 //end namespace ore
 </pre>
 </div>
-
 </div>
 <!-- /コンテンツ　-->
 <hr>
