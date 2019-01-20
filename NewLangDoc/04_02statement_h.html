@@ -40,6 +40,7 @@ namespace ore {
 
     enum class SmtResType {
         voidType,
+        continueType,
         breakType,
         returnTpe,
     };
@@ -47,9 +48,10 @@ namespace ore {
     struct SmtRes {
         SmtResType m_Type;
         Value m_RetValue;
+        bool m_CaseExec;
         SmtRes() :
             m_Type(SmtResType::voidType),
-            m_RetValue() {}
+            m_RetValue(), m_CaseExec(false){}
     };
 
     //--------------------------------------------------------------------------------------
@@ -133,6 +135,57 @@ namespace ore {
 
 
     //--------------------------------------------------------------------------------------
+    ///  case文クラス
+    //--------------------------------------------------------------------------------------
+    class CaseStm : public Statement {
+    public:
+        CaseStm(const Expression* exp, const Statement* stm);
+        virtual ~CaseStm();
+        const Expression* getExp()const;
+        Value getExpExcute()const ;
+        const Statement* getStatement()const;
+        virtual SmtRes Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  default文クラス
+    //--------------------------------------------------------------------------------------
+    class DefaultStm : public Statement {
+    public:
+        DefaultStm(const Statement* stm);
+        virtual ~DefaultStm();
+        const Statement* getStatement()const;
+        virtual SmtRes Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+    //--------------------------------------------------------------------------------------
+    ///  switch文クラス
+    //--------------------------------------------------------------------------------------
+    class SwitchStm : public Statement {
+    public:
+        SwitchStm(const Expression* exp, const Statement* stm);
+        virtual ~SwitchStm();
+        const Expression* getExp()const;
+        const Statement* getStatement()const;
+        virtual SmtRes Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+
+    //--------------------------------------------------------------------------------------
     ///  while文クラス
     //--------------------------------------------------------------------------------------
     class WhileStm : public Statement {
@@ -167,6 +220,37 @@ namespace ore {
     };
 
     //--------------------------------------------------------------------------------------
+    ///  foreach文クラス
+    //--------------------------------------------------------------------------------------
+    class ForeachStm : public Statement {
+    public:
+        ForeachStm(const Expression* arr, const char* key, const char* val, const Statement* stm);
+        virtual ~ForeachStm();
+        const Expression* getArray()const;
+        const char* getKey()const;
+        const char* getVal()const;
+        const Statement* getStatement()const;
+        virtual SmtRes Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+
+    //--------------------------------------------------------------------------------------
+    ///  continue文クラス
+    //--------------------------------------------------------------------------------------
+    class ContinueStm : public Statement {
+    public:
+        ContinueStm();
+        virtual ~ContinueStm();
+        virtual SmtRes Excute() const  override;
+    };
+
+
+    //--------------------------------------------------------------------------------------
     ///  break文クラス
     //--------------------------------------------------------------------------------------
     class BreakStm : public Statement {
@@ -196,13 +280,16 @@ namespace ore {
     //--------------------------------------------------------------------------------------
     ///  文リストクラス
     //--------------------------------------------------------------------------------------
-    class StatementList : public ObjBase {
+    class StatementList : public StmExBase {
     public:
         StatementList(const Statement* stm);
         virtual ~StatementList();
         const Statement* getStm() const;
         StatementList* getNext()const;
         void setNext(StatementList* next);
+        virtual SmtRes Excute() const  override;
+        SmtRes ExcuteFromCase(Value val)const;
+        SmtRes ExcuteFromDefault()const;
     private:
         // pImplイディオム
         struct Impl;
@@ -219,6 +306,8 @@ namespace ore {
         virtual ~BlockStm();
         const StatementList* getStatementList()const;
         virtual SmtRes Excute() const  override;
+        SmtRes ExcuteFromCase(Value val)const;
+        SmtRes ExcuteFromDefault()const;
     private:
         // pImplイディオム
         struct Impl;
@@ -288,6 +377,8 @@ namespace ore {
         struct Impl;
         Impl* pImpl;
     };
+
+
 
 }
 //end namespace ore

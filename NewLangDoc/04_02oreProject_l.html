@@ -31,18 +31,39 @@ int yywrap(void){ return 1; }
 %%
 &lt;INITIAL>{
     "tru"   return TRUE_T;
+    "true"   return TRUE_T;
     "fls"   return FALSE_T;
+    "false"   return FALSE_T;
     "if"    return IF;
     "els"   return ELSE;
+    "else"   return ELSE;
+    "sch"   return SWITCH;
+    "switch"   return SWITCH;
+    "cse"   return CASE;
+    "case"  return CASE;
+    "def"   return DEFAULT;
+    "default"   return DEFAULT;
     "whl"   return WHILE;
+    "while"   return WHILE;
     "for"   return FOR;
+    "feh"   return FOREACH;
+    "as"   return AS;
+    "foreach"   return FOREACH;
+    "ctn"   return CONTINUE;
+    "continue"   return CONTINUE;
     "brk"   return BREAK;
+    "break"   return BREAK;
     "fnc"   return FUNCTION;
+    "function"   return FUNCTION;
     "ret"   return RETURN;
+    "return"   return RETURN;
     "("     return LP;
     ")"     return RP;
     "{"     return LC;
     "}"     return RC;
+    "["     return LB;
+    "]"     return RB;
+    ":"     return COLON;
     ";"     return SEMICOLON;
     ","     return COMMA;
     "*="    return MULASS;
@@ -54,16 +75,21 @@ int yywrap(void){ return 1; }
     "--"    return DECREMENT;
     "=="    return EQ;
     "!="    return NE;
-    "&lt;=" return LE;
+    "&lt;="    return LE;
     ">="    return GE;
     "&lt;"      return LT;
     ">"     return GT;
+    "&&"    return LOGICAL_AND;
+    "||"    return LOGICAL_OR;
     "+"     return ADD;
     "-"     return SUB;
     "*"     return MUL;
     "/"     return DIV;
+    "%"     return MOD;
     "&"     return AMP;
     "="     return ASS;
+    "ary"   return ARRAY;
+    "array"   return ARRAY;
     "setcnf"   return SETCONFIG;
     "getcnf"   return GETCONFIG;
     "pn"    return PRINTN;
@@ -86,7 +112,7 @@ int yywrap(void){ return 1; }
         yylval.expression = ore::Interpreter::getInp()->createDoubleLiteralExp(yytext);
         return DOUBLE_LITERAL;
     }
-    "\:"[A-Za-z_][A-Za-z_0-9]* {
+    "\$"[A-Za-z_][A-Za-z_0-9]* {
         yylval.fixedString = ore::Interpreter::getInp()->createFixedString(yytext);
         return LOCAL_IDENTIFIER;
     }

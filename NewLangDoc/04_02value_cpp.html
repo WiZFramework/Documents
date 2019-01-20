@@ -172,12 +172,27 @@ namespace ore {
         return str;
     }
 
+
+    //--------------------------------------------------------------------------------------
+    ///  配列
+    //--------------------------------------------------------------------------------------
+    struct ArrItem {
+        size_t sztKey;
+        string strKey;
+        bool isKeyStr;
+        Value val;
+        ArrItem():
+            sztKey(0), strKey(), isKeyStr(false)
+        {}
+    };
+
     //--------------------------------------------------------------------------------------
     ///  値
     //--------------------------------------------------------------------------------------
     struct Value::Impl {
         ValueType m_Type;
         string strV;
+        vector&lt;shared_ptr&lt;ArrItem>> arrV;
         //get用のstring
         string tmpStr;
         union {
@@ -229,6 +244,7 @@ namespace ore {
     }
 
     Value& Value::operator=(bool b) {
+        pImpl->arrV.clear();
         pImpl->m_Type = ValueType::boolVal;
         pImpl->boolV = b;
         pImpl->strV = "";
@@ -237,6 +253,7 @@ namespace ore {
     }
 
     Value& Value::operator=(int i) {
+        pImpl->arrV.clear();
         pImpl->m_Type = ValueType::intVal;
         pImpl->intV = i;
         pImpl->strV = "";
@@ -245,6 +262,7 @@ namespace ore {
     }
 
     Value& Value::operator=(double d) {
+        pImpl->arrV.clear();
         pImpl->m_Type = ValueType::doubleVal;
         pImpl->doubleV = d;
         pImpl->strV = "";
@@ -253,6 +271,7 @@ namespace ore {
     }
 
     Value& Value::operator=(const char* s) {
+        pImpl->arrV.clear();
         pImpl->m_Type = ValueType::stringVal;
         pImpl->intV = 0;
         pImpl->strV = s;
@@ -289,6 +308,9 @@ namespace ore {
         case ValueType::stringVal:
             return toBoolValue(pImpl->strV);
             break;
+        case ValueType::arrayVal:
+            Interpreter::getInp()->runtimeExit(2021);
+            break;
         }
         return toBoolValue();
     }
@@ -306,6 +328,9 @@ namespace ore {
             break;
         case ValueType::stringVal:
             return toIntValue(pImpl->strV);
+            break;
+        case ValueType::arrayVal:
+            Interpreter::getInp()->runtimeExit(2021);
             break;
         }
         return toIntValue();
@@ -325,6 +350,9 @@ namespace ore {
         case ValueType::stringVal:
             return toDoubleValue(pImpl->strV);
             break;
+        case ValueType::arrayVal:
+            Interpreter::getInp()->runtimeExit(2021);
+            break;
         }
         return toDoubleValue();
     }
@@ -343,12 +371,40 @@ namespace ore {
         case ValueType::stringVal:
             pImpl->tmpStr = pImpl->strV;
             break;
+        case ValueType::arrayVal:
+            Interpreter::getInp()->runtimeExit(2021);
+            break;
         default:
             pImpl->tmpStr = toStringValue();
             break;
         }
         return pImpl->tmpStr.c_str();
     }
+
+    Value Value::getTypedValue(ValueType t) const {
+        Value val;
+        switch (t) {
+        case ValueType::boolVal:
+            val =  getBool();
+            break;
+        case ValueType::intVal:
+            val = getInt();
+            break;
+        case ValueType::doubleVal:
+            val = getDouble();
+            break;
+        case ValueType::stringVal:
+            val = getString();
+            break;
+        case ValueType::arrayVal:
+            Interpreter::getInp()->runtimeExit(2021);
+            break;
+        default:
+            break;
+        }
+        return val;
+    }
+
 
     Value getOptimalTypeValue(double ret) {
         double mod = std::fmod(ret, 1.0);
@@ -388,6 +444,17 @@ namespace ore {
         ret /= other_double;
         return getOptimalTypeValue(ret);
     }
+
+    Value Value::operator%(const Value& other) {
+        double other_double = other.getDouble();
+        if (other_double == 0.0) {
+            Interpreter::getInp()->runtimeExit(2003);
+        }
+        double ret((*this).getDouble());
+        ret = fmod(ret, other_double);
+        return getOptimalTypeValue(ret);
+    }
+
 
     Value Value::operator&(const Value& other) {
         string ret((*this).getString());
@@ -433,7 +500,7 @@ namespace ore {
             return (left == right);
         }
         else if (this->getType() == ValueType::intVal
-            || other.getType() == ValueType::intVal){
+            || other.getType() == ValueType::intVal) {
             int left((*this).getInt());
             int right(other.getInt());
             return (left == right);
@@ -475,6 +542,174 @@ namespace ore {
         double left((*this).getDouble());
         double right(other.getDouble());
         return (left >= right);
+    }
+
+    bool Value::operator && (const Value& other) {
+        bool left((*this).getBool());
+        bool right(other.getBool());
+        return (left && right);
+    }
+
+    bool Value::operator || (const Value& other) {
+        bool left((*this).getBool());
+        bool right(other.getBool());
+        return (left || right);
+    }
+
+    void Value::setArrClear() {
+        pImpl->arrV.clear();
+        pImpl->m_Type = ValueType::arrayVal;
+    }
+
+    bool Value::isArrKey(size_t index)const {
+        if (pImpl->m_Type != ValueType::arrayVal) {
+            return false;
+        }
+        for (auto& v : pImpl->arrV) {
+            if (v->isKeyStr == false && v->sztKey == index) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool Value::isArrKey(const char* key)const {
+        if (pImpl->m_Type != ValueType::arrayVal) {
+            return false;
+        }
+        for (auto& v : pImpl->arrV) {
+            if (v->isKeyStr && v->strKey == key) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    void Value::createArrKey(size_t index) {
+        pImpl->m_Type = ValueType::arrayVal;
+        auto ptrArrItem = make_shared&lt;ArrItem>();
+        ptrArrItem->isKeyStr = false;
+        ptrArrItem->sztKey = index;
+        ptrArrItem->val = Value();
+        size_t size = pImpl->arrV.size();
+        pImpl->arrV.push_back(ptrArrItem);
+    }
+
+    void Value::createArrKey(const char* key) {
+        pImpl->m_Type = ValueType::arrayVal;
+        auto ptrArrItem = make_shared&lt;ArrItem>();
+        ptrArrItem->isKeyStr = true;
+        ptrArrItem->strKey = key;
+        ptrArrItem->val = Value("");
+        size_t size = pImpl->arrV.size();
+        pImpl->arrV.push_back(ptrArrItem);
+    }
+
+    size_t Value::getNextIndexKey() const {
+        int lastIndex = -1;
+        for (auto& v : pImpl->arrV) {
+            if (v->isKeyStr == false) {
+                if (((int)v->sztKey) > lastIndex) {
+                    lastIndex = (int)v->sztKey;
+                }
+            }
+        }
+        return (size_t)(lastIndex + 1);
+    }
+
+
+
+    const Value& Value::operator[](size_t index)const {
+        for (auto& v : pImpl->arrV) {
+            if (v->isKeyStr == false && v->sztKey == index) {
+                return v->val;
+            }
+        }
+        //無かった
+        //ワーニングを出す
+        Interpreter::getInp()->runtimeWorning(2022);
+        auto ptrArrItem = make_shared&lt;ArrItem>();
+        ptrArrItem->isKeyStr = false;
+        ptrArrItem->sztKey = index;
+        ptrArrItem->val = Value();
+        size_t size = pImpl->arrV.size();
+        pImpl->m_Type = ValueType::arrayVal;
+        pImpl->arrV.push_back(ptrArrItem);
+        return pImpl->arrV[size]->val;
+    }
+    Value& Value::operator[](size_t index) {
+        for (auto& v : pImpl->arrV) {
+            if (v->isKeyStr == false && v->sztKey == index) {
+                return v->val;
+            }
+        }
+        //無かった
+        auto ptrArrItem = make_shared&lt;ArrItem>();
+        ptrArrItem->isKeyStr = false;
+        ptrArrItem->sztKey = index;
+        ptrArrItem->val = Value();
+        size_t size = pImpl->arrV.size();
+        pImpl->m_Type = ValueType::arrayVal;
+        pImpl->arrV.push_back(ptrArrItem);
+        return pImpl->arrV[size]->val;
+    }
+
+    const Value& Value::operator[](const char* key)const {
+        for (auto& v : pImpl->arrV) {
+            if (v->isKeyStr && v->strKey == key) {
+                return v->val;
+            }
+        }
+        //無かった
+        //ワーニングを出す
+        Interpreter::getInp()->runtimeWorning(2022);
+        auto ptrArrItem = make_shared&lt;ArrItem>();
+        ptrArrItem->isKeyStr = true;
+        ptrArrItem->strKey = key;
+        ptrArrItem->val = Value("");
+        size_t size = pImpl->arrV.size();
+        pImpl->m_Type = ValueType::arrayVal;
+        pImpl->arrV.push_back(ptrArrItem);
+        return pImpl->arrV[size]->val;
+
+    }
+    Value& Value::operator[](const char* key) {
+        for (auto& v : pImpl->arrV) {
+            if (v->isKeyStr && v->strKey == key) {
+                return v->val;
+            }
+        }
+        //無かった
+        auto ptrArrItem = make_shared&lt;ArrItem>();
+        ptrArrItem->isKeyStr = true;
+        ptrArrItem->strKey = key;
+        ptrArrItem->val = Value("");
+        size_t size = pImpl->arrV.size();
+        pImpl->m_Type = ValueType::arrayVal;
+        pImpl->arrV.push_back(ptrArrItem);
+        return pImpl->arrV[size]->val;
+    }
+
+    size_t Value::getArrCount() const {
+        return pImpl->arrV.size();
+    }
+
+    const Value& Value::getArrVValue(size_t index) const {
+        return pImpl->arrV[index]->val;
+    }
+    Value& Value::getArrVValue(size_t index) {
+        return pImpl->arrV[index]->val;
+    }
+
+    Value Value::getArrVKey(size_t index) const {
+        Value ret;
+        if (pImpl->arrV[index]->isKeyStr) {
+            ret = pImpl->arrV[index]->strKey.c_str();
+        }
+        else {
+            ret = (int)pImpl->arrV[index]->sztKey;
+        }
+        return ret;
     }
 
 }

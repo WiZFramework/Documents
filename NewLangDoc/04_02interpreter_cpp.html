@@ -80,7 +80,7 @@ namespace ore {
         //ツリー構造
         weak_ptr&lt;RuntimeObject> m_Parent;
         shared_ptr&lt;RuntimeObject> m_Child;
-        RuntimeObject(shared_ptr&lt;RuntimeObject> parent,bool IsFunc = false) :
+        RuntimeObject(shared_ptr&lt;RuntimeObject> parent, bool IsFunc = false) :
             m_Parent(parent), m_Child(nullptr), m_IsFunc(IsFunc)
         {}
         ~RuntimeObject() {}
@@ -119,6 +119,8 @@ namespace ore {
         int m_RuntimeLineNumber;
         //breakの深さ
         int m_BreakDeps;
+        //Loopの深さ
+        int m_LoopDeps;
     };
 
     Interpreter::Interpreter() :
@@ -149,10 +151,16 @@ namespace ore {
             { 2012, "定義関数で、キーが空白でねえがい？"},
             { 2013, "関数呼び出しで、パラメータ数より実引数が多いぞい。関数定義をよぐみでくんつえ。"},
             { 2014, "関数のながに関数をづぐろうどしてんべ。すまねが、それはでぎんよ。"},
-            { 2015, "なんだがわがんねげど、ループが閉じてねえどごがあんぞい。"},
+            { 2015, "なんだがわがんねげど、ループがスイッチが開いてねえが閉じてねえどごがあんぞい。"},
             { 2016, "ブレーク文はループの中がスイッチのながしかかげねぞい。"},
             { 2017, "リターン文は関数内でしかかげねぞい。"},
+            { 2018, "コンティニュー文はループの中しかかげねぞい。"},
+            { 2019, "配列の添え字は正の整数か文字列だぞい"},
+            { 2020, "親配列がないぞい"},
+            { 2021, "配列はほがの型に変換でぎねぞい。"},
+            { 2022, "その配列の添え字はめっかんねぞい。"},
         };
+
         //初期状態はワーニングを出す
         pImpl->m_IsWorningOut = true;
         pImpl->m_RuntimeLineNumber = 1;
@@ -160,6 +168,7 @@ namespace ore {
         pImpl->m_ConfigMap["calc_epsilon"] = "0.000001";
         pImpl->m_FunctionRuntime = false;
         pImpl->m_BreakDeps = 0;
+        pImpl->m_LoopDeps = 0;
     }
     Interpreter::~Interpreter() {
         delete pImpl;
@@ -199,6 +208,27 @@ namespace ore {
             pImpl->m_CurrentRuntime->m_Child.reset();
         }
     }
+
+    //ループ実行中かどうか
+    void Interpreter::pushLoop() {
+        pImpl->m_LoopDeps++;
+
+    }
+    void Interpreter::popLoop() {
+        pImpl->m_LoopDeps--;
+        if (pImpl->m_LoopDeps &lt; 0) {
+            Interpreter::getInp()->runtimeExit(2015);
+        }
+    }
+    //continue可能かどうか
+    bool Interpreter::isContinueOK() const {
+        if (pImpl->m_LoopDeps > 0) {
+            return true;
+        }
+        return false;
+    }
+
+
 
     void Interpreter::pushBreak() {
         pImpl->m_BreakDeps++;
@@ -273,6 +303,63 @@ namespace ore {
         return ptr;
     }
 
+    Expression* Interpreter::createArrayInitValueExp(const ArgumentList* argumentList) {
+        auto ptr = new ArrayInitValueExp(argumentList);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createArrayInitKeyValueExp(const ArrKeyValueList* arrKeyValueList) {
+        auto ptr = new ArrayInitKeyValueExp(arrKeyValueList);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    ArrKeyValueList* Interpreter::createArrKeyValueList(const Expression* key, const Expression* value) {
+        auto ptr = new ArrKeyValueList(key, value);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    ArrKeyValueList* Interpreter::createArrKeyValueList(ArrKeyValueList* prev, const Expression* key, const Expression* value) {
+        ArrKeyValueList* pos;
+        if (prev == nullptr)
+            return createArrKeyValueList(key, value);
+        for (pos = prev; pos->getNext(); pos = pos->getNext())
+            ;
+        pos->setNext(createArrKeyValueList(key,value));
+        return prev;
+    }
+
+    ArrKeytList* Interpreter::createArrKeytList() {
+        auto ptr = new ArrKeytList();
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    ArrKeytList* Interpreter::createArrKeytList(const Expression* key) {
+        auto ptr = new ArrKeytList(key);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+    ArrKeytList* Interpreter::createArrKeytList(ArrKeytList* parent, const Expression* key) {
+        ArrKeytList* pos;
+        if (parent == nullptr)
+            return createArrKeytList(key);
+        for (pos = parent; pos->getNext(); pos = pos->getNext())
+            ;
+        pos->setNext(createArrKeytList(key));
+        return parent;
+    }
+
+
+    Expression* Interpreter::createArrayExp(const char* ident,ArrKeytList* keylist, bool isLocal) {
+        string str = clampToken(ident);
+        auto ptr = new ArrayExp(str.c_str(), keylist, isLocal);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
     Expression* Interpreter::createPriorityExp(const Expression* target) {
         auto ptr = new PriorityExp(target);
         pImpl->m_ObjectPool.push_back(ptr);
@@ -313,6 +400,12 @@ namespace ore {
 
     Expression* Interpreter::createAssExp(const Expression* ident, const Expression* right) {
         auto ptr = new AssignExp(ident, right);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+
+    Expression* Interpreter::createAssignArrExp(const Expression* variable,  const Expression* operand) {
+        auto ptr = new AssignArrExp(variable, operand);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
@@ -365,7 +458,7 @@ namespace ore {
             //その名前の関数がなかった
             syntaxExit(1005, gLine, ident, false);
         }
-        auto ptr = new FunctionCallExp(ident,args, pImpl->m_FunctionMap[ident]);
+        auto ptr = new FunctionCallExp(ident, args, pImpl->m_FunctionMap[ident]);
         pImpl->m_ObjectPool.push_back(ptr);
         return ptr;
     }
@@ -494,7 +587,7 @@ namespace ore {
         //ルートまでさかのぼってしまった。
         return false;
     }
-    
+
     Value& Interpreter::getLocalValiableValue(const char* key) {
         auto tgtRuntime = pImpl->m_CurrentRuntime;
         do {
@@ -525,6 +618,17 @@ namespace ore {
     int Interpreter::getRuntimeLineNumber() const {
         return pImpl->m_RuntimeLineNumber;
     }
+
+    void Interpreter::syntaxKeepExit(int mess_id, const char* detail) {
+        cerr &lt;&lt; "\n"
+            &lt;&lt; pImpl->m_ErrMap[1003]
+            &lt;&lt; detail
+            &lt;&lt; ": "
+            &lt;&lt; pImpl->m_ErrMap[mess_id]
+            &lt;&lt; endl;
+        exit(1);
+    }
+
 
     void Interpreter::syntaxExit(int mess_id, int linnum, const char* detail, bool bison) {
         string detailstr = detail;
@@ -574,7 +678,7 @@ namespace ore {
         exit(1);
     }
 
-    void Interpreter::runtimeExit(int mess_id,const char* target) {
+    void Interpreter::runtimeExit(int mess_id, const char* target) {
         if (target) {
             cerr &lt;&lt; "\n動がしてるどきのまじがいだぞい。 "
                 &lt;&lt; getRuntimeLineNumber()

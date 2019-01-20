@@ -52,7 +52,15 @@ namespace ore {
         void pushBackObject(ObjBase* pobj);
         const char* createFixedString(const char* ext);
         ///Expression
-        Expression* createVariableExp(const char* ident,bool isLocal);
+        Expression* createVariableExp(const char* ident, bool isLocal);
+        ArrKeyValueList* createArrKeyValueList(const Expression* key, const Expression* value);
+        ArrKeyValueList* createArrKeyValueList(ArrKeyValueList* prev, const Expression* key, const Expression* value);
+        Expression* createArrayInitValueExp(const ArgumentList* argumentList);
+        Expression* createArrayInitKeyValueExp(const ArrKeyValueList* arrKeyValueList);
+        ArrKeytList* createArrKeytList();
+        ArrKeytList* createArrKeytList(const Expression* key);
+        ArrKeytList* createArrKeytList(ArrKeytList* parent,const Expression* key);
+        Expression* createArrayExp(const char* ident,ArrKeytList* keylist, bool isLocal);
         Expression* createPriorityExp(const Expression* target);
         Expression* createBoolLiteralExp(bool b);
         Expression* createIntLiteralExp(const char* ext);
@@ -60,6 +68,7 @@ namespace ore {
         Expression* createBinaryExp(const Expression* left, const Expression* right, ExpressionType t);
         Expression* createRelationalExp(const Expression* left, const Expression* right, ExpressionType t);
         Expression* createAssExp(const Expression* ident, const Expression* right);
+        Expression* createAssignArrExp(const Expression* variable, const Expression* operand);
         Expression* createToAssExp(const Expression* ident, const Expression* right, ExpressionType t);
         Expression* createUnaryIncDecExp(const Expression* ident, ExpressionType t);
         Expression* createPostfixIncDecExp(const Expression* ident, ExpressionType t);
@@ -109,19 +118,26 @@ namespace ore {
         //関数実行中かどうか
         void setFunctionRuntime(bool b);
         bool isFunctionRuntime() const;
+        //ループ実行中かどうか
+        void pushLoop();
+        void popLoop();
+        //continue可能かどうか
+        bool isContinueOK() const;
         //break可能な深さをpushする。
         void pushBreak();
         //break可能な深さをpopする。
         void popBreak();
         //break可能かどうか
         bool isBreakOK() const;
+        ///シンタックスエラー予約語関連
+        void syntaxKeepExit(int mess_id, const char* detail);
         ///シンタックスエラー(行番号、位置情報付き)
-        void syntaxExit(int mess_id, int linnum, const char* detail,bool bison = true);
+        void syntaxExit(int mess_id, int linnum, const char* detail, bool bison = true);
         ///ランタイム中の行番号
         void setRuntimeLineNumber(int num);
         int getRuntimeLineNumber() const;
         ///ランタイムエラー(行番号付き)
-        void runtimeExit(int mess_id,const char* target = nullptr);
+        void runtimeExit(int mess_id, const char* target = nullptr);
         ///ランタイムワーニング
         void runtimeWorning(int mess_id);
         ///警告を出すかどうか

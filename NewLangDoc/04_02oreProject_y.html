@@ -36,6 +36,8 @@ int yyerror(char const *str){
 %union {
     const char* fixedString;
     ore::Expression* expression;
+    ore::ArrKeyValueList* arraykeyvalueList;
+    ore::ArrKeytList* arraykeyList;
     ore::Statement* statement;
     ore::StatementList* statementList;
     ore::ParameterList* parameterList;
@@ -44,21 +46,27 @@ int yyerror(char const *str){
 }
 %token &lt;fixedString> IDENTIFIER LOCAL_IDENTIFIER
 %token &lt;expression>  TRUE_T FALSE_T INT_LITERAL DOUBLE_LITERAL STR_LITERAL
-%token LP RP LC RC EQ NE LE GE LT GT AMP COMMA SEMICOLON ADD SUB MUL DIV CR  
-%token MULASS DIVASS  ADDASS SUBASS AMPASS ASS PRINTN PRINT SETCONFIG GETCONFIG INCREMENT DECREMENT
-%token IF ELSE WHILE FOR BREAK FUNCTION RETURN
+%token LP RP LC RC LB RB EQ NE LE GE LT GT LOGICAL_AND LOGICAL_OR AMP COMMA COLON SEMICOLON ADD SUB MUL DIV MOD CR  
+%token MULASS DIVASS  ADDASS SUBASS AMPASS ASS PRINTN PRINT SETCONFIG GETCONFIG ARRAY INCREMENT DECREMENT
+%token IF ELSE SWITCH CASE DEFAULT WHILE FOREACH AS FOR BREAK CONTINUE FUNCTION RETURN
 %right ASS 
 %right ADDASS SUBASS AMPASS
 %right MULASS DIVASS
+%left LOGICAL_OR
+%left LOGICAL_AND
 %left ADD SUB 
-%left MUL DIV
+%left MUL DIV MOD
 %left UMINUS
-%type &lt;expression> constart_expression identifier_expression primary_expression
+%type &lt;expression> constart_expression identifier_expression identifier_array_expression 
+%type &lt;expression> internal_expression primary_expression
 %type &lt;expression> postfix_expression unary_expression mul_expression add_expression
-%type &lt;expression> relational_expression equality_expression assign_expression expression   
-%type &lt;statement> statement expression_statement compound_statement internal_statement
+%type &lt;expression> relational_expression equality_expression 
+%type &lt;expression> logical_and_expression logical_or_expression assign_expression expression   
+%type &lt;statement> statement labeled_statement expression_statement compound_statement internal_statement
 %type &lt;statement> selection_statement iteration_statement jump_statement function_define_statement
 %type &lt;statementList> statement_list
+%type &lt;arraykeyvalueList> initialize_array_key_value_list
+%type &lt;arraykeyList> arraykey_list
 %type &lt;argumentList> argument_list
 %type &lt;parameterList> parameter_list
 %type &lt;root> root
@@ -80,13 +88,24 @@ statement_list
     }
     ;
 statement
-    : expression_statement
+    : labeled_statement
+    | expression_statement
     | compound_statement
     | selection_statement
     | iteration_statement
     | jump_statement
     | internal_statement
     | function_define_statement
+    ;
+labeled_statement
+    : CASE expression COLON statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::CaseStm>($2,$4);
+    }
+    | DEFAULT COLON statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::DefaultStm>($3);
+    }
     ;
 expression_statement
     : SEMICOLON
@@ -99,13 +118,13 @@ expression_statement
     }
     ;
 compound_statement
-    : LC statement_list RC
-    {
-        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::BlockStm>($2);
-    }
-    | LC RC
+    : LC RC
     {
         $$ = ore::Interpreter::getInp()->createStatement&lt;ore::BlockStm>();
+    }
+    | LC statement_list RC
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::BlockStm>($2);
     }
     ;
 selection_statement
@@ -117,6 +136,10 @@ selection_statement
     {
         $$ = ore::Interpreter::getInp()->createStatement&lt;ore::IfStm>($3,$5);
     }
+    | SWITCH  LP expression RP compound_statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::SwitchStm>($3,$5);
+    }
     ;
 iteration_statement
     : WHILE LP expression RP statement
@@ -127,9 +150,21 @@ iteration_statement
     {
         $$ = ore::Interpreter::getInp()->createStatement&lt;ore::ForStm>($3,$4,$6,$8);
     }
+    | FOREACH LP identifier_expression AS IDENTIFIER COLON IDENTIFIER RP statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::ForeachStm>($3,$5,$7,$9);
+    }
+    | FOREACH LP identifier_expression AS LOCAL_IDENTIFIER COLON LOCAL_IDENTIFIER RP statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::ForeachStm>($3,$5,$7,$9);
+    }
     ;
 jump_statement
-    : BREAK SEMICOLON
+    : CONTINUE SEMICOLON
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::ContinueStm>();
+    }
+    | BREAK SEMICOLON
     {
         $$ = ore::Interpreter::getInp()->createStatement&lt;ore::BreakStm>();
     }
@@ -180,10 +215,14 @@ expression
     : assign_expression
     ;
 assign_expression
-    : equality_expression
+    : logical_or_expression
     | identifier_expression ASS assign_expression
     {
         $$ = ore::Interpreter::getInp()->createAssExp($1,$3);
+    }
+    | identifier_array_expression ASS assign_expression
+    {
+        $$ = ore::Interpreter::getInp()->createAssignArrExp($1,$3);
     }
     | identifier_expression ADDASS assign_expression
     {
@@ -204,6 +243,20 @@ assign_expression
     | identifier_expression DIVASS assign_expression
     {
         $$ = ore::Interpreter::getInp()->createToAssExp($1,$3, ore::ExpressionType::divAssExp);
+    }
+    ;
+logical_or_expression
+    : logical_and_expression
+    | logical_or_expression LOGICAL_OR logical_and_expression
+    {
+        $$ = ore::Interpreter::getInp()->createRelationalExp($1,$3,ore::ExpressionType::logicalOrExp);
+    }
+    ;
+logical_and_expression
+    : equality_expression
+    | logical_and_expression LOGICAL_AND equality_expression
+    {
+        $$ = ore::Interpreter::getInp()->createRelationalExp($1,$3,ore::ExpressionType::logicalAndExp);
     }
     ;
 equality_expression
@@ -261,6 +314,10 @@ mul_expression
     {
         $$ = ore::Interpreter::getInp()->createBinaryExp($1,$3,ore::ExpressionType::divExp);
     }
+    | mul_expression MOD primary_expression
+    {
+        $$ = ore::Interpreter::getInp()->createBinaryExp($1,$3,ore::ExpressionType::modExp);
+    }
     ;
 unary_expression
     : postfix_expression
@@ -288,7 +345,9 @@ postfix_expression
     }
     ;
 primary_expression
-    : identifier_expression
+    : identifier_array_expression
+    | internal_expression
+    | identifier_expression
     | constart_expression
     | STR_LITERAL
     {
@@ -297,6 +356,16 @@ primary_expression
     | LP expression RP
     {
         $$ = ore::Interpreter::getInp()->createPriorityExp($2);
+    }
+    ;
+internal_expression
+    : ARRAY LP argument_list RP
+    {
+        $$ = ore::Interpreter::getInp()->createArrayInitValueExp($3);
+    }
+    | ARRAY LP initialize_array_key_value_list RP
+    {
+        $$ = ore::Interpreter::getInp()->createArrayInitKeyValueExp($3);
     }
     ;
 argument_list
@@ -308,9 +377,43 @@ argument_list
     {
         $$ = ore::Interpreter::getInp()->createArgumentList($1);
     }
-    | argument_list COMMA assign_expression
+    | argument_list COMMA expression
     {
         $$ = ore::Interpreter::getInp()->createArgumentList($1,$3);
+    }
+    ;
+initialize_array_key_value_list
+    : expression COLON expression
+    {
+        $$ = ore::Interpreter::getInp()->createArrKeyValueList($1,$3);
+    }
+    | initialize_array_key_value_list COMMA expression COLON expression
+    {
+        $$ = ore::Interpreter::getInp()->createArrKeyValueList($1,$3,$5);
+    }
+    ;
+identifier_array_expression
+    : IDENTIFIER arraykey_list
+    {
+        $$ = ore::Interpreter::getInp()->createArrayExp($1,$2,false);
+    }
+    | LOCAL_IDENTIFIER arraykey_list
+    {
+        $$ = ore::Interpreter::getInp()->createArrayExp($1,$2,true);
+    }
+    ;
+arraykey_list
+    : LB RB
+    {
+        $$ = ore::Interpreter::getInp()->createArrKeytList();
+    }
+    | LB expression RB
+    {
+        $$ = ore::Interpreter::getInp()->createArrKeytList($2);
+    }
+    | arraykey_list LB expression RB
+    {
+        $$ = ore::Interpreter::getInp()->createArrKeytList($1,$3);
     }
     ;
 identifier_expression
