@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語とインタプリタ</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－１２．文クラス</h3>
+<h4>文クラスの作成</h4>
+　<b>文クラス</b>は<b>statement.h/cpp</b>に作成します。<br />
+　まず<b>statement.h</b>を<b>oreProject</b>に追加します。そして以下を記述します。
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  文タイプ
+    //--------------------------------------------------------------------------------------
+    enum class StatementType {
+        nullStm,
+        printStm,
+        stmTypeCount
+    };
+
+    enum class SmtResType {
+        voidType,
+        continueType,
+        breakType,
+        returnTpe,
+    };
+
+    struct SmtRes {
+        SmtResType m_Type;
+        Value m_RetValue;
+        bool m_CaseExec;
+        SmtRes() :
+            m_Type(SmtResType::voidType),
+            m_RetValue(), m_CaseExec(false) {}
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  文などの親
+    //--------------------------------------------------------------------------------------
+    class StmExBase : public ObjBase {
+    protected:
+        StmExBase(ObjType type) :
+            ObjBase(type) {}
+    public:
+        virtual ~StmExBase() {}
+        //voidの実行関数
+        virtual SmtRes Excute() const {
+            return SmtRes();
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  文
+    //--------------------------------------------------------------------------------------
+    class Statement : public StmExBase {
+    protected:
+        Statement(StatementType type);
+    public:
+        virtual ~Statement();
+        StatementType getType()const;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+    //--------------------------------------------------------------------------------------
+    ///  文リストクラス
+    //--------------------------------------------------------------------------------------
+    class StatementList : public StmExBase {
+    public:
+        StatementList(const Statement* stm);
+        virtual ~StatementList();
+        const Statement* getStm() const;
+        StatementList* getNext()const;
+        void setNext(StatementList* next);
+        virtual SmtRes Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  print文
+    //--------------------------------------------------------------------------------------
+    class PrintStm : public Statement {
+    public:
+        PrintStm(const Expression* target, bool nflg);
+        virtual ~PrintStm();
+        const Expression* getExpression()const;
+        bool getNflg() const;
+        virtual SmtRes Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+}
+//end namespace ore
+</pre>
+</div>
+　続いて<b>proc.h</b>を以下のように書き換えます。
+<div class="box1">
+<pre>
+#pragma once
+
+#include "value.h"
+#include "objBase.h"
+#include "expression.h"
+<span class="red">#include "statement.h"</span>
+#include "interpreter.h"
+
+namespace ore {
+
+
+//中略
+
+}
+//end namespace ore
+</pre>
+</div>
+　続いて<b>statement.cpp</b>を追加し、以下を記述します。
+<div class="box1">
+<pre>
+#include &lt;cstdlib>
+#include &lt;iostream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+#include "util.h"
+#include "proc.h"
+using namespace std;
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  文
+    //--------------------------------------------------------------------------------------
+    struct Statement::Impl {
+        StatementType   m_StmType;
+        int m_LineNumber;
+    };
+
+    Statement::Statement(StatementType type) :
+        StmExBase(ObjType::StmType),
+        pImpl(new Impl)
+    {
+        pImpl->m_StmType = type;
+        pImpl->m_LineNumber = 0;
+    }
+
+    Statement::~Statement() {
+        delete pImpl;
+    }
+
+    StatementType Statement::getType()const {
+        return pImpl->m_StmType;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ///  文リストクラス
+    //--------------------------------------------------------------------------------------
+    struct StatementList::Impl {
+        const Statement* m_Statement;
+        StatementList* m_Next;
+    };
+
+    StatementList::StatementList(const Statement* stm) :
+        StmExBase(ObjType::StmListType),
+        pImpl(new Impl)
+    {
+        pImpl->m_Statement = stm;
+        pImpl->m_Next = nullptr;
+    }
+
+    StatementList::~StatementList() {
+        delete pImpl;
+    }
+
+    const Statement* StatementList::getStm() const {
+        return pImpl->m_Statement;
+    }
+
+    StatementList* StatementList::getNext()const {
+        return pImpl->m_Next;
+    }
+
+    void StatementList::setNext(StatementList* next) {
+        pImpl->m_Next = next;
+    }
+
+    SmtRes StatementList::Excute() const {
+        setRuntimeLineNumber();
+        auto stml = this;
+        while (stml) {
+            auto stm = stml->getStm();
+            if (stm) {
+                auto res = stm->Excute();
+                if (res.m_Type == SmtResType::breakType || res.m_Type == SmtResType::returnTpe
+                    || res.m_Type == SmtResType::continueType) {
+                    return res;
+                }
+            }
+            else {
+                break;
+            }
+            stml = stml->getNext();
+        }
+        return SmtRes();
+    }
+
+
+    //--------------------------------------------------------------------------------------
+    ///  print文クラス
+    //--------------------------------------------------------------------------------------
+    struct PrintStm::Impl {
+        const Expression* m_Expression;
+        bool m_Nflg;
+    };
+
+    PrintStm::PrintStm(const Expression* target, bool nflg)
+        : Statement(StatementType::printStm),
+        pImpl(new Impl)
+    {
+        pImpl->m_Expression = target;
+        pImpl->m_Nflg = nflg;
+    }
+
+    PrintStm::~PrintStm() {
+        delete pImpl;
+    }
+
+    const Expression* PrintStm::getExpression()const {
+        return pImpl->m_Expression;
+    }
+
+    bool PrintStm::getNflg() const {
+        return pImpl->m_Nflg;
+    }
+
+    SmtRes PrintStm::Excute() const {
+        setRuntimeLineNumber();
+        auto val = pImpl->m_Expression->Excute();
+        switch (val.getType()) {
+        case ValueType::boolVal:
+            cout &lt;&lt; val.getBool();
+            break;
+        case ValueType::intVal:
+            cout &lt;&lt; val.getInt();
+            break;
+        case ValueType::doubleVal:
+            cout &lt;&lt; val.getDouble();
+            break;
+        case ValueType::stringVal:
+            cout &lt;&lt; val.getString();
+            break;
+        case ValueType::voidVal:
+            cout &lt;&lt; val.getString();
+        }
+        if (getNflg()) {
+            cout &lt;&lt; endl;
+        }
+        //void型を返す
+        return SmtRes();
+    }
+
+}
+//end namespace ore
+</pre>
+</div>
+<h4>解説</h4>
+　<b>文クラス</b>は<b>Statementクラス</b>および、その関連クラスの実装です。<br />
+　<b>文</b>は、複数集まることで<b>文リスト</b>を形成し、また将来的には<b>ループ</b>や<b>if文</b>などの制御構造を記述していきます。<br />
+　<b>文</b>および<b>文リスト</b>は共通の親として<b>StmExBaseクラス</b>を持ちます。<b>StmExBaseクラス</b>の親クラスは<b>ObjBaseクラス</b>となります。<br />
+　この構造は次項で述べる<b>Interpreterクラスの修正とランタイム</b>に大きくかかわってきます。<br />
+　<b>Statementクラス</b>は派生クラスを作成して実装します。<br />
+　今項の実装では<b>PrintStm（プリントステートメント）クラス</b>のみ実装しています。今後、このほかにも<b>if文クラス</b>や<b>forループクラス</b>を実装していきます。<br />
+　<b>Statementクラス</b>にも仮想関数として<b>Excute()関数</b>があります。しかし、前項で述べた<b>Expressionクラス</b>が<b>Valueを返す</b>のに対して、<b>Statementクラス</b>は<b>SmtResクラス</b>を返します。<br />
+　通常<b>文</b>は実行するだけですが、<b>return文</b>や<b>break文</b>の実装するにあたって重要になってきます。<br />
+　次項では<b>Interpreterクラスの修正とランタイム</b>を実装します。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="03_11.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="03_13.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

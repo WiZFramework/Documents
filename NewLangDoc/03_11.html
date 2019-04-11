@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語とインタプリタ</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－１１．式クラス</h3>
+<h4>式、文クラス作成の準備</h4>
+　さて、続いて<b>式、文クラス</b>を作成したいところですが、ここで、両クラスの親クラスとなる<b>ObjBaseクラス</b>を作成します。<br />
+　このクラスは<b>式、文クラス</b>の親になるばかりではなく、前項で作成した<b>Interpreterクラス</b>の親クラスになるように修正していきます。
+<h4>ObjBaseクラスの作成</h4>
+　<b>oreProject</b>に<b>objBase.h</b>を作成して、以下を記述します。
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  オブジェクトタイプ
+    //--------------------------------------------------------------------------------------
+    enum class ObjType {
+        NullType,
+        ExpType,
+        StmType,
+        StmListType,
+        RootType,
+        InterpreterType,
+        ParamListType,
+        FuncDefinitionType,
+        ArrKeyListType,
+        ArrKeyValueListType,
+        objTypeCount
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  Objectベース（インターフェイス）
+    //--------------------------------------------------------------------------------------
+    class ObjBase {
+    protected:
+        ObjBase(ObjType type);
+    public:
+        virtual ~ObjBase();
+        ObjType getObjType()const;
+        int getLineNumber()const;
+        void setRuntimeLineNumber()const;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+}
+//end namespace ore
+</pre>
+</div>
+　続いて<b>proc.h</b>に今作った<b>objBase.h</b>をインクルードします。以下、<b>proc.h</b>です。
+<div class="box1">
+<pre>
+#pragma once
+
+#include "value.h"
+<span class="red">#include "objBase.h"</span>
+#include "interpreter.h"
+
+namespace ore {
+
+//中略
+
+}
+//end namespace ore
+</pre>
+</div>
+　続いて<b>objBase.cpp</b>を作成して以下を記述します。
+<div class="box1">
+<pre>
+#include "util.h"
+#include "proc.h"
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  Objectベース（インターフェイス）
+    //--------------------------------------------------------------------------------------
+    struct ObjBase::Impl {
+        ObjType m_ObjType;
+        int m_LineNumber;
+    };
+    ObjBase::ObjBase(ObjType type) :
+        pImpl(new Impl)
+    {
+        extern int gLine;
+        pImpl->m_ObjType = type;
+        pImpl->m_LineNumber = gLine;
+    }
+    ObjBase::~ObjBase() {}
+
+    ObjType ObjBase::getObjType()const {
+        return pImpl->m_ObjType;
+    }
+
+    int ObjBase::getLineNumber()const {
+        return pImpl->m_LineNumber;
+    }
+
+    void ObjBase::setRuntimeLineNumber()const {
+        //何も記述しないでおく
+    }
+
+}
+// end namespace ore
+</pre>
+</div>
+　上記のように、<b>ObjBase::setRuntimeLineNumber()</b>には何も記述しないでおきます。
+<h4>式クラスの作成</h4>
+　<b>式クラス</b>は<b>expression.h/cpp</b>に記述します。<b>oreProject</b>に<b>expression.h</b>を記述し、以下を記述します。
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  式タイプ
+    //--------------------------------------------------------------------------------------
+    enum class ExpressionType {
+        boolLiteralExp = 0,
+        doubleLiteralExp,
+        nullExp,
+        expTypeCount
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  式クラス
+    //--------------------------------------------------------------------------------------
+    class Expression : public ObjBase {
+    protected:
+        Expression(ExpressionType type);
+    public:
+        virtual ~Expression();
+        ExpressionType getType()const;
+        virtual Value Excute() const {
+            return Value();
+        }
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  doubleリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    class DoubleLiteralExp : public Expression {
+    public:
+        DoubleLiteralExp(double d = 0.0);
+        virtual ~DoubleLiteralExp();
+        double getDoubleValue()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+}
+//end namespace ore
+</pre>
+</div>
+　今のところ、かなりシンプルな内容になっていますが、この<b>expression.h</b>は今後、どんどん追記されていくファイルです。<br />
+　<b>expression.h</b>の記述が終わったら<b>proc.h</b>に以下のように<b>expression.h</b>のインクルードを追加します。
+<div class="box1">
+<pre>
+#pragma once
+
+#include "value.h"
+#include "objBase.h"
+<span class="red">#include "expression.h"</span>
+#include "interpreter.h"
+
+namespace ore {
+
+//中略
+
+}
+//end namespace ore
+</pre>
+</div>
+　続いて<b>expression.cpp</b>を追加し記述します。
+<div class="box1">
+<pre>
+#include &lt;cstdlib>
+#include &lt;iostream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+#include "util.h"
+#include "proc.h"
+using namespace std;
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  式クラス
+    //--------------------------------------------------------------------------------------
+    struct Expression::Impl {
+        ExpressionType m_ExpType;
+    };
+
+    Expression::Expression(ExpressionType type)
+        :ObjBase(ObjType::ExpType),
+        pImpl(new Impl)
+    {
+        pImpl->m_ExpType = type;
+    }
+
+    Expression::~Expression() {
+        delete pImpl;
+    }
+
+    ExpressionType Expression::getType()const {
+        return pImpl->m_ExpType;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ///  doubleリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    struct DoubleLiteralExp::Impl {
+        double m_DoubleValue;
+    };
+
+    DoubleLiteralExp::DoubleLiteralExp(double d)
+        :Expression(ExpressionType::doubleLiteralExp),
+        pImpl(new Impl)
+    {
+        pImpl->m_DoubleValue = d;
+    }
+
+    DoubleLiteralExp::~DoubleLiteralExp() {
+        delete pImpl;
+    }
+
+
+    double DoubleLiteralExp::getDoubleValue()const {
+        return pImpl->m_DoubleValue;
+    }
+
+    Value DoubleLiteralExp::Excute() const {
+        setRuntimeLineNumber();
+        return Value(pImpl->m_DoubleValue);
+    }
+
+
+}
+//end namespace ore
+</pre>
+</div>
+<h4>解説</h4>
+　<b>式</b>というのは、たとえば
+<div class="box1">
+<pre>
+1 + 5
+</pre>
+</div>
+　というのも<b>式</b>ですが
+<div class="box1">
+<pre>
+5
+</pre>
+</div>
+　というのも立派な式です。上記は<b>整数リテラル</b>といいます。つまり<b>整数表現</b>です。<b>5</b>というのは、ソースコード上はただの数字文字にすぎません。これを<b>5つ</b>という意味の<b>数値</b>に<b>演算</b>する必要があります。これが<b>整数表現</b>です。<br />
+　ここでは<b>double型</b>の数値表演である<b>ダブルリテラル式</b>のみ実装してあります。<br />
+　また<b>Expressionクラス</b>には<b>Excute()</b>という仮想関数があります。これは派生クラスで定義されるのを前提とした関数です。ですから<b>DoubleLiteralExpクラス</b>では<b>DoubleLiteralExp::Excute()関数</b>で
+<div class="box1">
+<pre>
+    Value DoubleLiteralExp::Excute() const {
+        setRuntimeLineNumber();
+        return Value(pImpl->m_DoubleValue);
+    }
+</pre>
+</div>
+　と多重定義しています。<br />
+　この手法は、実際に<b>ランタイム実行</b>の時に、威力を発揮します。<br />
+　では次項では<b>文クラス</b>を作成します。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="03_10.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="03_12.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
