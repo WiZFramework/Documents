@@ -201,7 +201,7 @@ namespace ore {
     }
 
     inline int toIntValue(double d) {
-        //強制的な型変換
+        //強制的な型返還
         int i = (int)d;
         return i;
     }
@@ -417,8 +417,7 @@ namespace ore {
             return toBoolValue(pImpl->strV);
             break;
         case ValueType::arrayVal:
-            cerr &lt;&lt; "ランタイムエラー" &lt;&lt; endl;
-            exit(1);
+            Interpreter::getInp()->runtimeExit(2021);
             break;
         }
         return toBoolValue();
@@ -439,8 +438,7 @@ namespace ore {
             return toIntValue(pImpl->strV);
             break;
         case ValueType::arrayVal:
-            cerr &lt;&lt; "ランタイムエラー" &lt;&lt; endl;
-            exit(1);
+            Interpreter::getInp()->runtimeExit(2021);
             break;
         }
         return toIntValue();
@@ -461,8 +459,7 @@ namespace ore {
             return toDoubleValue(pImpl->strV);
             break;
         case ValueType::arrayVal:
-            cerr &lt;&lt; "ランタイムエラー" &lt;&lt; endl;
-            exit(1);
+            Interpreter::getInp()->runtimeExit(2021);
             break;
         }
         return toDoubleValue();
@@ -483,8 +480,7 @@ namespace ore {
             pImpl->tmpStr = pImpl->strV;
             break;
         case ValueType::arrayVal:
-            cerr &lt;&lt; "ランタイムエラー" &lt;&lt; endl;
-            exit(1);
+            Interpreter::getInp()->runtimeExit(2021);
             break;
         default:
             pImpl->tmpStr = toStringValue();
@@ -509,8 +505,7 @@ namespace ore {
             val = getString();
             break;
         case ValueType::arrayVal:
-            cerr &lt;&lt; "ランタイムエラー" &lt;&lt; endl;
-            exit(1);
+            Interpreter::getInp()->runtimeExit(2021);
             break;
         default:
             break;
@@ -521,7 +516,7 @@ namespace ore {
 
     Value getOptimalTypeValue(double ret) {
         double mod = std::fmod(ret, 1.0);
-        Value eps(0.000001);
+        Value eps = Interpreter::getInp()->getConfig("calc_epsilon");
         double epsd = eps.getDouble();
         if (abs(epsd) >= 0.1)epsd = 0.1;
         if (std::fabs(mod) &lt;= epsd) {
@@ -551,8 +546,7 @@ namespace ore {
     Value Value::operator/(const Value& other) {
         double other_double = other.getDouble();
         if (other_double == 0.0) {
-            cerr &lt;&lt; "ランタイムエラー" &lt;&lt; endl;
-            exit(1);
+            Interpreter::getInp()->runtimeExit(2003);
         }
         double ret((*this).getDouble());
         ret /= other_double;
@@ -562,8 +556,7 @@ namespace ore {
     Value Value::operator%(const Value& other) {
         double other_double = other.getDouble();
         if (other_double == 0.0) {
-            cerr &lt;&lt; "ランタイムエラー" &lt;&lt; endl;
-            exit(1);
+            Interpreter::getInp()->runtimeExit(2003);
         }
         double ret((*this).getDouble());
         ret = fmod(ret, other_double);
@@ -742,7 +735,7 @@ namespace ore {
         }
         //無かった
         //ワーニングを出す
-        cerr &lt;&lt; "ワーニング" &lt;&lt; endl;
+        Interpreter::getInp()->runtimeWorning(2022);
         auto ptrArrItem = make_shared&lt;ArrItem>();
         ptrArrItem->isKeyStr = false;
         ptrArrItem->sztKey = index;
@@ -777,7 +770,7 @@ namespace ore {
         }
         //無かった
         //ワーニングを出す
-        cerr &lt;&lt; "ワーニング" &lt;&lt; endl;
+        Interpreter::getInp()->runtimeWorning(2022);
         auto ptrArrItem = make_shared&lt;ArrItem>();
         ptrArrItem->isKeyStr = true;
         ptrArrItem->strKey = key;

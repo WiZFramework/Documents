@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語とインタプリタ</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－１４．FlexとBisonファイルとproc.hの修正</h3>
+<h4>Flexファイルの修正</h4>
+　Flexのファイル<b>oreProject.l</b>は大きく変更はありませんが、以下のようにします。
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include "oreProject.tab.h"
+#include "../oreProject/proc.h"
+#define YY_SKIP_YYWRAP 1
+int gLine = 1;
+int yywrap(void){ return 1; }
+%}
+%s COMMENT
+%s LINE_COMMENT
+%%
+&lt;INITIAL>{
+    ";"     return SEMICOLON;
+    "*="    return MULASS;
+    "/="    return DIVASS;
+    "+="    return ADDASS;
+    "-="    return SUBASS;
+    "+"     return ADD;
+    "-"     return SUB;
+    "*"     return MUL;
+    "/"     return DIV;
+    "="     return ASS;
+    "pn"    return PRINTN;
+    "p"     return PRINT;
+    "/*"   { BEGIN(COMMENT);}
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+    [0-9][0-9]* {
+        yylval.expression = ore::Interpreter::getInp()->createDoubleLiteralExp(yytext);
+        return DOUBLE_LITERAL;
+    }
+    [0-9]*\.[0-9]* {
+        yylval.expression = ore::Interpreter::getInp()->createDoubleLiteralExp(yytext);
+        return DOUBLE_LITERAL;
+    }
+    [A-Za-z_][A-Za-z_0-9]* {
+        yylval.fixedString = ore::Interpreter::getInp()->createFixedString(yytext);
+        return IDENTIFIER;
+    }
+    "\n"    { gLine++; }
+    [ \t]   ;
+    .       { return 0; }
+}
+&lt;COMMENT>{
+    "\n"    { gLine++;}
+    "*/"    { BEGIN(INITIAL); }
+    .       ;
+}
+&lt;LINE_COMMENT>{
+    "\n"    { gLine++; BEGIN(INITIAL); }
+    .       ;
+}
+%%
+</pre>
+</div>
+<h4>Bisonファイルの修正</h4>
+　続いて、Bisonのファイル<b>oreProject.y</b>を以下のように書き換えます。
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include "../oreProject/proc.h"
+#define YYDEBUG 1
+extern int yylex(void);
+int yyerror(char const *str){
+    extern char *yytext;
+    extern int gLine;
+    ore::Interpreter::getInp()->syntaxExit(1003, gLine, yytext);
+    return 0;
+}
+%}
+%code requires {
+#include "../oreProject/proc.h"
+}
+%union {
+    const char* fixedString;
+    ore::Expression* expression;
+    ore::Statement* statement;
+    ore::StatementList* statementList;
+    ore::Root* root;
+}
+%token &lt;fixedString> IDENTIFIER
+%token &lt;expression>  DOUBLE_LITERAL
+%token SEMICOLON ADD SUB MUL DIV  
+%token MULASS DIVASS  ADDASS SUBASS ASS PRINTN PRINT
+%right ASS 
+%right ADDASS SUBASS
+%right MULASS DIVASS
+%left ADD SUB 
+%left MUL DIV
+%type &lt;expression> constart_expression identifier_expression 
+%type &lt;expression> primary_expression mul_expression add_expression
+%type &lt;expression> assign_expression expression   
+%type &lt;statement> expression_statement internal_statement statement
+%type &lt;statementList> statement_list
+%type &lt;root> root
+%%
+root
+    : statement_list
+    {
+        $$ = ore::Interpreter::getInp()->createRoot($1);
+    }
+    ;
+statement_list
+    : statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatementList($1);
+    }
+    | statement_list statement
+    {
+        $$ = ore::Interpreter::getInp()->createStatementList($1,$2);
+    }
+    ;
+statement
+    : expression_statement
+    | internal_statement
+    ;
+expression_statement
+    : SEMICOLON
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::ExpressionStm>();
+    }
+    | expression SEMICOLON
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::ExpressionStm>($1);
+    }
+    ;
+internal_statement
+    : PRINTN expression SEMICOLON
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::PrintStm>($2,true);
+    }
+    | PRINT expression SEMICOLON
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::PrintStm>($2,false);
+    }
+    ;
+expression
+    : assign_expression
+    ;
+assign_expression
+    : add_expression
+    | identifier_expression ASS assign_expression
+    {
+        $$ = ore::Interpreter::getInp()->createAssExp($1,$3);
+    }
+    | identifier_expression ADDASS assign_expression
+    {
+        $$ = ore::Interpreter::getInp()->createToAssExp($1,$3, ore::ExpressionType::addAssExp);
+    }
+    | identifier_expression SUBASS assign_expression
+    {
+        $$ = ore::Interpreter::getInp()->createToAssExp($1,$3, ore::ExpressionType::subAssExp);
+    }
+    | identifier_expression MULASS assign_expression
+    {
+        $$ = ore::Interpreter::getInp()->createToAssExp($1,$3, ore::ExpressionType::mulAssExp);
+    }
+    | identifier_expression DIVASS assign_expression
+    {
+        $$ = ore::Interpreter::getInp()->createToAssExp($1,$3, ore::ExpressionType::divAssExp);
+    }
+    ;
+add_expression
+    : mul_expression
+    | add_expression ADD mul_expression
+    {
+        $$ = ore::Interpreter::getInp()->createBinaryExp($1,$3,ore::ExpressionType::addExp);
+    }
+    | add_expression SUB mul_expression
+    {
+        $$ = ore::Interpreter::getInp()->createBinaryExp($1,$3,ore::ExpressionType::subExp);
+    }
+    ;
+mul_expression
+    : primary_expression
+    | mul_expression MUL primary_expression
+    {
+        $$ = ore::Interpreter::getInp()->createBinaryExp($1,$3,ore::ExpressionType::mulExp);
+    }
+    | mul_expression DIV primary_expression
+    {
+        $$ = ore::Interpreter::getInp()->createBinaryExp($1,$3,ore::ExpressionType::divExp);
+    }
+    ;
+primary_expression
+    : identifier_expression
+    | constart_expression
+    ;
+identifier_expression
+    : IDENTIFIER
+    {
+        $$ = ore::Interpreter::getInp()->createVariableExp($1);
+    }
+    ;
+constart_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = $1;
+    }
+    ;
+%%
+</pre>
+</div>
+<h4>proc.hの修正</h4>
+　最後に、<b>proc.h</b>は、以下だけの内容にします。
+<div class="box1">
+<pre>
+#pragma once
+
+#include "value.h"
+#include "objBase.h"
+#include "expression.h"
+#include "statement.h"
+#include "interpreter.h"
+</pre>
+</div>
+<h4>proc.cppの削除</h4>
+　また<b>proc.cpp</b>は、もう必要がないので<b>ソリューションエクスプローラ</b>から、<b>削除</b>します。ファイルを完全に削除してしまってかまいません。
+<h4>解説</h4>
+　さてこの項までで、<b>index.ore</b>に記述されたスクリプト、すなわち
+<div class="box1">
+<pre>
+abc = 5;
+pn a = 10;
+abc += a;
+pn abc;
+pn abc + 25 + a;
+</pre>
+</div>
+　が実行できるようになりました。実行すると
+<div class="box1">
+<pre>
+10
+15
+50
+
+...\oreProject.exe (プロセス 7668) は、コード 0 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　という出力が得られます。<br />
+<h4>コンパイル</h4>
+　さて<b>main()関数</b>から呼ばれた、<b>Interpreter::Compile()関数</b>では、<b>oreProject.y、oreProject.l</b>に記述されてる文法にもとづいて、<b>index.ore</b>を解析します。<br />
+　たとえば
+<div class="box1">
+<pre>
+abc = 5;
+</pre>
+</div>
+　という式があった場合、まず
+<div class="box1">
+<pre>
+5
+</pre>
+</div>
+　という文字を<b>数値の5</b>に変換します。それを行っている部分は<b>oreProject.l</b>の
+<div class="box1">
+<pre>
+    [0-9][0-9]* {
+        yylval.expression = ore::Interpreter::getInp()->createDoubleLiteralExp(yytext);
+        return DOUBLE_LITERAL;
+    }
+</pre>
+</div>
+　の部分です。<br />
+　yylval.expression に<b>Interpreter::createDoubleLiteralExp()</b>の戻り値を代入し、<b>DOUBLE_LITERAL</b>を返します。<br />
+　<b>Interpreter::createDoubleLiteralExp()</b>の実体は以下です。
+<div class="box1">
+<pre>
+    Expression* Interpreter::createDoubleLiteralExp(const char* ext) {
+        string str = clampToken(ext);
+        <span class="red">auto ptr = new DoubleLiteralExp(std::stod(str));
+        pImpl->m_ObjectPool.push_back(ptr);</span>
+        return ptr;
+    }
+</pre>
+</div>
+　ここで、<b>DoubleLiteralExpクラスのインスタンス</b>を構築して<b>pImpl->m_ObjectPool配列</b>にそのポインタを追加します。<br />
+　pImpl->m_ObjectPoolは
+<div class="box1">
+<pre>
+    vector&lt;ObjBase*> m_ObjectPool;
+</pre>
+</div>
+　となっていて<b>ObjBaseのポインタの配列</b>です。<b>Expressionクラス</b>や<b>Statementクラス</b>が<b>ObjBaseの派生クラス（子か孫など）</b>になっている理由がわかると思います。<br />
+　<b>DoubleLiteralExpクラス</b>も<b>Expressionクラス</b>の派生クラスなので、<b>ObjBaseの派生クラス</b>になります。<br />
+　こうしておくことで<b>m_ObjectPool</b>には、<b>式、文など</b><b>oreProject</b>で使用する多くのオブジェクトをプールしておくことが可能になります。<br />
+　<b>createDoubleLiteralExp()関数</b>は<b>Expression型のポインタ</b>を返します。それを受けているのは<b>oreProject.y</b>の以下の部分です。
+<div class="box1">
+<pre>
+constart_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = $1;
+    }
+    ;
+</pre>
+</div>
+　です。ここでは、入力そのものを<b>$$</b>に返します。この意味は<b>oreProject.y</b>の
+<div class="box1">
+<pre>
+%type &lt;expression> <span class="red">constart_expression</span> identifier_expression 
+</pre>
+</div>
+　で指定されているので<b>ore::Expression* expression</b>を返す形となります。<br />
+　続いて
+<div class="box1">
+<pre>
+abc = 5;
+</pre>
+</div>
+　の
+<div class="box1">
+<pre>
+abc
+</pre>
+</div>
+　を解析します。これは<b>oreProject.l</b>では
+<div class="box1">
+<pre>
+    [A-Za-z_][A-Za-z_0-9]* {
+        yylval.fixedString = ore::Interpreter::getInp()->createFixedString(yytext);
+        return IDENTIFIER;
+    }
+</pre>
+</div>
+　と評価されます。<b>createFixedString()関数</b>は以下です。
+<div class="box1">
+<pre>
+    const char* Interpreter::createFixedString(const char* ext) {
+        //255文字に切り詰める。
+        auto str = clampToken(ext);
+        auto it = pImpl->m_FixedStringPool.insert(str);
+        return it.first->c_str();
+    }
+</pre>
+</div>
+　のようになっていて、<b>pImpl->m_FixedStringPool</b>にまとめられます。そしてその文字列のポインタを返します。<br />
+　この<b>pImpl->m_FixedStringPool</b>は<b>文字列のset</b>になっていて、これが意味するところは<b>重複を許さない</b>ところにあります。この先<b>abc</b>という文字列がどこかに出てきたときも、<b>insert</b>した場合でも同じポインタを返します。<br />
+　つまり<b>同じ文字列のデータは一か所</b>という仕様になります。<br />
+　この関数はそのポインタを返すので、<b>yylval.fixedString</b>に代入して、<b>IDENTIFIER</b>を返します。<br />
+　<b>oreProject.y</b>で受ける場所は
+<div class="box1">
+<pre>
+identifier_expression
+    : IDENTIFIER
+    {
+        $$ = ore::Interpreter::getInp()->createVariableExp($1);
+    }
+    ;
+</pre>
+</div>
+　です。ここで文字列のポインタから<b>識別子式</b>を作成します。<b>createVariableExp()関数</b>の実体は以下です。
+<div class="box1">
+<pre>
+    Expression* Interpreter::createVariableExp(const char* ident) {
+        string str = clampToken(ident);
+        auto ptr = new VariableExp(str.c_str());
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+</pre>
+</div>
+　このようにここでは<b>VariableExpクラス</b>を構築して<b>pImpl->m_ObjectPool</b>に追加します。<br />
+　さて
+<div class="box1">
+<pre>
+abc = 5;
+</pre>
+</div>
+　の
+<div class="box1">
+<pre>
+=
+</pre>
+</div>
+　を解析します。これは<b>代入式</b>です。<b>oreProject.l</b>では
+<div class="box1">
+<pre>
+    "="     return ASS;
+</pre>
+</div>
+　でトークン分けされます。これを<b>oreProject.y</b>では
+<div class="box1">
+<pre>
+assign_expression
+    : add_expression
+    | identifier_expression ASS assign_expression
+    {
+        $$ = ore::Interpreter::getInp()->createAssExp($1,$3);
+    }
+</pre>
+</div>
+　の部分で評価されます。<br/>
+　この段階では、先ほどの<b>abc</b>の部分は<b>$1</b>に、<b>5</b>の部分は<b>$3</b>に入ってますのでそれを引数に渡します。<br />
+<b>createAssExp()関数</b>は以下です。
+<div class="box1">
+<pre>
+    Expression* Interpreter::createAssExp(const Expression* ident, const Expression* right) {
+        auto ptr = new AssignExp(ident, right);
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }
+</pre>
+</div>
+　ここでは<b>AssignExpクラス</b>を構築して<b>m_ObjectPool</b>に追加します。<br/>
+　最後に、この代入式は<b>oreProject.y</b>の
+<div class="box1">
+<pre>
+expression_statement
+    : SEMICOLON
+    {
+        $$ = ore::Interpreter::getInp()->createStatement&lt;ore::ExpressionStm>();
+    }
+    | expression SEMICOLON
+    {
+        <span class="red">$$ = ore::Interpreter::getInp()->createStatement&lt;ore::ExpressionStm>($1);</span>
+    }
+    ;
+</pre>
+</div>
+　の赤くなっているところで<b>式文</b>として昇格します。つまり<b>実行できる文</b>になるわけです。<br />
+　以上で
+<div class="box1">
+<pre>
+abc = 5;
+</pre>
+</div>
+　のコンパイルの流れは終わりです。<br />
+　このこうにして、以下のindex.ore内の命令文も一つ一つコンパイルされます。<br />
+　全部コンパイルが終わると、それぞれの<b>文</b>はまとめられて<b>文リスト</b>になります。そして、その<b>文リスト</b>が<b>Root</b>と呼ばれるオブジェクトにセットされます。それを行っているのが<b>oreProject.y</b>の
+<div class="box1">
+<pre>
+root
+    : statement_list
+    {
+        $$ = ore::Interpreter::getInp()->createRoot($1);
+    }
+    ;
+</pre>
+</div>
+　という部分です。ここで<b>Rootオブジェクト</b>が作成されます。実体は以下です。
+<div class="box1">
+<pre>
+    Root*  Interpreter::createRoot(const StatementList* stml) {
+        auto ptr = new Root(stml);
+        pImpl->m_ObjectPool.push_back(ptr);
+        //インタプリタのrootにセット
+        pImpl->m_Root = ptr;
+        return ptr;
+    }
+</pre>
+</div>
+　このようにして<b>pImpl->m_Root</b>に<b>Rootオブジェクトのポインタ</b>がセットされて、<b>実行</b>を待ちます。
+<h4>実行</h4>
+　<b>Interpreter::Exec()関数</b>の実体は以下になります。
+<div class="box1">
+<pre>
+    void Interpreter::Exec()const {
+        if (pImpl->m_Root) {
+            pImpl->m_RootRuntime = make_shared&lt;RuntimeObject>(nullptr);
+            pImpl->m_Root->Excute();
+        }
+        else {
+            Interpreter::getInp()->runtimeExit(2001);
+        }
+    }
+</pre>
+</div>
+　ここで<b>if (pImpl->m_Root)</b>という条件式は、<b>m_Rootが有効なら</b>と読めます。つまり<b>コンパイル</b>フィーズで、最後に<b>createRoot()関数</b>を実行していますが、そこまでたどり着けなければエラーになります。<br />
+　もしRootオブジェクトが有効なら
+<div class="box1">
+<pre>
+            pImpl->m_RootRuntime = make_shared&lt;RuntimeObject>(nullptr);
+</pre>
+</div>
+　とランライムオブジェクトを作成します。<br />
+　そして
+<div class="box1">
+<pre>
+            pImpl->m_Root->Excute();
+</pre>
+</div>
+　と実行します。<br />
+　<b>Rootクラス</b>の<b>Excute()関数</b>は以下になります。
+<div class="box1">
+<pre>
+    SmtRes Root::Excute()const {
+        setRuntimeLineNumber();
+        if (pImpl->m_StatementList) {
+            auto pos = pImpl->m_StatementList;
+            do {
+                <span class="red">auto stm = pos->getStm();
+                stm->Excute();
+                pos = pos->getNext();</span>
+            } while (pos);
+        }
+        else {
+            Interpreter::getInp()->runtimeExit(2001);
+        }
+        return SmtRes();
+    }
+</pre>
+</div>
+　赤くなっているように、文リストの1行1行の<b>文</b>を<b>実行（Excute()）</b>し、次の行に移行し<b>実行（Excute()）</b>します。これは、<b>文</b>がなくなるまで続きます。<br />
+　各<b>文</b>の実行は<b>StmExBase::Excute()関数</b>の派生クラスで実装されます。<br />
+　つまり各<b>文</b>の<b>Excute()関数</b>にゆだねられます。<br />
+　たとえば<b>式文クラス</b>の<b>Excute()関数</b>であれば
+<div class="box1">
+<pre>
+    SmtRes ExpressionStm::Excute() const {
+        setRuntimeLineNumber();
+        if (pImpl) {
+            getExp()->Excute();
+        }
+        return SmtRes();
+    }
+</pre>
+</div>
+　とあるように、そのもととなる<b>式</b>の<b>Excute()関数</b>を呼び出します。<br />
+　たとえば
+<div class="box1">
+<pre>
+abc = 5;
+</pre>
+</div>
+　の式文であれば、元は<b>代入式</b>なので
+<div class="box1">
+<pre>
+    Value AssignExp::Excute() const {
+        setRuntimeLineNumber();
+        //変数の値の参照を取り出す
+        auto valptr = dynamic_cast&lt;const VariableExp*>(pImpl->m_Variable);
+        if (valptr) {
+            Value& v = valptr->getVariableValue();
+            v = pImpl->m_Operand->Excute();
+            //それを返す
+            return v;
+        }
+        return Value();
+    }
+</pre>
+</div>
+　という代入式が実行されます。<br />
+　<b>Expressionクラス</b>の戻り値は<b>Value型</b>です。<b>式</b>はかならず値を返します。唯一返さないのは<b>void</b>の場合ですが<b>Value型</b>は<b>void</b>にも対応してますので、とにかく<b>式の実行</b>は<b>Value型</b>を返す形で実装すれば問題ありません。<br />
+<br/>
+　そんな形で<b>実行フィーズ</b>は各<b>式</b>まで細かく切り分けて実行します。<br />
+<h4>破棄</h4>
+　破棄は簡単です。
+<div class="box1">
+<pre>
+    void Interpreter::Delete() {
+        for (auto v : pImpl->m_ObjectPool) {
+            delete v;
+        }
+        pImpl->m_ObjectPool.clear();
+        pImpl->m_FixedStringPool.clear();
+    }
+</pre>
+</div>
+　という形で、<b> pImpl->m_ObjectPool</b>および<b>pImpl->m_FixedStringPool</b>のオブジェクトを破棄します。
+<h4>まとめ</h4>
+　さてここでは<b>oreProject</b>の<b>コンパイル、実行、破棄</b>の流れを、どう実装しているかを説明してきました。<br />
+　しかし、現時点では<b>ループ</b>もしないし<b>if文</b>も書けない状態です。<b>式</b>に限れば<b>整数型</b>も実装されてないし<b>文字列、配列</b>も実装されていません。<br />
+　これらを注意深く一つ一つ実装していく必要があります。<br />
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="03_13.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

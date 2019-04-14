@@ -28,24 +28,21 @@ namespace ore {
     //--------------------------------------------------------------------------------------
     enum class StatementType {
         nullStm,
+        expressionStm,
         printStm,
         stmTypeCount
     };
 
     enum class SmtResType {
         voidType,
-        continueType,
-        breakType,
-        returnTpe,
     };
 
     struct SmtRes {
         SmtResType m_Type;
         Value m_RetValue;
-        bool m_CaseExec;
         SmtRes() :
             m_Type(SmtResType::voidType),
-            m_RetValue(), m_CaseExec(false) {}
+            m_RetValue(){}
     };
 
     //--------------------------------------------------------------------------------------
@@ -97,6 +94,23 @@ namespace ore {
     };
 
     //--------------------------------------------------------------------------------------
+    ///  式文クラス
+    //--------------------------------------------------------------------------------------
+    class ExpressionStm : public Statement {
+    public:
+        ExpressionStm(const Expression* exp);
+        ExpressionStm();
+        virtual ~ExpressionStm();
+        const Expression* getExp()const;
+        virtual SmtRes Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+    //--------------------------------------------------------------------------------------
     ///  print文
     //--------------------------------------------------------------------------------------
     class PrintStm : public Statement {
@@ -111,7 +125,6 @@ namespace ore {
         struct Impl;
         Impl* pImpl;
     };
-
 
 }
 //end namespace ore
@@ -178,6 +191,7 @@ namespace ore {
         return pImpl->m_StmType;
     }
 
+
     //--------------------------------------------------------------------------------------
     ///  文リストクラス
     //--------------------------------------------------------------------------------------
@@ -217,15 +231,48 @@ namespace ore {
             auto stm = stml->getStm();
             if (stm) {
                 auto res = stm->Excute();
-                if (res.m_Type == SmtResType::breakType || res.m_Type == SmtResType::returnTpe
-                    || res.m_Type == SmtResType::continueType) {
-                    return res;
-                }
             }
             else {
                 break;
             }
             stml = stml->getNext();
+        }
+        return SmtRes();
+    }
+
+    //--------------------------------------------------------------------------------------
+    ///  式文クラス
+    //--------------------------------------------------------------------------------------
+    struct ExpressionStm::Impl {
+        const Expression* m_Exp;
+    };
+
+    ExpressionStm::ExpressionStm()
+        :Statement(StatementType::expressionStm),
+        pImpl(nullptr)
+    {
+        //空文の場合はpImplは作成しない
+    }
+
+    ExpressionStm::ExpressionStm(const Expression* exp)
+        :Statement(StatementType::expressionStm),
+        pImpl(new Impl)
+    {
+        pImpl->m_Exp = exp;
+    }
+
+    ExpressionStm::~ExpressionStm() {
+        delete pImpl;
+    }
+
+    const Expression* ExpressionStm::getExp()const {
+        return pImpl->m_Exp;
+    }
+
+    SmtRes ExpressionStm::Excute() const {
+        setRuntimeLineNumber();
+        if (pImpl) {
+            getExp()->Excute();
         }
         return SmtRes();
     }
