@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０４．本格的な実装</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０４－０１．整数リテラル式の実装</h3>
+<h4>整数リテラルとは</h4>
+　この項では<b>整数リテラル式</b>を実装します。<br />
+　<b>整数リテラル</b>とは、例えば<b>123</b>という数字の集合は<b>10進数123</b>という<b>値</b>を意味します。<br />
+　このような数字の集合を<b>10進数123</b>に変換するには<b>演算</b>が必要です。この演算をするのが<b>整数リテラル式</b>です。<br />
+　<b>式</b>ですから<b>Expressionクラスの派生クラス</b>として実装します。
+<h4>式タイプの追加</h4>
+　まず<b>expression.h</b>の冒頭に
+<div class="box1">
+<pre>
+//--------------------------------------------------------------------------------------
+///  式タイプ
+//--------------------------------------------------------------------------------------
+enum class ExpressionType {
+    noExp = 0,
+    <span class="red">intLiteralExp,</span>
+    doubleLiteralExp,
+    variableExp,
+    assignExp,
+    addAssExp,
+    subAssExp,
+    mulAssExp,
+    divAssExp,
+    addExp,
+    subExp,
+    mulExp,
+    divExp,
+    printExp,
+    expTypeCount
+};
+</pre>
+</div>
+　と<b>intLiteralExp</b>を実装します。この<b>enum class</b>は各<b>式</b>にそのタイプを設定するための<b>enum</b>です。<b>enum class</b>というのは<b>C++11</b>で導入された新しい文法で、こうすることで<b>整数との相互変換</b>ができなくなります。<br />
+　C言語の<b>enum</b>はその柔軟性のため、バグが起きやすい設計です。
+<h4>式クラスの追加</h4>
+　以下のように<b>expression.h</b>に<b>IntLiteralExpクラス</b>を作成します。<b>Expressionクラス</b>の派生クラスとして作成します。（赤い部分です）。<br />
+　<b>DoubleLiteralExpクラス</b>の上あたりに追加するとよいでしょう。
+<div class="box1">
+<pre>
+    //--------------------------------------------------------------------------------------
+    ///  式クラス
+    //--------------------------------------------------------------------------------------
+    class Expression : public ObjBase {
+    protected:
+        Expression(ExpressionType type);
+    public:
+        virtual ~Expression();
+        ExpressionType getType()const;
+        virtual Value Excute() const {
+            return Value();
+        }
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+    <span class="red">//--------------------------------------------------------------------------------------
+    ///  intリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    class IntLiteralExp : public Expression {
+    public:
+        IntLiteralExp(int i = 0);
+        virtual ~IntLiteralExp();
+        int getIntValue()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };</span>
+
+
+    //--------------------------------------------------------------------------------------
+    ///  doubleリテラル式クラス
+    //--------------------------------------------------------------------------------------
+</pre>
+</div>
+　<b>IntLiteralExpクラス</b>の実体は<b>expression.cpp</b>に記述します。こちらも<b>DoubleLiteralExpクラス</b>の上あたりに記述します。
+<div class="box1">
+<pre>
+    <span class="red">//--------------------------------------------------------------------------------------
+    ///  intリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    struct IntLiteralExp::Impl {
+        int m_IntValue;
+    };
+
+    IntLiteralExp::IntLiteralExp(int i) :
+        Expression(ExpressionType::intLiteralExp),
+        pImpl(new Impl)
+    {
+        pImpl->m_IntValue = i;
+    }
+    IntLiteralExp::~IntLiteralExp() {
+        delete pImpl;
+    }
+
+    int IntLiteralExp::getIntValue()const {
+        return pImpl->m_IntValue;
+    }
+
+    Value IntLiteralExp::Excute() const {
+        setRuntimeLineNumber();
+        return Value(pImpl->m_IntValue);
+    }</span>
+
+
+    //--------------------------------------------------------------------------------------
+    ///  doubleリテラル式クラス
+    //--------------------------------------------------------------------------------------
+</pre>
+</div>
+<h4>インターフェイスの追加</h4>
+　<b>IntLiteralExpクラスのインスタンス</b>を作成する関数を<b>Interpreterクラス</b>に追加します。<b>createDoubleLiteralExp()関数</b>の上あたりに記述します。<b>interpreter.h</b>です。
+<div class="box1">
+<pre>
+    //--------------------------------------------------------------------------------------
+    ///  インタープリタクラス
+    //--------------------------------------------------------------------------------------
+    class Interpreter : public ObjBase {
+        Interpreter();
+    public:
+//中略
+        <span class="red">Expression* createIntLiteralExp(const char* ext);</span>
+        Expression* createDoubleLiteralExp(const char* ext);
+//中略
+    };
+</pre>
+</div>
+　続いて実体を<b>interpreter.cpp</b>に記述します。
+<div class="box1">
+<pre>
+    <span class="red">Expression* Interpreter::createIntLiteralExp(const char* ext) {
+        string str = clampToken(ext);
+        auto ptr = new IntLiteralExp(std::stoi(str));
+        pImpl->m_ObjectPool.push_back(ptr);
+        return ptr;
+    }</span>
+
+    Expression* Interpreter::createDoubleLiteralExp(const char* ext) {
+//中略
+    }
+//中略
+</pre>
+</div>
+　ここでは、<b>IntLiteralExpクラス</b>のインスタンスを作成します。引数は<b>文字列（stringクラス）</b>を渡します。そのため
+<div class="box1">
+<pre>
+        string str = clampToken(ext);
+</pre>
+</div>
+　のような記述で<b>stringクラス</b>を作成して渡します。
+<h4>oreProject.lの修正</h4>
+　Flexファイルの<b>oreProject.l</b>を修正します。27行目付近に以下のように修正します。（赤くなっている部分です）
+<div class="box1">
+<pre>
+    [0-9][0-9]* {
+        <span class="red">yylval.expression = ore::Interpreter::getInp()->createIntLiteralExp(yytext);
+        return INT_LITERAL;</span>
+    }
+</pre>
+</div>
+　ここで<b>Interpreterクラス</b>の<b>createIntLiteralExp()関数</b>を呼び出して<b>整数リテラル式</b>を構築します。
+<h4>oreProject.yの修正</h4>
+　続いてBisonファイル<b>oreProject.y</b>です。25行目付近の<b>token</b>設定の部分に
+<div class="box1">
+<pre>
+%token &lt;expression>  <span class="red">INT_LITERAL</span> DOUBLE_LITERAL
+</pre>
+</div>
+　のように<b>INT_LITERAL</b>を設定します。（赤い部分です）<br />
+　続いて、143行目付近に
+<div class="box1">
+<pre>
+constart_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = $1;
+    }
+    <span class="red">| INT_LITERAL
+    {
+        $$ = $1;
+    }</span>
+    ;
+</pre>
+</div>
+　と追加します。
+<h4>リビルドと実行</h4>
+　これでコード記述は終わりです。<b>ビルド-リビルド</b>で、コンパイルし、<b>デバッグ-デバッグなしで開始</b>で、<b>０３－１４．FlexとBisonファイルとproc.hの修正</b>と同じ出力が得られれば完成です。
+<h4>まとめ</h4>
+　ここでは比較的簡単な<b>整数リテラル</b>の実装を行いました。この実装の特徴は、<b>式のコンパイル</b>を<b>oreProject.l</b>に記述しているところです。<br />
+　通常は、Bisonファイル<b>oreProject.y</b>に記述することが多くなります。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="index.html">目次</a></li>
+<li><a href="04_02.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

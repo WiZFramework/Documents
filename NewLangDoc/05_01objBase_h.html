@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０５．ここまでの全ソース</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>objBase.h</h3>
+
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  オブジェクトタイプ
+    //--------------------------------------------------------------------------------------
+    enum class ObjType {
+        NullType,
+        ExpType,
+        StmType,
+        StmListType,
+        RootType,
+        InterpreterType,
+        ParamListType,
+        FuncDefinitionType,
+        ArrKeyListType,
+        ArrKeyValueListType,
+        objTypeCount
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  Objectベース（インターフェイス）
+    //--------------------------------------------------------------------------------------
+    class ObjBase {
+    protected:
+        ObjBase(ObjType type);
+    public:
+        virtual ~ObjBase();
+        ObjType getObjType()const;
+        int getLineNumber()const;
+        void setRuntimeLineNumber()const;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+}
+//end namespace ore
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="05_01.html">戻る</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

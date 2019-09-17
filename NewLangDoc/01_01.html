@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０１．はじめに</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０１－０１．【はじめに】と開発ツール</h3>
+　このドキュメント目的は<b>新しいプログラミング言語</b>を作成することです。<br />
+　具体的に述べましょう。<br />
+　たとえばPHPを作成することを考えてみましょう。<br />
+　PHPは<b>phpブロック</b>にはさまれた部分は<b>実行</b>を行いそれ以外は<b>標準出力</b>をするプログラム言語です。<br />
+　以下の様なphpファイルがあった場合
+<div class="box1">
+<pre>
+&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+&lt;meta charset="utf-8">
+&lt;title>CGI言語作成（2018年）&lt;/title>
+&lt;/head>
+&lt;body>
+こんにちはHTML&lt;br />
+&lt;?php
+echo "こんにちはPHP";
+?>
+&lt;/body>
+&lt;/html>
+</pre>
+</div>
+　ブラウザの表示は以下のようになります。
+<div class="box1">
+<pre>
+こんにちはHTML
+こんにちはPHP
+</pre>
+</div>
+　すなわち、<b>phpブロック内</b>では<b>echo "こんにちはPHP";</b>という構文が実行され、出力されます。<br />
+　ここで<b>echo</b>という構文はPHPでは<b>出力する</b>という意味になりますが、言語によっては<b>prt "こんにちは";</b>が出力になるかもしれません。<br />
+　これは<b>プログラム言語の文法</b>によります。
+<h4>新しい言語とは</h4>
+　PHPにおける<b>echo</b>を<b>prt</b>に置き換えた場合、これは、<b>新しい言語</b>になります。<br />
+　例えば、PHPブロックを<b>ore</b>という<b>ブロック</b>に変え、以下のように記述すれば
+<div class="box1">
+<pre>
+&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+&lt;meta charset="utf-8">
+&lt;title>CGI言語作成（2018年）&lt;/title>
+&lt;/head>
+&lt;body>
+こんにちはHTML&lt;br />
+<span class="red">&lt;?ore</span>
+prt "こんにちはORE";
+<span class="red">?></span>
+&lt;/body>
+&lt;/html>
+</pre>
+</div>
+　とすれば、一番単純な<b>oreプログラミング</b>の完成です。<br />
+　もちろん、<b>PHP</b>のように、<b>ブロック以外は出力</b>にしなくてもかまいません。文書全てを実行構文として
+<div class="box1">
+<pre>
+<span class="red">%str&lt;hdoc:HDOC</span>
+&lt;!DOCTYPE html>
+&lt;html lang="ja">
+&lt;head>
+&lt;meta charset="utf-8">
+&lt;title>CGI言語作成（2018年）&lt;/title>
+&lt;/head>
+&lt;body>
+こんにちはHTML&lt;br />
+<span class="red">HDOC;</span>
+prt %str;
+prt "こんにちはORE";
+<span class="red">%str&lt;hdoc:HDOC</span>
+&lt;/body>
+&lt;/html>
+<span class="red">HDOC;</span>
+prt %str;
+</pre>
+</div>
+　として
+<div class="box1">
+<pre>
+<span class="red">%str&lt;hdoc:HDOC</span>
+</pre>
+</div>
+から
+<div class="box1">
+<pre>
+<span class="red">HDOC;</span>
+</pre>
+</div>
+を、ヒアドキュメントの記述のように扱えれば、PHPの仕様のようにはしなくてもいいと思います。<br />
+　この場合<b>%str</b>は変数です。PHPは<b>$</b>で変数は始まりますが、<b>%</b>で始まるのようにした場合です。<br />
+　あるいは、<b>Python</b>のように<b>C言語系</b>とは、まったく違った言語体系にしてもいいと思います。
+<h4>このドキュメントの目的</h4>
+　このドキュメントの目的は<b>お勉強</b>です。僕自身の勉強でもあり、<b>C/C++を極めたい</b>と思っている人の<b>お勉強</b>のためでもあります。ですから、このドキュメントに沿っていろいろ作成したからといって、いま、あなたがプロのプログラマーだったとして、開発現場で取り組んでいる<b>何か</b>の役に立つわけではありません。むしろ、現場の弊害になるような記述方法が随所に入っているかもしれません。<br/>
+　でもひょっとしたら、直接は役にはたたなっけど<b>こういう書き方があるのか</b>という一つの指針になるかもしれません。<br />
+　僕自身、C/C++に長くかかわってきて、決して模範となる書き方ではないけれど、ある程度、経験則的な<b>記述の癖</b>があります。<br />
+　そういった<b>癖</b>があちこちに出現します。それを読んでいただく、あるいは記述して実行していただくことで、何らかの指針が伝えられればいいなと思っています。
+<h4>そしてどこに向かうのか</h4>
+　最終目的は現在はっきりているわけではありません。まずは<b>インタプリタ言語</b>を開発します。そこまでは目標とします。<br />
+　次のステップは<b>擬似アセンブラ化</b>です。Javaとかと同じですね。そこまで行ければまあ満足でしょう。<br />
+　さらに言えば、それをサーバーで<b>CGIとして</b>動くところまで行ければ、ひょっとしたら誰かが使ってくれる言語になるかもしれません。
+<h4>作成ツール</h4>
+　さて、<b>新しい言語</b>を作る環境として、なにが一番取り込みやすいでしょうか？<br />
+　もちろんＷＥＢサーバーを立て（ローカルサーバでもよいけども）、<b>Linux環境</b>で作成するのもいいのですが、ちょっとハードルが高いような気がします。<br />
+　そこでまずは<b>VisuaStudio</b>の環境で作成する<b>Windowsアプリ</b>として作成しましょう。<br />
+　将来的には<b>Linuxで動く</b>あるいは<b>CGI化</b>を考えるとして、<b>ビルドしたり実装したりを繰り返す</b>作業になりますので、できるだけ<b>開発しやすい環境</b>が良いと思います。<br />
+　その点,<b>VisuaStudio</b>であればエディタやコンパイラもGUIで使いやすいです。<br />
+　最低限必要な作成環境、使用ツールは以下です。
+<div class="box1">
+<pre>
+１、VisualStudio2015もしくは2017のC/C++プログラム環境（コンソールプログラミング）
+２、Windows版、Flex
+３、Windows版、Bison
+</pre>
+</div>
+　上記ツールを確認しましょう。
+<h4>公開する内容について</h4>
+　今のところ<b>VisualSstudio</b>の<b>ソリューション</b>などは公開、あるいはダウンロードできるようにするつもりはありません。<br />
+　冒頭述べましたように、このプロジェクトは<b>お勉強</b>のためのものです。<br />
+　その代り、このドキュメントに則してコードを記述（コピペでもよい）すれば、その項目で実装した内容が実装できるはずです。<br />
+　もし動かないとすれば、記述が間違っているか、あるいは設定なども結構変わりますので、そのあたりを読み飛ばしているか、です。<br />
+　そういう場合は、少し前に戻ってプロジェクトを書き直してみましょう。<br />
+　それでは、次項では簡単な計算機を作成します。<br />
+<div class="right">２０１８年冬　WiZ非常勤講師（C/C++担当）　山ノ井靖</div>
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="index.html">目次</a></li>
+<li><a href="02_01.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

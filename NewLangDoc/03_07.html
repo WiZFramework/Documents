@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語とインタプリタ</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－０７．変数の実装（解説）</h3>
+　この項では前項での実装の解説を行います。<br />
+　前項で行った<b>変数の追加</b>では、<b>変数</b>のほかに<b>代入処理</b>も実装されています。<br />
+　<b>変数</b>は<b>データを入れる箱</b>であるとは、プログラムの勉強の最初のほうに覚える概念です。<br />
+　<b>変数</b>を実装するにあたり、必ず実装しなければいけないのが<b>代入</b>です。<br/>
+<h4>oreProject.lの解説</h4>
+　まず<b>oreProject.l</b>における、<b>変数と代入</b>に関係する部分をピックアップします。
+<div class="box1">
+<pre>
+&lt;INITIAL>{
+    ";"     return SEMICOLON;
+    <span class="red">"*="    return MULASS;
+    "/="    return DIVASS;
+    "+="    return ADDASS;
+    "-="    return SUBASS;</span>
+    "+"     return ADD;
+    "-"     return SUB;
+    "*"     return MUL;
+    "/"     return DIV;
+    <span class="red">"="     return ASS;</span>
+    "pn"    return PRINTN;
+    "p"     return PRINT;
+    "/*"    { BEGIN(COMMENT);}
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+    [1-9][0-9]* {
+        yylval.double_literal = ore::getDblLiteral(yytext);
+        return DOUBLE_LITERAL;
+    }
+    [0-9]*\.[0-9]* {
+        yylval.double_literal = ore::getDblLiteral(yytext);
+        return DOUBLE_LITERAL;
+    }
+    <span class="red">[A-Za-z_][A-Za-z_0-9]* {
+        yylval.identifier = ore::getIdent(yytext);
+        return IDENTIFIER;
+    }</span>
+    "\n"    {gLine++;}
+    [ \t]   ;
+    .   { return 0;}
+}
+</pre>
+</div>
+　いわゆる<b>代入</b>の<b> = </b>のほかに<b> *= </b>や<b> -= </b>などの<b>追演算</b>のトークンも定義します。<br />
+　また、<b>IDENTIFIER</b>の定義として
+<div class="box1">
+<pre>
+    <span class="red">[A-Za-z_][A-Za-z_0-9]* {
+        yylval.identifier = ore::getIdent(yytext);
+        return IDENTIFIER;
+    }</span>
+</pre>
+</div>
+　としています。<br />
+　<b>IDENTIFIER</b>というのは直訳すると<b>識別子</b>という意味です。<b>変数</b>ではありません。<br />
+　<b>oreProject</b>では<b>識別子</b>は<b>変数</b>に使用されるだけではありません。将来的には<b>関数名</b>や<b>クラス名</b>にも使用されます。<br />
+　ここで呼び出している<b>ore::getIdent()</b>という関数は、以下のような実体を持ちます（<b>proc.cpp</b>に記述があります）。
+<div class="box1">
+<pre>
+    ///識別子のポインタを得る（無ければ作成する）
+    const char* getIdent(const char* ext) {
+        //255文字に切り詰める。
+        auto str = <span class="red">clampToken(ext);</span>
+        //新規作成、すでにあればその参照を返す
+        auto st = IdentSet.insert(str);
+        return st.first->c_str();
+    }
+</pre>
+</div>
+　ここで記述がある<b>clampToken()関数</b>は<b>トークンが255文字以上なら切り詰める</b>という処理をします。<br />
+　<b>oreProject</b>では<b>識別子</b>に<b>255文字以内</b>という制限をかけます。もしそれ以上の識別子が現れたら、切り詰めます。エラーは出しません。もしプログラマが<b>255文字を超える部分が違う2つの変数</b>を作成した場合、当然のことながら<b>同じ変数</b>の扱いになります。大きなバグを生む可能性はありますが、そこはプログラマにゆだねます。<br />
+<h4>oreProject.yの解説</h4>
+　<b>oreProject.y</b>では、以下のような記述があります
+<div class="box1">
+<pre>
+%union {
+    <span class="red">const char* identifier;</span>
+    double  double_literal;
+}
+<span class="red">%token &lt;identifier>  IDENTIFIER</span>
+%token &lt;double_literal>  DOUBLE_LITERAL
+%token  SEMICOLON ADD SUB MUL DIV CR <span class="red">MULASS DIVASS  ADDASS SUBASS ASS</span> PRINTN PRINT
+%type &lt;double_literal> expression add_expression mul_expression primary_expression
+</pre>
+</div>
+　ここで新規のトークンを定義します。こうしておかないと、構文解析の定義で実装できません。<br />
+　続いて構文解析部です。<br />
+　一番下の<b>primary_expression</b>ですが
+<div class="box1">
+<pre>
+primary_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = $1;
+    }
+    <span class="red"> | IDENTIFIER
+    {
+        $$ = ore::getValue($1);
+    }</span>
+    ;
+</pre>
+</div>
+　のように記述します。<br/>
+　<b>ore::getValue()関数</b>はここでは<b>変数</b>を取得します。将来的に<b>IDENTIFIER</b>は<b>関数名の取得</b>などに利用する場合があります。その場合の記述は、この形ではありません。<br />
+　<b>ore::getValue()関数</b>の実体は
+<div class="box1">
+<pre>
+    ///変数の値を得る
+    double getValue(const char* ext) {
+        //255文字に切り詰める。
+        auto str = clampToken(ext);
+        auto it = <span class="red">ValueMap</span>.find(str);
+        if (it != ValueMap.end()) {
+            //見つかった
+            return it->second;
+        }
+        else {
+            //見つからないので作成（double型の0.0）
+            ValueMap[str] = 0.0;
+            return 0.0;
+        }
+    }
+</pre>
+</div>
+　のようになってます。<b>ValueMap</b>というのは
+<div class="box1">
+<pre>
+    ///変数のmap
+    map&lt;string, double> ValueMap;
+</pre>
+</div>
+　のように定義されている<b>map</b>です。<b>map</b>というのはPHPの連想配列のようなコンテナです。<br />
+　<b>ore::getValue()関数</b>は、指定した識別子の変数があればその値を返し、無ければ<b>0.0</b>を返します。<br />
+　そんなわけで<b>IDENTIFIER</b>における<b>$$</b>には<b>変数があればその値、なければ0.0</b>が設定されます。<br />
+<br/>
+　ここで少し、<b>Bison</b>における構文解析の文法ですが、
+<div class="box1">
+<pre>
+$1
+</pre>
+</div>
+　というのは、<b>1番目のトークン</b>という意味です。ですから
+<div class="box1">
+<pre>
+add_expression ADD mul_expression
+{
+    $$ = ore::procAdd($1,$3);
+}
+</pre>
+</div>
+　というのは<b>$1はadd_expression</b>をあらわし<b>$3はmul_expression</b>を表します。<b>$$</b>は結果の値です。<br/>
+<br />
+　構文解析のブロックでは、以下の記述が重要です。
+<div class="box1">
+<pre>
+expression
+    : add_expression
+    | IDENTIFIER MULASS expression
+    {
+        <span class="red">$$ = ore::procMulAcc($1,$3);</span>
+    }
+    | IDENTIFIER DIVASS expression
+    {
+        <span class="red">$$ = ore::procDivAcc($1,$3);</span>
+    }
+    | IDENTIFIER ADDASS expression
+    {
+        <span class="red">$$ = ore::procAddAcc($1,$3);</span>
+    }
+    | IDENTIFIER SUBASS expression
+    {
+        <span class="red">$$ = ore::procSubAcc($1,$3);</span>
+    }
+    | IDENTIFIER ASS expression
+    {
+        <span class="red">$$ = ore::procAcc($1,$3);</span>
+    }
+    ;
+</pre>
+</div>
+　<b>ore::</b>で始まる各関数では、実際に代入処理を行い結果を返しています。（代入式は、代入された値そのものが戻り値となります）。<br />
+<br />
+　今回の修正で<b>セキュリティの問題がある関数</b>の使用をやめました。具体的には<b>scanf()</b>を<b>std::atof()</b>に変え<b>fopen()</b>は<b>fopen_s()</b>に変えました。これによりプロジェクトの設定もセキュリティ警告を<b>あり</b>にできるようになります。<br />
+<h4>次項からについて</h4>
+　さて、この章こここまでは<b>トレース言語</b>の作成を行ってきました。<br />
+　その目的は<b>FlexやBison</b>に慣れることと、<b>コメントなど</b>の実装を行いました。<br />
+　しかし、次項からは、現在の姿とは大きく変わることになります。<br />
+　現在は<b>Bison</b>の構文解析の順番で実行しています。しかし、このままでは<b>分岐</b>や<b>ループ</b>といった<b>プログラミング言語</b>としての機能が全くついていません。<br />
+　それらの機能がついて初めて<b>プログラム言語</b>と呼べるようになります。<br />
+　そのためには<b>インタプリタとは何か</b>から考えなければいけません。次項ではそこから入っていきます。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="03_06.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="03_08.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

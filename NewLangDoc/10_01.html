@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>ＥＸ．C/C++によるCGIの作成（予備知識）</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>ＥＸ－１．C/C++によるCGIのHelloWprld</h3>
+　まず、以下のソースを記述します。<br />
+　記述する際、気を付けるのは<b>改行がLFのみ</b>で保存することです。<br />
+　改行は、Windowsなら<b>\r\n</b>(CR+LF)なので、エディタの設定で<b>\n</b>(LF)のみにします。<br />
+　また日本語を記述する場合はエンコードは<b>UTF-8（BOMなし）</b>にします。
+<div class="box1">
+<pre>
+#include &lt;iostream>
+using namespace std;
+
+int main() {
+        cout &lt;&lt; "Content-type: text/html\n\n";
+        cout &lt;&lt; "&lt;h2>ハローCPPによるCGI&lt;/h2>" &lt;&lt; endl;
+    return 0;
+}
+</pre>
+</div>
+　ソースが記述出来たら、サーバにアップして<b>g++</b>が使用できる環境でコンパイルします。<br />
+　例えば<b>ソースがmain.cpp</b>であれば
+<div class="box1">
+<pre>
+$ g++ main.cpp  -std=gnu++0x
+</pre>
+</div>
+　で、コードが問題なければビルド出来ます。ビルド後<b>a.out</b>というファイルができますので、
+<div class="box1">
+<pre>
+$ ./a.out
+</pre>
+</div>
+　で以下の表示が出れば成功です。
+<div class="box1">
+<pre>
+Content-type: text/html
+
+&lt;h2>ハローCPPによるCGI&lt;/h2>
+</pre>
+</div>
+　その後、
+<div class="box1">
+<pre>
+$ cp a.out /home/[username]/public_html/test.cgi
+</pre>
+</div>
+　を実行して、ウェブに公開されるドキュメントルートにコピーします。<br />
+　ただし[username]はLinuxユーザー名です。自分が書き込みアクセスできる必要があります。<br />
+　また、コピー先は<b>CGI実行</b>が許可されてなくてはなりません。<br />
+　コピーが終わったら、ブラウザから
+<div class="box1">
+<pre>
+http://hoge.huga.jp/~[username]/test.cgi
+</pre>
+</div>
+　とアクセスして
+<div class="box1">
+<pre>
+ハローCPPによるCGI
+</pre>
+</div>
+　と太文字で表示されればOKです。<br/>
+<h4>コード解説</h4>
+　CGIプログラムは、最初に<b>ヘッダ</b>というのを出力しなければなりません。<br />
+　これが
+<div class="box1">
+<pre>
+Content-type: text/html
+
+
+</pre>
+</div>
+　という出力です。このCGIはテキスト形式でHTML文書です。という意味です。<br />
+　これが、画像ファイルなどの場合は変わります。<br />
+　ヘッダは、出力後<b>\n</b>を2個以上出力する必要があります。ですので、ソース上は
+<div class="box1">
+<pre>
+        cout &lt;&lt; "Content-type: text/html\n\n";
+</pre>
+</div>
+　という記述になります。<br />
+　<b>PHP</b>の場合は、この<b>ヘッダ出力</b>を省略することができます。<b>header()関数</b>で出力もできます。<br />
+　しかし<b>Perl</b>は
+<div class="box1">
+<pre>
+#! /usr/bin/perl
+
+print "Content-type: text/html\n\n";
+print "こんにちは！\n";
+</pre>
+</div>
+　のように記述する必要があります。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="index.html">目次</a></li>
+<li><a href="10_02.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

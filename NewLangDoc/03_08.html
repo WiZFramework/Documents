@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０３．トレース言語とインタプリタ</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０３－０８．インタプリタへの修正</h3>
+　さて、これまでの例では<b>上から下に実行する</b>だけでした。<br />
+　しかし、プログラミング言語では<b>ジャンプ、ループ、関数呼び出し</b>などの制御構造を作ることが必要です。<br />
+　この機能を実装するためには、以下の3つのステップを踏む形が有効です。
+<div class="box1">
+<pre>
+１、コンパイル
+２、実行
+３、破棄
+</pre>
+</div>
+　それぞれ以下の様な役割をします。
+<h4>コンパイル</h4>
+　いわゆる<b>コンパイル言語、インタプリタ言語</b>という分け方があります。よく<b>インタプリタは解釈しながら実行</b>と言われますが、古典的な<b>インタプリタ</b>はそういう手法をとるのが一般的でしたが（例えばループを表現する場合、コード中ループ構文が出てくる都度解釈しなおして実行するなど）、最近では<b>構造を翻訳しておき、後から実行</b>という手法をとるものも<b>インタプリタ言語</b>と解釈されるのが多くなりました。<br />
+　本ドキュメントでも、そのような設計になっています。<br />
+　では<b>インタプリタとコンパイラの厳密な違い</b>はなんでしょうか？<br />
+　本ドキュメントでは、<b>マシン語もしくは擬似マシン語に翻訳し、何らかのメディアに保存する。</b>のをコンパイラと呼び、<b>翻訳したもの（命令のかたまり）をメモリ上に一時的に保存し、そのまま実行する</b>のをインタプリタと呼ぶようにします。<br />
+　つまり<b>コンパイル（翻訳）フィーズ</b>は、本ドキュメントでは実装されます。<br />
+<h4>実行</h4>
+　翻訳が終わったら、それを<b>実行</b>します。<br />
+　通常は<b>文（ステートメント）</b>単位で実行します。
+<h4>破棄</h4>
+　実行が終わったら、翻訳によって作成されたオブジェクト（あるいは翻訳データ）を破棄します。
+<h4>簡単な実装</h4>
+　では、前項までで作成したソースを修正して、一部、上記方式で実装されるよう修正します。<br />
+　以下、新しく作成するファイルとその内容です。
+<h4>interpreter.h</h4>
+　<b>oreProject</b>に<b>interpreter.h</b>を作成して、以下のように記述します。
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  インタープリタクラス
+    //--------------------------------------------------------------------------------------
+    class Interpreter{
+        Interpreter();
+    public:
+        virtual ~Interpreter();
+        int Compile(FILE *fp);
+        void Exec();
+        void Delete();
+        //インスタンス参照
+        static Interpreter* getInp();
+        //double型の変数表示文を作成する
+        void createPrintStatement(double val, bool retFlg);
+    };
+
+}
+//end namespace
+</pre>
+</div>
+<h4>interpreter.cpp</h4>
+　<b>oreProject</b>に<b>interpreter.cpp</b>を作成して、以下のように記述します。
+<div class="box1">
+<pre>
+#include &lt;cstdlib>
+#include &lt;iostream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+#include "proc.h"
+using namespace std;
+
+namespace ore {
+
+    //唯一のインタプリタのインスタンス
+    Interpreter* theInp;
+    //printを表現する構造体
+    struct PrintDouble {
+        bool ret;
+        double val;
+    };
+    //PrintDoubleの配列
+    vector&lt;PrintDouble> PrintDoubleVec;
+
+    Interpreter::Interpreter() {}
+    Interpreter::~Interpreter(){
+        if (theInp) {
+            delete theInp;
+        }
+    }
+    int Interpreter::Compile(FILE *fp) {
+        extern int yyparse(void);
+        extern FILE* yyin;
+        yyin = fp;
+        if (yyparse()) {
+            return 1;
+        }
+        return 0;
+
+    }
+    void Interpreter::Exec(){
+        for (auto v : PrintDoubleVec) {
+            if (v.ret) {
+                cout &lt;&lt; v.val &lt;&lt; endl;
+            }
+            else {
+                cout &lt;&lt; v.val;
+            }
+        }
+
+    }
+    void Interpreter::Delete() {
+        PrintDoubleVec.clear();
+    }
+
+    //インスタンス参照
+    Interpreter* Interpreter::getInp() {
+        if (!theInp) {
+            theInp = new Interpreter;
+        }
+        return theInp;
+    }
+
+    //double型の変数表示を作成する
+    void Interpreter::createPrintStatement(double val, bool retFlg) {
+        PrintDouble tmp;
+        tmp.ret = retFlg;
+        tmp.val = val;
+        PrintDoubleVec.push_back(tmp);
+
+    }
+
+}
+//end namespace ore
+</pre>
+</div>
+<h4>proc.h</h4>
+　<b>proc.h</b>は以下のように書き換えます。赤い部分です。
+<div class="box1">
+<pre>
+#pragma once
+<span class="red">#include "interpreter.h"</span>
+
+namespace ore {
+
+//中略
+
+
+}
+//end namespace ore
+</pre>
+</div>
+<h4>main.cpp</h4>
+　<b>main.cpp</b>を以下の様に書き換えます。
+<div class="box1">
+<pre>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;vector>
+#include &lt;string>
+#include "proc.h"
+using namespace std;
+
+class InputParser {
+    vector &lt;string> tokens;
+public:
+    InputParser(int &argc, char **argv) {
+        for (int i = 1; i &lt; argc; ++i) {
+            tokens.push_back(string(argv[i]));
+        }
+    }
+    const string& getCmdOption(const string &option) const {
+        vector&lt;string>::const_iterator itr;
+        itr = find(tokens.begin(), tokens.end(), option);
+        if (itr != tokens.end() && ++itr != tokens.end()) {
+            return *itr;
+        }
+        static const string empty_string("");
+        return empty_string;
+    }
+    bool cmdOptionExists(const string &option) const {
+        return find(tokens.begin(), tokens.end(), option)
+            != tokens.end();
+    }
+};
+
+
+int main(int argc, char **argv) {
+    InputParser input(argc, argv);
+    const string &filename = input.getCmdOption("-f");
+    if (filename.empty()) {
+        cout &lt;&lt; "err1" &lt;&lt; endl;
+        return 1;
+    }
+    errno_t err;
+    FILE* fp;
+    if ((err = fopen_s(&fp, filename.c_str(), "r")) != 0) {
+        cout &lt;&lt; "err2" &lt;&lt; endl;
+        return 1;
+    }
+    auto tntp = ore::Interpreter::getInp();
+    if (tntp->Compile(fp)) {
+        return 1;
+    }
+    tntp->Exec();
+    tntp->Delete();
+    return 0;
+}
+</pre>
+</div>
+<h4>oreProject.y</h4>
+　最後に、Bisonの定義ファイル、<b>oreProject.y</b>を以下のようにします。赤い部分です。
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include "../oreProject/proc.h"
+#define YYDEBUG 1
+extern int yylex(void);
+int yyerror(char const *str){
+    extern char *yytext;
+    extern int gLine;
+    fprintf(stderr,"%s, line: %d, near %s\n",str, gLine, yytext);
+    return 0;
+}
+%}
+%union {
+    const char* identifier;
+    double  double_literal;
+}
+%token &lt;identifier>  IDENTIFIER
+%token &lt;double_literal>  DOUBLE_LITERAL
+%token  SEMICOLON ADD SUB MUL DIV CR MULASS DIVASS  ADDASS SUBASS ASS PRINTN PRINT
+%type &lt;double_literal> expression add_expression mul_expression primary_expression
+%%
+statement_list
+    : statement
+    | statement_list statement
+    ;
+statement
+    : SEMICOLON
+    | expression SEMICOLON
+    {
+        ore::procEmpty();
+    }
+    | PRINTN expression SEMICOLON
+    {
+        <span class="red">ore::Interpreter::getInp()->createPrintStatement($2, true);</span>
+    }
+    | PRINT expression SEMICOLON
+    {
+        <span class="red">ore::Interpreter::getInp()->createPrintStatement($2, false);</span>
+    }
+    ;
+expression
+    : add_expression
+    | IDENTIFIER MULASS expression
+    {
+        $$ = ore::procMulAcc($1,$3);
+    }
+    | IDENTIFIER DIVASS expression
+    {
+        $$ = ore::procDivAcc($1,$3);
+    }
+    | IDENTIFIER ADDASS expression
+    {
+        $$ = ore::procAddAcc($1,$3);
+    }
+    | IDENTIFIER SUBASS expression
+    {
+        $$ = ore::procSubAcc($1,$3);
+    }
+    | IDENTIFIER ASS expression
+    {
+        $$ = ore::procAcc($1,$3);
+    }
+    ;
+add_expression
+    : mul_expression
+    | add_expression ADD mul_expression
+    {
+        $$ = ore::procAdd($1,$3);
+    }
+    | add_expression SUB mul_expression
+    {
+        $$ = ore::procSub($1,$3);
+    }
+    ;
+mul_expression
+    : primary_expression
+    | mul_expression MUL primary_expression
+    {
+        $$ = ore::procMul($1,$3);
+    }
+    | mul_expression DIV primary_expression
+    {
+        $$ = ore::procDiv($1,$3);
+    }
+    ;
+primary_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = $1;
+    }
+    | IDENTIFIER
+    {
+        $$ = ore::getValue($1);
+    }
+    ;
+%%
+</pre>
+</div>
+<h4>リビルドと実行</h4>
+　リビルドして実行すると、以下の出力になります。
+<div class="box1">
+<pre>
+10
+15
+50
+
+...\oreProject.exe (プロセス 4848) は、コード 0 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+<h4>解説</h4>
+　この項では、一番単純な<b>double型の値の表示</b>を<b>上記の方式</b>に修正しています。<br />
+　コンパイル機能を実装するために新しいクラス<b>Interpreterクラス</b>を作成します。これは<b>interpreter.h/cpp</b>に作成します。<br />
+　以下、宣言部です。上の方にも出てきました。
+<div class="box1">
+<pre>
+    //--------------------------------------------------------------------------------------
+    ///  インタープリタクラス
+    //--------------------------------------------------------------------------------------
+    class Interpreter{
+        Interpreter();
+    public:
+        virtual ~Interpreter();
+        int Compile(FILE *fp);
+        void Exec();
+        void Delete();
+        //インスタンス参照
+        static Interpreter* getInp();
+        //double型の変数表示文を作成する
+        void createPrintStatement(double val, bool retFlg);
+    };
+</pre>
+</div>
+　この中に<b>Compile、Exec、Delete</b>という関数があります。これらがまさしく、冒頭に説明した<b>コンパイル、実行、破棄</b>に相当します。<br />
+　また
+<div class="box1">
+<pre>
+        //インスタンス参照
+        static Interpreter* getInp();
+</pre>
+</div>
+　という関数があります。<br />
+　<b>Interpreterクラス</b>はよく見ると、コンストラクタが<b>プライベート関数</b>になっています。<br />
+　これは、<b>Interpreterクラス</b>のインスタンスはこのプロジェクト中、1つしか作成できないようにする手法で<b>シングルトン</b>と呼ばれています。<br />
+　つまり、他から<b>Interpreterクラスのインスタンス</b>を取得するためには
+<div class="box1">
+<pre>
+Interpreter::getInp();
+</pre>
+</div>
+　とスタティック呼び出しを行います。<br />
+　さて、ではその実体はどうなっているのでしょうか？<br />
+　<b>interpreter.cpp</b>に記述があります。
+<div class="box1">
+<pre>
+    //唯一のインタプリタのインスタンス
+    Interpreter* theInp;
+
+//中略
+
+    //インスタンス参照
+    Interpreter* Interpreter::getInp() {
+        if (!theInp) {
+            theInp = new Interpreter;
+        }
+        return theInp;
+    }
+</pre>
+</div>
+　このようにグローバル変数<b>theInp</b>にポインタを用意しておき、<b>初期化されてなければ、newする</b>という手法をとります。<br />
+　また、デストラクタでは
+<div class="box1">
+<pre>
+    Interpreter::~Interpreter(){
+        if (theInp) {
+            delete theInp;
+        }
+    }
+</pre>
+</div>
+　と記述されています。これで、<b>もし初期化済みなら削除する</b>という処理になります。<br />
+　<b>Interpreterクラス</b>の<b>createPrintStatement()関数</b>の実体は以下です。
+<div class="box1">
+<pre>
+    //printを表現する構造体
+    struct PrintDouble {
+        bool ret;
+        double val;
+    };
+    //PrintDoubleの配列
+    vector&lt;PrintDouble> PrintDoubleVec;
+
+//中略
+
+    //double型の変数表示を作成する
+    void Interpreter::createPrintStatement(double val, bool retFlg) {
+        PrintDouble tmp;
+        tmp.ret = retFlg;
+        tmp.val = val;
+        PrintDoubleVec.push_back(tmp);
+
+    }
+</pre>
+</div>
+　ここではグローバル変数（配列）の<b>PrintDoubleVec</b>に新しい値を追加します。<br />
+　<b>PrintDoubleVec</b>は<b>PrintDouble型</b>の構造体で<b>改行するかしないか</b>のフラグと、実際の値がメンバとなってます。<br />
+　このように<b>Interpreterのインスタンスを取得する</b>方法と、そのメンバである<b>createPrintStatement()関数</b>の実体を記述したことで、<b>oreProject.y</b>では
+<div class="box1">
+<pre>
+    | PRINTN expression SEMICOLON
+    {
+        <span class="red">ore::Interpreter::getInp()->createPrintStatement($2, true);</span>
+    }
+    | PRINT expression SEMICOLON
+    {
+        <span class="red">ore::Interpreter::getInp()->createPrintStatement($2, false);</span>
+    }
+</pre>
+</div>
+　のように記述することが可能になります。<br />
+　そして、<b>コンパイル、実行、破棄</b>の実体は以下になります。
+<div class="box1">
+<pre>
+    int Interpreter::Compile(FILE *fp) {
+        extern int yyparse(void);
+        extern FILE* yyin;
+        yyin = fp;
+        if (yyparse()) {
+            return 1;
+        }
+        return 0;
+
+    }
+    void Interpreter::Exec(){
+        for (auto v : PrintDoubleVec) {
+            if (v.ret) {
+                cout &lt;&lt; v.val &lt;&lt; endl;
+            }
+            else {
+                cout &lt;&lt; v.val;
+            }
+        }
+
+    }
+    void Interpreter::Delete() {
+        PrintDoubleVec.clear();
+    }
+</pre>
+</div>
+　このように<b>破棄（nterpreter::Delete()）</b>では<b>PrintDoubleVec.clear()</b>と配列をクリアしています。<br />
+　あとは<b>main.cpp</b>ですが
+<div class="box1">
+<pre>
+int main(int argc, char **argv) {
+    InputParser input(argc, argv);
+    const string &filename = input.getCmdOption("-f");
+    if (filename.empty()) {
+        cout &lt;&lt; "err1" &lt;&lt; endl;
+        return 1;
+    }
+    errno_t err;
+    FILE* fp;
+    if ((err = fopen_s(&fp, filename.c_str(), "r")) != 0) {
+        cout &lt;&lt; "err2" &lt;&lt; endl;
+        return 1;
+    }
+    auto tntp = ore::Interpreter::getInp();
+    <span class="red">if (tntp->Compile(fp)) {
+        return 1;
+    }
+    tntp->Exec();
+    tntp->Delete();</span>
+    return 0;
+}
+</pre>
+</div>
+　赤くなっているところのように、<b>コンパイル、実行、破棄</b>を<b>tntp変数</b>を介して呼び出しています。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="03_07.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="03_09.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

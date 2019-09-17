@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０５．ここまでの全ソース</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>interpreter.h</h3>
+
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  ルートクラス
+    //--------------------------------------------------------------------------------------
+    class Root : public StmExBase {
+    public:
+        Root(const StatementList* stml);
+        virtual ~Root();
+        virtual SmtRes Excute() const  override;
+        const StatementList* getStmeList()const;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  インタープリタクラス
+    //--------------------------------------------------------------------------------------
+    class Interpreter : public ObjBase {
+        Interpreter();
+    public:
+        virtual ~Interpreter();
+        int Compile(FILE *fp);
+        void Exec() const;
+        void Delete();
+        ///Util
+        void setConfig(const char* key, const Value val);
+        Value getConfig(const char* key);
+        void pushBackObject(ObjBase* pobj);
+        const char* createFixedString(const char* ext);
+        ///Expression
+        Expression* createVariableExp(const char* ident, bool isLocal);
+        ArrKeyValueList* createArrKeyValueList(const Expression* key, const Expression* value);
+        ArrKeyValueList* createArrKeyValueList(ArrKeyValueList* prev, const Expression* key, const Expression* value);
+        Expression* createArrayInitValueExp(const ArgumentList* argumentList);
+        Expression* createArrayInitKeyValueExp(const ArrKeyValueList* arrKeyValueList);
+        ArrKeytList* createArrKeytList();
+        ArrKeytList* createArrKeytList(const Expression* key);
+        ArrKeytList* createArrKeytList(ArrKeytList* parent,const Expression* key);
+        Expression* createArrayExp(const char* ident,ArrKeytList* keylist, bool isLocal);
+        Expression* createPriorityExp(const Expression* target);
+        Expression* createBoolLiteralExp(bool b);
+        Expression* createIntLiteralExp(const char* ext);
+        Expression* createDoubleLiteralExp(const char* ext);
+        Expression* createBinaryExp(const Expression* left, const Expression* right, ExpressionType t);
+        Expression* createRelationalExp(const Expression* left, const Expression* right, ExpressionType t);
+        Expression* createAssExp(const Expression* ident, const Expression* right);
+        Expression* createAssignArrExp(const Expression* variable, const Expression* operand);
+        Expression* createToAssExp(const Expression* ident, const Expression* right, ExpressionType t);
+        Expression* createUnaryIncDecExp(const Expression* ident, ExpressionType t);
+        Expression* createPostfixIncDecExp(const Expression* ident, ExpressionType t);
+        ArgumentList* createArgumentList();
+        ArgumentList* createArgumentList(const Expression* exp);
+        ArgumentList* createArgumentList(ArgumentList* agl, const Expression* exp);
+        Expression* createFunctionCallExp(const char* ident, const ArgumentList* args);
+        //文字列リテラル
+        void startStringLiteral();
+        void addStringLiteral(char ext);
+        Expression* createStringLiteralExp();
+        ///ExpressiontList
+        ExpressionList* createExpressiontList(const Expression* exp);
+        ExpressionList* createExpressiontList(ExpressionList* expl, const Expression* exp);
+        ///Statement
+        //Util template
+        template&lt;typename T, typename... Ts>
+        Statement* createStatement(Ts&&... params) {
+            auto ptr = new T(params...);
+            pushBackObject(ptr);
+            return ptr;
+        }
+
+        //関数定義関連
+        ParameterList* createParameterList();
+        ParameterList* createParameterList(const char* ident);
+        ParameterList* createParameterList(ParameterList* pml, const char* ident);
+        Statement* createFunctionDefineStm(const char* ident, const ParameterList* pml, const Statement* stm);
+        ///StatementList
+        StatementList* createStatementList(const Statement* stm);
+        StatementList* createStatementList(StatementList* stml, const Statement* stm);
+        //Root
+        Root*  createRoot(const StatementList* stml);
+        //インスタンス参照
+        static Interpreter* getInp();
+        ///Exec関連
+        ///変数の値の参照を取得
+        Value& getGlobalValiableValue(const char* key);
+        //ローカル変数に探す
+        bool findLocalValiableValue(const char* key);
+        ///ローカル変数の値の参照を取得
+        Value& getLocalValiableValue(const char* key);
+        ///１階層ランタイムをpushする
+        void pushRuntime(bool IsFunc = false);
+        ///１階層ランタイムをpopする
+        void popRuntime();
+        //関数実行中かどうか
+        void setFunctionRuntime(bool b);
+        bool isFunctionRuntime() const;
+        //ループ実行中かどうか
+        void pushLoop();
+        void popLoop();
+        //continue可能かどうか
+        bool isContinueOK() const;
+        //break可能な深さをpushする。
+        void pushBreak();
+        //break可能な深さをpopする。
+        void popBreak();
+        //break可能かどうか
+        bool isBreakOK() const;
+        ///シンタックスエラー予約語関連
+        void syntaxKeepExit(int mess_id, const char* detail);
+        ///シンタックスエラー(行番号、位置情報付き)
+        void syntaxExit(int mess_id, int linnum, const char* detail, bool bison = true);
+        ///ランタイム中の行番号
+        void setRuntimeLineNumber(int num);
+        int getRuntimeLineNumber() const;
+        ///ランタイムエラー(行番号付き)
+        void runtimeExit(int mess_id, const char* target = nullptr);
+        ///ランタイムワーニング
+        void runtimeWorning(int mess_id);
+        ///警告を出すかどうか
+        bool isWorningOut() const;
+        void setWorningOut(bool b);
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+}
+//end namespace ore
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="05_01.html">戻る</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

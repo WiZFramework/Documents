@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０５．ここまでの全ソース</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０５－０１．現在のoreProject</h3>
+　完全ではないですが、出来たところまで公開します。<br />
+　分岐、ループ、変数など、おおむね最低限必要な機能は実装しました。<br />
+　大きなところで残っているのは、配列とクラス（構造体）などでしょうか？<br />
+　まず<b>oreProject</b>の<b>ヘッダーファイル</b>を<b>右クリック</b>し<b>追加－新しい項目</b>で
+<div class="box1">
+<pre>
+expression.h
+interpreter.h
+objBase.h
+statement.h
+util.h
+value.h
+</pre>
+</div>
+　を追加します。<br />
+　続いて、<b>oreProject</b>の<b>ソースファイル</b>を<b>右クリック</b>し<b>追加－新しい項目</b>で
+<div class="box1">
+<pre>
+expression.cpp
+interpreter.cpp
+objBase.cpp
+statement.cpp
+value.cpp
+</pre>
+</div>
+　を追加します。<br />
+　最後に
+<div class="box1">
+<pre>
+proc.cpp
+</pre>
+</div>
+　を「<span class="red">削除</span>」します
+　結果として、以下の様なファイル構成になります。
+<h4>【FlexBisonプロジェクト】</h4>
+<h4>FlexBisonソースファイル</h4>
+<div class="box1">
+<pre>
+oreProject.l
+oreProject.y
+</pre>
+</div>
+<h4>【oreProjectプロジェクト】</h4>
+<h4>ヘッダファイル</h4>
+<div class="box1">
+<pre>
+expression.h
+interpreter.h
+objBase.h
+oreProject.tab.h　<span class="red">※このファイルはBisonが更新するので触る必要はない</span>
+proc.h
+statement.h
+util.h
+value.h
+</pre>
+</div>
+<h4>ソースファイル</h4>
+<div class="box1">
+<pre>
+expression.cpp
+interpreter.cpp
+main.cpp
+objBase.cpp
+oreProject.flex.cpp　<span class="red">※このファイルはFlexが更新するので触る必要はない</span>
+oreProject.tab.cpp　<span class="red">※このファイルはBisonが更新するので触る必要はない</span>
+statement.cpp
+value.cpp
+</pre>
+</div>
+<h4>スクリプトファイル</h4>
+<div class="box1">
+<pre>
+index.ore
+</pre>
+</div>
+　そのうえで、各ファイルを以下のように記述します。各リンクをクリックしてください。
+<h4>【FlexBisonプロジェクト】</h4>
+<h4>oreProject.lの書き換え</h4>
+　<a href="05_01oreProject_l.html" ><b>oreProject.l</b></a>
+<h4>oreProject.yの書き換え</h4>
+　<a href="05_01oreProject_y.html" ><b>oreProject.y</b></a>
+<h4>【oreProjectプロジェクト】</h4>
+<h4>expression.hの記述</h4>
+　<a href="05_01expression_h.html"><b>expression.h</b></a>
+<h4>interpreter.hの記述</h4>
+　<a href="05_01interpreter_h.html"><b>interpreter.h</b></a>
+<h4>objBase.hの記述</h4>
+　<a href="05_01objBase_h.html"><b>objBase.h</b></a>
+<h4>proc.hの記述</h4>
+　<a href="05_01proc_h.html"><b>proc.h</b></a>
+<h4>statement.hの記述</h4>
+　<a href="05_01statement_h.html"><b>statement.h</b></a>
+<h4>util.hの記述</h4>
+　<a href="05_01util_h.html"><b>util.h</b></a>
+<h4>value.hの記述</h4>
+　<a href="05_01value_h.html"><b>value.h</b></a>
+<h4>expression.cppの記述</h4>
+　<a href="05_01expression_cpp.html"><b>expression.cpp</b></a>
+<h4>interpreter.cppの記述</h4>
+　<a href="05_01interpreter_cpp.html"><b>interpreter.cpp</b></a>
+<h4>main.cppの記述</h4>
+　<a href="05_01main_cpp.html"><b>main.cpp</b></a>
+<h4>objBase.cppの記述</h4>
+　<a href="05_01objBase_cpp.html"><b>objBase.cpp</b></a>
+<h4>statement.cppの記述</h4>
+　<a href="05_01statement_cpp.html"><b>statement.cpp</b></a>
+<h4>value.cppの記述</h4>
+　<a href="05_01value_cpp.html"><b>value.cpp</b></a>
+<h4>index.oreの書き換え</h4>
+　最後に<b>index.ore</b>です。テスト用のスクリプトを記述します。
+<div class="box1">
+<pre>
+//数字で初期化
+test1 = 123;
+//文字列を連結
+test1 &= "abc";
+//出力
+pn "1: " & test1;
+//それに数字を足す
+test2 = test1 + 246;
+//出力
+pn "2: " & test2;
+pn '--------------------------';
+max = 500;
+//$fromから$toまで加算する関数
+fnc func1($from,$to){
+    //先頭に$が付くのはローカル変数
+    $c = 0;
+    whl($from &lt;= $to){
+        $from++;
+        if($from  % 2){
+          ctn;
+        }
+        $c += $from;
+        if($c > max){
+            //maxはグローバル変数を参照
+            ret "オーバーフローしました。";
+        }
+    }
+    //出力
+    pn "3: " & $c;
+    ret "4: OKです。";
+}
+//関数呼び出し
+pn func1(1,10);
+pn '--------------------------';
+arr = array();
+arr[] = array(1,0,'ルート');
+arr[] = array(2,1,'家庭用品');
+arr[] = array(3,1,'カー用品');
+arr[] = array(4,1,'パソコン用品');
+arr[] = array(5,2,'台所用品');
+arr[] = array(6,3,'タイヤ');
+arr[] = array(7,3,'エンジンオイル');
+arr[] = array(8,4,'キーボード');
+arr[] = array(9,4,'マウス');
+arr[] = array(10,4,'ディスプレイ');
+arr[] = array(11,5,'まな板');
+arr[] = array(12,5,'フライパン');
+arr[] = array(13,6,'ラジアルタイヤ');
+arr[] = array(14,6,'スタッドレスタイヤ');
+feh(arr as key : val){
+    pn key & ': ' & val[0] & ',' & val[1] & ',' & val[2];
+}
+pn '--------------------------';
+</pre>
+</div>
+<h4>ビルドと実行</h4>
+　<b>リビルド</b>して<b>デバッグなしで実行</b>します。以下の出力が得られれば成功です。
+<div class="box1">
+<pre>
+1: 123abc
+2: 369
+--------------------------
+3: 30
+4: OKです。
+--------------------------
+0: 1,0,ルート
+1: 2,1,家庭用品
+2: 3,1,カー用品
+3: 4,1,パソコン用品
+4: 5,2,台所用品
+5: 6,3,タイヤ
+6: 7,3,エンジンオイル
+7: 8,4,キーボード
+8: 9,4,マウス
+9: 10,4,ディスプレイ
+10: 11,5,まな板
+11: 12,5,フライパン
+12: 13,6,ラジアルタイヤ
+13: 14,6,スタッドレスタイヤ
+--------------------------
+
+...\oreProject\Debug\oreProject.exe (プロセス 6924) は、コード 0 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　では次項から解説します。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="index.html">目次</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

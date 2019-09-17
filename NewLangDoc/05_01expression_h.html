@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０５．ここまでの全ソース</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>expression.h</h3>
+
+<div class="box1">
+<pre>
+#pragma once
+
+namespace ore {
+
+    //--------------------------------------------------------------------------------------
+    ///  式タイプ
+    //--------------------------------------------------------------------------------------
+    enum class ExpressionType {
+        boolLiteralExp = 0,
+        intLiteralExp,
+        doubleLiteralExp,
+        stringLiteralExp,
+        voidExp,
+        variableExp,
+        priorityExp,
+        assignExp,
+        addAssExp,
+        subAssExp,
+        ampAssExp,
+        mulAssExp,
+        divAssExp,
+        addExp,
+        subExp,
+        ampExp,
+        mulExp,
+        divExp,
+        modExp,
+        logicalAndExp,
+        logicalOrExp,
+        eqExp,
+        neExp,
+        gtExp,
+        geExp,
+        ltExp,
+        leExp,
+        minusExp,
+        unaInc,
+        unaDec,
+        posInc,
+        posDec,
+        printExp,
+        functionExp,
+        arrayInitValueExp,
+        arrayInitKeyValueExp,
+        arrayExp,
+        nullExp,
+        expTypeCount
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  式クラス
+    //--------------------------------------------------------------------------------------
+    class Expression : public ObjBase {
+    protected:
+        Expression(ExpressionType type);
+    public:
+        virtual ~Expression();
+        ExpressionType getType()const;
+        virtual Value Excute() const {
+            return Value();
+        }
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  式リストクラス
+    //--------------------------------------------------------------------------------------
+    class ExpressionList : public ObjBase {
+    public:
+        ExpressionList(const Expression* exp);
+        virtual ~ExpressionList();
+        const Expression* getExp() const;
+        ExpressionList* getNext()const;
+        void setNext(ExpressionList* next);
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  boolリテラル値式クラス
+    //--------------------------------------------------------------------------------------
+    class BoolLiteralExp : public Expression {
+    public:
+        BoolLiteralExp(bool b = false);
+        virtual ~BoolLiteralExp();
+        bool getBoolValue()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  intリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    class IntLiteralExp : public Expression {
+    public:
+        IntLiteralExp(int i = 0);
+        virtual ~IntLiteralExp();
+        int getIntValue()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  doubleリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    class DoubleLiteralExp : public Expression {
+    public:
+        DoubleLiteralExp(double d = 0.0);
+        virtual ~DoubleLiteralExp();
+        double getDoubleValue()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  stringリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    class StringLiteralExp : public Expression {
+    public:
+        StringLiteralExp(const char* str);
+        virtual ~StringLiteralExp();
+        const char* getStringLiteral() const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  変数式クラス
+    //--------------------------------------------------------------------------------------
+    class VariableExp : public Expression {
+    public:
+        VariableExp(const char* ident, bool local = false);
+        virtual ~VariableExp();
+        const char* getIdentifier()const;
+        bool IsLocal() const;
+        Value& getVariableValue()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  引数クラス
+    //--------------------------------------------------------------------------------------
+    class ArgumentList : public ObjBase {
+    public:
+        ArgumentList();
+        ArgumentList(const Expression* exp);
+        virtual ~ArgumentList();
+        const Expression* getExp() const;
+        ArgumentList* getNext()const;
+        void setNext(ArgumentList* next);
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  配列添え字と値ペアクラス
+    //--------------------------------------------------------------------------------------
+    class ArrKeyValueList : public ObjBase {
+    public:
+        ArrKeyValueList(const Expression* key, const Expression* value);
+        virtual ~ArrKeyValueList();
+        const Expression* getKey() const;
+        const Expression* getValue() const;
+        ArrKeyValueList* getNext()const;
+        void setNext(ArrKeyValueList* next);
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  array式(Valueのみ)
+    //--------------------------------------------------------------------------------------
+    class ArrayInitValueExp : public Expression {
+    public:
+        ArrayInitValueExp(const ArgumentList* argumentList);
+        virtual ~ArrayInitValueExp();
+        const ArgumentList* getArgumentList()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  array式(KeyとValue)
+    //--------------------------------------------------------------------------------------
+    class ArrayInitKeyValueExp : public Expression {
+    public:
+        ArrayInitKeyValueExp(const ArrKeyValueList* arrKeyValueList);
+        virtual ~ArrayInitKeyValueExp();
+        const ArrKeyValueList* getArrKeyValueList()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  配列添え字クラス
+    //--------------------------------------------------------------------------------------
+    class ArrKeytList : public ObjBase {
+    public:
+        ArrKeytList();
+        ArrKeytList(const Expression* key);
+        virtual ~ArrKeytList();
+        const Expression* getKey() const;
+        Value& getValue(Value& parent);
+        ArrKeytList* getNext()const;
+        void setNext(ArrKeytList* next);
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  配列変数式クラス
+    //--------------------------------------------------------------------------------------
+    class ArrayExp : public Expression {
+    public:
+        ArrayExp(const char* ident,ArrKeytList* key, bool local = false);
+        virtual ~ArrayExp();
+        const char* getIdentifier()const;
+        bool IsLocal() const;
+        Value& getValue()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+
+    //--------------------------------------------------------------------------------------
+    ///  優先式クラス
+    //--------------------------------------------------------------------------------------
+    class PriorityExp : public Expression {
+    public:
+        PriorityExp(const Expression* target);
+        virtual ~PriorityExp();
+        const Expression* getTarget()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  代入式クラス
+    //--------------------------------------------------------------------------------------
+    class AssignExp : public Expression {
+    public:
+        AssignExp(const Expression* variable, const Expression* operand);
+        virtual ~AssignExp();
+        const Expression* getVariable()const;
+        const Expression* getOperand()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  配列代入式クラス
+    //--------------------------------------------------------------------------------------
+    class AssignArrExp : public Expression {
+    public:
+        AssignArrExp(const Expression* variable, const Expression* operand);
+        virtual ~AssignArrExp();
+        const Expression* getVariable()const;
+        const Expression* getOperand()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+    //--------------------------------------------------------------------------------------
+    ///  追演算クラス
+    //--------------------------------------------------------------------------------------
+    class ToAssExp : public Expression {
+    public:
+        ToAssExp(const Expression* variable, const Expression* operand, ExpressionType tp);
+        virtual ~ToAssExp();
+        const Expression* getVariable()const;
+        const Expression* getOperand()const;
+        ExpressionType getExpType()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  演算式クラス
+    //--------------------------------------------------------------------------------------
+    class BinaryExp : public Expression {
+    public:
+        BinaryExp(ExpressionType type, const Expression* left, const Expression* right);
+        virtual ~BinaryExp();
+        const Expression* getLeft()const;
+        const Expression* getRight()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  単項マイナス式クラス
+    //--------------------------------------------------------------------------------------
+    class MinusExp : public Expression {
+    public:
+        MinusExp(Expression* target);
+        virtual ~MinusExp();
+        const Expression* getTarget()const;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  前置インク／デクリメント
+    //--------------------------------------------------------------------------------------
+    class UnaryIncDecExp : public Expression {
+    public:
+        UnaryIncDecExp(const Expression* variable, ExpressionType t);
+        virtual ~UnaryIncDecExp();
+        const Expression* getVariable()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  後置インク／デクリメント
+    //--------------------------------------------------------------------------------------
+    class PostfixIncDecExp : public Expression {
+    public:
+        PostfixIncDecExp(const Expression* variable, ExpressionType t);
+        virtual ~PostfixIncDecExp();
+        const Expression* getVariable()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  関係式クラス
+    //--------------------------------------------------------------------------------------
+    class RelationalExp : public Expression {
+    public:
+        RelationalExp(ExpressionType type, const Expression* left, const Expression* right);
+        virtual ~RelationalExp();
+        const Expression* getLeft()const;
+        const Expression* getRight()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+
+    class FunctionDefineStm;
+    //--------------------------------------------------------------------------------------
+    ///  関数呼び出し式クラス
+    //--------------------------------------------------------------------------------------
+    class FunctionCallExp : public Expression {
+    public:
+        FunctionCallExp(const char* ident, const ArgumentList* args, const FunctionDefineStm* funcDef);
+        virtual ~FunctionCallExp();
+        const char* getIdentifier()const;
+        virtual Value Excute() const  override;
+    private:
+        // pImplイディオム
+        struct Impl;
+        Impl* pImpl;
+    };
+
+}
+//end namespace ore
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="05_01.html">戻る</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
