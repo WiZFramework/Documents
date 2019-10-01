@@ -19,7 +19,7 @@
 　どのみちブートからするようにするので、開発マシンはどちらでもよいのですが、いざというときにソースコードを調べられる環境がいいかなと思ってこうしました。<br />
 <h4>最初のプログラム</h4>
 　まず最初に<b>文字列を出力する</b>プログラムを作成します。<br />
-　ですが、まだ<b>OS</b>というにはちょっと足りない内容になってます。OSであれば、FDDから起動するのであれば、そのような記述が必要ですし、USBであればそのような記述が必要です。<br />
+　ですが、まだ<b>OS</b>というにはちょっと足りない内容になってます。<br />
 　しかし、このプログラムは、エミュレータに起動をまかせ、ただ文字列を出力して<b>HLT</b>します。<br /.>
 　まず、自分のホームディレクトリに<b>projectOS</b>などのディレクトリを作成して、その中に<b>pros.asm</b>というテキストファイルを作成します。<b>GEDIT</b>で作成しても、あるいは<b>vim</b>などで作成してもかまいません。そんなに大きなソースではありません。<br />
 　このドキュメントではこの<b>pros.asm</b>に今後ブートローダーを実装していきます。<br />
@@ -27,7 +27,6 @@
 <div class="box1">
 <pre>
 JMP     entry
-;   ここに将来boot関連の情報を記述
 entry:
         MOV AX, 0x07c0
         MOV DS, AX
@@ -59,12 +58,12 @@ TIMES   510-($-$$) db 0
 　また、同じディレクトリ内に<b>Makefile</b>というファイルを作成し、以下を記述します。
 <div class="box1">
 <pre>
-pros.bin: pros.asm
-&#009;nasm -f bin pros.asm -o pros.bin
-qemu: pros.bin
-&#009;qemu-system-x86_64 pros.bin
+pros.img: pros.asm
+&#009;nasm -f bin pros.asm -o pros.img
+qemu: pros.img
+&#009;qemu-system-x86_64 pros.img
 clean:
-&#009;rm *.bin
+&#009;rm *.img
 </pre>
 </div>
 　保存したら、端末を開いて、以下のように<b>projectOS</b>ディレクトリに移動し、コマンドを打ち込みます。

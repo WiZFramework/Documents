@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>プロジェクトOS（2019年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>０１．qemuで遊ぼう</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>０１－０２．とりあえずUSBからブートしてみる</h3>
+　<b>qemu</b>での実行ができたので、じゃあ、USBからブートって、ほんとにできるんかいな、ってことで。ブート用のUSBを作ってみます。<br />
+　用意するのは、USB（7ギガもあれば十分。あんまりでかいとフォーマットできない可能性があるので注意）。<br />
+　これを<b>Windows</b>で良いので<b>FAT32</b>で<b>フォーマット</b>しておきます。<br />
+　で、それを、LinuxマシンのUSBに差し込んで
+<div class="box1">
+<pre>
+$sudo fdisk -l
+</pre>
+</div>
+　とコマンドを打ち込むと、USBのデバイス名が出てきます。ここで間違ってHDDに書き込んだりするとあぶないので慎重に。<br />
+　僕のマシンでは<b>/dev/sdb</b>でした。そして
+<div class="box1">
+<pre>
+$sudo unmount [自分のUSB名]
+</pre>
+</div>
+　[自分のUSB名]は、僕の場合は、<b>/dev/sdb</b>ですが、たぶん皆さん違うと思うので、間違わないでください。<br />
+　その後
+<div class="box1">
+<pre>
+$sudo dd if=pros.img of=[自分のUSB名]
+</pre>
+</div>
+　でUSBに書き込みます。<br />
+　<b>ddコマンド</b>は本当に危ないコマンドなので慎重に。間違ってHDDに転送しちゃったら、Linuxが破壊します。最悪、HDDに再セットアップすらできなくなるかもしれないので、くれぐれも慎重に。<br />
+　その後、USBを抜いて、再起動して<b>Biosの設定</b>を起動します。<br />
+　その中の<b>起動の優先順位</b>を<b>USBハードディスク</b>を<b>HDDより上に</b>設定して、さっき作ったUSBを差し込んで再起動。<br />
+　そしたら
+<div class="box1">
+<pre>
+hello projectOS
+</pre>
+</div>
+　と表示されました。めでたしめでたし。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="01_01.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="01_03.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
