@@ -60,11 +60,11 @@ TIMES   510-($-$$) db 0
 <div class="box1">
 <pre>
 pros.bin: pros.asm
-    nasm -f bin pros.asm -o pros.bin
+nasm -f bin pros.asm -o pros.bin
 qemu: pros.bin
-    qemu-system-x86_64 pros.bin
+qemu-system-x86_64 pros.bin
 clean:
-    rm *.bin
+rm *.bin
 </pre>
 </div>
 　保存したら、端末を開いて、以下のように<b>projectOS</b>ディレクトリに移動し、コマンドを打ち込みます。
