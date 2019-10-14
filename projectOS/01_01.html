@@ -9,14 +9,181 @@
 <!-- 全体コンテナ　-->
 <div id="container">
 <div id="header">
-<h3>０１．qemuで遊ぼう</h3>
+<h3>０１．UEFIアプリの作成</h3>
 </div>
 <!-- コンテンツ　-->
 <div id="contents">
-<h3>０１－０１．いまやUEFIが主流らしい</h3>
-　レガシーなブートをベースに書き始めたのですが、いろいろ調べると、いまや「UEFIが主流」らしいのがわかってきました。<br />
-　なにでちょっと方針変更。「UEFIによるブート」に変更することにしました。<br />
-　とはいえ、いろいろ、調べたり実験したりしなくちゃなりません。なので少々おまちを・・・。
+<h3>０１－０１．UEFIとEDKⅡによるHelloWorld</h3>
+　この項では、<b>UEFI</b>でのブートを実現する<b>EDKⅡ</b>というツールの説明をするとともに、<b>HelloWorld</b>します。<br />
+　<b>はじめに</b>にも述べたように、今、ノート型の開発マシン（ubuntuがセットアップされている）があります。ネットもつながっています。<br />
+　この項で行うのは<a href="https://github.com/tianocore/tianocore.github.io/wiki/EDK-II-Documents">EDKⅡのドキュメント</a>に記述されていることをなぞる感じです。英語のサイトなので<b>日本語訳</b>くらいに考えていただければと思います。<br />
+　<b>UEFI</b>というのは、これまでの<b>Biosによるパソコンの起動</b>の仕組みを根本から変えるものです。DVDやUSBなど、ブートしたいメディアに1つの規格を設け、その規格に合っていればそのメディアの中のプログラムを実行してくれる、というのが<b>UEFI</b>です。<br />
+　ただ、<b>UEFI</b>がやってくれるのは、<b>指定されたプログラムをメモリにロードして実行</b>するだけです。そのあとはプログラムする必要があります。UEFIが起動するアプリを<b>UEFIアプリ</b>なんて書かれている場合もあります。拡張子は<b>.efi</b>です。<br />
+　パソコンのブート時の状態は、PCATマシンであれば<b>biosが実行できる</b>だけの状態です。<b>C言語</b>でプログラムすることができますが、たぶん、多くの人が考えている<b>C言語</b>とは勝手が違います。なんせ、<b>標準ライブラリが使えない</b>状態です。<br />
+　<b>C言語の標準ライブラリ</b>はOSが用意するライブラリです。Linuxしかり、Windowsしかり。しかし<b>UEFI</b>が起草するプログラムにはそれがついてないのです。<br />
+　しかし、それではいくら何でも不便だろう、ということで<b>Cの標準ライブラリ</b>ではないですが、ある程度パソコンを操れるライブラリを用意しているツールがあります。<b>UEFIアプリのSDK</b>ともいえるツールです。<br />
+　ネットを探すといろいろ出てくるのですが、有名どころは
+<div class="box1">
+<pre>
+EDKⅡ
+gnu-efi
+</pre>
+</div>
+　などです。ここでは<b>EDKⅡ</b>を使った<b>UEFIアプリの制作</b>をやってみたいと思います。
+<h4>開発ツールのインストール</h4>
+　まず、コンパイラとか様々な開発ツールをセットアップする必要があります。<br />
+　端末を開いて
+<div class="box1">
+<pre>
+$ sudo apt install build-essential uuid-dev iasl git gcc-5 nasm python3-distutils
+</pre>
+</div>
+　と実行しますと、開発環境がインストールされます。あとからもう少し開発ツールをインストールしますが、今んとこは、ここまでにしておきます。
+<h4>EDKⅡのダウンロード</h4>
+　<b>EDKⅡ</b>のダウンロードは、以下のように行います。
+<div class="box1">
+<pre>
+$ mkdir ~/src
+$ cd ~/src
+$ git clone https://github.com/tianocore/edk2
+</pre>
+</div>
+　ここでは、ホームディレクトリに<b>src</b>というディレクトリを作成し、その中に<b>edk2</b>をダウンロードします。上記のコマンドで
+<div class="box1">
+<pre>
+/home/アカウント名/src/edk2/
+</pre>
+</div>
+　に<b>EDKⅡ</b>がダウンロードされます。<br/>
+　断るまでもないかもしれませんが、上記は
+<div class="box1">
+<pre>
+~/src/edk2/
+</pre>
+</div>
+　の意味です。コマンドで
+<div class="box1">
+<pre>
+cd ~
+</pre>
+</div>
+　で自分のホームディレクトリに行けますので、<b>~</b>は<b>ホーム</b>という意味です。
+<h4>EDKⅡのコンパイル</h4>
+　続いて<b>EDKⅡ</b>の基本的なライブラリをコンパイルします。
+<div class="box1">
+<pre>
+$ make -C edk2/BaseTools
+</pre>
+</div>
+　今のカレントディレクトリは
+<div class="box1">
+<pre>
+~/src
+</pre>
+</div>
+　ですから、そこから上記のコマンドを打ち込みます。すると、<b>EDKⅡの基本的なライブラリ</b>がコンパイルされます。（結構時間がかかります）
+<h4>EDKⅡのパスの設定</h4>
+　コンパイルが終わりましたら、
+<div class="box1">
+<pre>
+$ cd ~/src/edk2
+$ export EDK_TOOLS_PATH=$HOME/src/edk2/BaseTools
+$ . edksetup.sh BaseTools
+</pre>
+</div>
+　と打ち込みます。これで<b>EDKⅡ</b>の各パッケージをビルドできる環境になります。またカレントディレクトリは<b>~/src/edk2</b>になります。
+<h4>MdeModulePkgパッケージのビルド</h4>
+　<b>EDKⅡ</b>は<b>パッケージ</b>という単位でプログラムをビルドします。パッケージを選択するには
+<div class="box1">
+<pre>
+Conf/target.txt
+</pre>
+</div>
+　というファイルを、テキストエディタ（gedit）で開き、その中の以下のブロックを修正します。
+<div class="box1">
+<pre>
+ACTIVE_PLATFORM       = <span class="red">MdeModulePkg/MdeModulePkg.dsc</span>
+TOOL_CHAIN_TAG        = <span class="red">GCC5</span>
+TARGET                = <span class="red">RELEASE</span>
+TARGET_ARCH           = <span class="red">X64</span>
+</pre>
+</div>
+　それぞれ、赤くなってるように書き換えます。<br />
+　書き換えたら、カレントディレクトリは<b>~/src/edk2</b>になっている状態で
+<div class="box1">
+<pre>
+$ build
+</pre>
+</div>
+　と打ち込みます。<b>MdeModulePkg</b>パッケージがビルドされます。<br/>
+　問題なければ<b>Done</b>というメッセージが表示されます
+<h4>HelloWorldアプリの実行準備</h4>
+　これで、<b>MdeModulePkg</b>パッケージに含まれる<b>HelloWorldアプリ</b>が出来上がったわけですが、これを実行する場合にはもう少し作業が必要です。<br />
+　<b>UEFIアプリ</b>は基本的に、<b>パソコンが起動したときに実行されるプログラム</b>です。USBやCD-ROMにコピーしてパソコンを再起動する形で動作させるのが目標ですが、現時点では、そのための設定やらが大変です。<br />
+　そのため、<b>qemu</b>という<b>エミュレータ</b>を使います。
+　<b>qemu</b>をインストールするには以下のコマンドを打ちます。一緒に<b>OVMF</b>という<b>UEFIのファームウェア</b>もインストールします。
+<div class="box1">
+<pre>
+$ sudo apt install qemu ovmf
+</pre>
+</div>
+　<b>UEFI＋EDKⅡ</b>については、いろんな方々がブログや記事なども書いているのですが、その中では<b>OVMF</b>は<b>EDKⅡのパッケージ</b>にあるものをビルドして使うように記述されているのですが、今回の開発環境では、思うようにビルドできません。ですので<b>Ubuntu</b>のパッケージにある<b>OVMF</b>を使用することにします。<br />
+　上記のインストールが終わったら、以下のようにブートディスクイメージを作成します。
+<div class="box1">
+<pre>
+$ cd ~/src
+$ mkdir -p image/EFI/BOOT
+$ cp edk2/Build/MdeModule/RELEASE_GCC5/X64/HelloWorld.efi image/EFI/BOOT/BOOTX64.efi
+</pre>
+</div>
+　この<b>image</b>ディレクトリ配下がブートイメージになります。<br />
+　上記のコマンドで<b>HelloWorld.efi</b>という名前の<b>UEFIアプリ</b>が、ブートイメージの<b>EFI/BOOT/BOOTX64.efi</b>という名前で保存されます。
+<h4>HelloWorldアプリの実行</h4>
+　さあ、あとは、エミュレーターを起動して、アプリを実行します。
+<div class="box1">
+<pre>
+$ qemu-system-x86_64 \
+-bios OVMF.fd \
+-drive if=ide,file=fat:image,index=0,media=disk
+</pre>
+</div>
+　上記の<b> \ </b>はubuntuだと、バックスラッシュになります。<br />
+　しばらくして<b>ネットからのブート</b>がタイムアウトになると<b>Shell</b>が起動します。<br />
+　<b>Mapping table</b>の項目を見てください<b>FS0:</b>という項目が見つかると思います。<b>Shell</b>から
+<div class="box1">
+<pre>
+Shell>FS0:
+</pre>
+</div>
+　と記述して<b>Enter</b>を押します。その際<b> : </b>は打ちにくいと思います。認識が英語のキーボードになっているためで<b> : </b>は<b> shift + ; </b>を打ちましょう<b> ; </b>はセミコロンの場所です。すると
+<div class="box1">
+<pre>
+FS0:\>
+</pre>
+</div>
+　とでます。ここで<b>ls</b>と打つと<b>EFI</b>が見えると思います。ここで
+<div class="box1">
+<pre>
+FS0:\> cd EFI/BOOT
+FS0:\EFI\BOOT> ls
+</pre>
+</div>
+　とすると、<b>BOOTX64.efi</b>が見えると思います。これこそ<b>HelloWorldアプリ</b>です。
+
+
+<div class="box1">
+<pre>
+FS0:\EFI\BOOT> BOOTX64.efi
+</pre>
+</div>
+　と打ち込んでみましょう。
+<div class="box1">
+<pre>
+UEFI Hello World!
+</pre>
+</div>
+　と表示されると思います。これが<b>UEFI</b>の<b>HelloWorld</b>です。
+
 </div>
 <!-- /コンテンツ　-->
 <hr>
