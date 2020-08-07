@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2020年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>１２．FlexとBisonで計算機</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>１２－０２．FlexとBisonで計算機（VS2019版）</h3>
+　第１部では<b>VS2015</b>および<b>VS2017</b>での環境構築の説明をしました。<br>
+　ここでは<b>VS2019</b>で環境を構築し、簡単な計算機を作成します。<br />
+<h4>FlexとBisonのダウンロード</h4>
+　字句解析用のプログラムである<b>flex</b>と、構文解析用のプログラムの<b>bison</b>の<b>Windows版</b>は<b>winflexbison</b>というプロジェクトで、ネットで公開されています。<br />
+<br />
+<b>https://sourceforge.net/projects/winflexbison/files/</b><br />
+<br />
+　にアクセスして、<b>winflexbison3-latest.zip</b>をダウンロードします。<br />
+　ダウンロードしたら、<b>zipの状態のまま</b>、<b>ファイルを右ボタンでクリック</b>して<b>プロパティ</b>を開き、<b>セキュリティチェック</b>を外しておきます。こうしないと<b>VisualStudio</b>で読めこめません。<br />
+<br />
+<h4>プロジェクトの作成</h4>
+　<b>VS2017</b>の時は<b>WindowsXP</b>の開発環境をセットアップしてましたが、<b>VS2019</b>では必要ありません。それ以外は、ほぼ<b>VS2017版</b>と同じです。<br />
+　まず、<b>新規作成－プロジェクト</b>を選択します。
+<p>&nbsp;</p>
+<img src="img/120103.png" width="80%" border="1"/>
+<p>図120103</p>
+<p>&nbsp;</p>
+　<b>VisualC++</b>の<b>空のプロジェクト</b>を作成します。<br />
+　ここでは<b>CLangProject</b>としました。
+<p>&nbsp;</p>
+<img src="img/120204.png" width="80%" border="1" />
+<p>図120204</p>
+<p>&nbsp;</p>
+　基本プロジェクトができたら、もう一つ<b>プロジェクトを作成</b>します。
+<p>&nbsp;</p>
+<img src="img/120205.png" width="80%" border="1" />
+<p>図120205</p>
+<p>&nbsp;</p>
+　こちらも<b>空のプロジェクト</b>とし、名前は<b>FlexBison</b>とします。<br />
+　名前の通り<b>FlexとBison</b>を別プロジェクトにしますので、プロジェクト名は<b>FlexBison</b>で良いと思います
+<p>&nbsp;</p>
+<img src="img/120206.png" width="80%" border="1" />
+<p>図120206</p>
+<p>&nbsp;</p>
+　２つのプロジェクトを作成したら、<b>構成マネージャ</b>を開きます。
+<p>&nbsp;</p>
+<img src="img/120207.png" width="40%"/>
+<p>図120207</p>
+<p>&nbsp;</p>
+　まず<b>アクティブソリューションプラットフォーム</b>の<b>編集</b>を選択します。
+<p>&nbsp;</p>
+<img src="img/120208.png" width="80%"/>
+<p>図020208</p>
+<p>&nbsp;</p>
+　<b>x64</b>を削除します。今回は<b>32ビットアプリケーション</b>として作成するので、間違って<b>x64</b>が選択されないようにします。
+<p>&nbsp;</p>
+<img src="img/120209.png" width="60%"/>
+<p>図120209</p>
+<p>&nbsp;</p>
+　続いて中段の<b>CLangProject</b>の<b>プラットフォーム</b>も編集します。
+<p>&nbsp;</p>
+<img src="img/120210.png" width="80%"/>
+<p>図020210</p>
+<p>&nbsp;</p>
+　<b>x64</b>を削除します。
+<p>&nbsp;</p>
+<img src="img/120211.png" width="60%"/>
+<p>図120211</p>
+<p>&nbsp;</p>
+　続いて<b>FlexBison</b>も編集します。
+<p>&nbsp;</p>
+<img src="img/120212.png" width="80%"/>
+<p>図120212</p>
+<p>&nbsp;</p>
+　<b>x64</b>を削除します。
+<p>&nbsp;</p>
+<img src="img/020213.png" width="60%"/>
+<p>図120213</p>
+<p>&nbsp;</p>
+　先ほどダウンロードした<b>winflexbison3-latest.zip</b>を解凍し<b>winflexbison</b>とディレクトリ名を変更して、以下の様な構造で<b>FlexBison</b>プロジェクト内にコピーします。
+<p>&nbsp;</p>
+<img src="img/120214.png" width="80%"/>
+<p>図020214</p>
+<p>&nbsp;</p>
+　<b>FlexBison</b>プロジェクトの<b>ビルドのカスタマイズ</b>を選択します。
+<p>&nbsp;</p>
+<img src="img/120215.png" width="80%" border="1" />
+<p>図120215</p>
+<p>&nbsp;</p>
+　カスタマイズの画面で<b>既存ファイルの検索</b>を選びます。
+<p>&nbsp;</p>
+<img src="img/120216.png" width="80%"/>
+<p>図120216</p>
+<p>&nbsp;</p>
+　ローカルのディレクトリから、<b>FlexBison</b>プロジェクト内の、先ほどコピーした<b>winflexbison</b>内の<b>custom_build_rules</b>内の<b>win_flex_bison</b>を選択し、<b>win_flex_bison_custom_build.targets</b>を選択します。
+<p>&nbsp;</p>
+<img src="img/120217.png" width="80%"/>
+<p>図120217</p>
+<p>&nbsp;</p>
+　このまま設定するかどうか警告が出ますが<b>はい</b>で設定します。すると、以下のようにチェックできるように表示されますので、チェックし、<b>OK</b>をクリックします。
+<p>&nbsp;</p>
+<img src="img/120218.png" width="80%"/>
+<p>図120218</p>
+<p>&nbsp;</p>
+　続いて<b>FlexBison</b>プロジェクトの<b>プロパティ</b>を選択します。
+<p>&nbsp;</p>
+<img src="img/120219.png" width="60%" border="1" />
+<p>図120219</p>
+<p>&nbsp;</p>
+　<b>VC++ディレクトリ</b>の<b>実行可能ファイルディレクトリ</b>の<b>編集</b>を選びます。
+<p>&nbsp;</p>
+<img src="img/120220.png" width="80%" border="1" />
+<p>図120220</p>
+<p>&nbsp;</p>
+　そこで<b>$(ProjectDir)winflexbison</b>と記述し<b>OK</b>を選びます。
+<p>&nbsp;</p>
+<img src="img/120221.png" width="60%"/>
+<p>図120221</p>
+<p>&nbsp;</p>
+　<b>FlexBison</b>プロジェクトの<b>ソースファイル</b>に新しい項目を追加します。
+<p>&nbsp;</p>
+<img src="img/120222.png" width="80%" border="1" />
+<p>図120222</p>
+<p>&nbsp;</p>
+　<b>C++ファイル</b>を選んで。<b>CLangProject.l</b>（拡張子は<b>エル</b>です）というファイルを追加します。<br />
+　<b>.l</b>という拡張子は<b>Flex</b>が使う拡張子です。
+<p>&nbsp;</p>
+<img src="img/120223.png" width="80%"/>
+<p>図120223</p>
+<p>&nbsp;</p>
+　コードの編集画面が出たら、以下を記述します。<br/>
+　赤くなっているところの記述は気を付けてください。<br />
+　正確に言えば、この、<b>CLangProject.tab.h</b>は、<b>Bison</b>が書きだすヘッダファイル名です。ですから、この後設定する<b>Bison用のファイル名</b>の拡張子を<b>.tab.h</b>にしたものになります。
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include "<span class="red">CLangProject</span>.tab.h"
+
+#define YY_SKIP_YYWRAP 1
+
+int
+yywrap(void)
+{
+    return 1;
+}
+%}
+%%
+"+"     return ADD;
+"-"     return SUB;
+"*"     return MUL;
+"/"     return DIV;
+"\n"    return CR;
+[1-9][0-9]* {
+    double temp;
+    sscanf(yytext, "%lf", &temp);
+    yylval.double_value = temp;
+    return DOUBLE_LITERAL;
+}
+[0-9]*\.[0-9]* {
+    double temp;
+    sscanf(yytext, "%lf", &temp);
+    yylval.double_value = temp;
+    return DOUBLE_LITERAL;
+}
+[ \t] ;
+%%
+</pre>
+</div>
+　続いて、もう一つファイルを追加します。<br />
+　今度も、<b>C++ファイル</b>を選んで。<b>CLangProject.y</b>（拡張子は<b>ワイ</b>です）というファイルを追加します。<br />
+　<b>.y</b>という拡張子は<b>Bison</b>が使う拡張子です。<br/>
+　<b>Bison</b>はもともと<b>UNIXのyacc</b>ですから、拡張子が<b>.y</b>となります。<br />
+　<b>Bison</b>は、cppファイルのほかに<b>ファイル名.tab.h</b>というヘッダを書きだします。
+<p>&nbsp;</p>
+<img src="img/120224.png" width="80%"/>
+<p>図120224</p>
+<p>&nbsp;</p>
+　ファイルを作成したら、以下を記述します。
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#define YYDEBUG 1
+
+extern int yylex(void);
+
+int
+yyerror(char const *str)
+{
+    extern char *yytext;
+    fprintf(stderr, "parser error near %s\n", yytext);
+    return 0;
+}
+
+%}
+%union {
+    int     int_value;
+    double  double_value;
+}
+%token &lt;double_value>    DOUBLE_LITERAL
+%token ADD SUB MUL DIV CR
+%type &lt;double_value> expression term primary_expression
+%%
+line_list
+    : line
+    | line_list line
+    ;
+line
+    : expression CR
+    {
+        printf(">>%lf\n", $1);
+    }
+expression
+    : term
+    | expression ADD term
+    {
+        $$ = $1 + $3;
+    }
+    | expression SUB term
+    {
+        $$ = $1 - $3;
+    }
+    ;
+term
+    : primary_expression
+    | term MUL primary_expression 
+    {
+        $$ = $1 * $3;
+    }
+    | term DIV primary_expression
+    {
+        $$ = $1 / $3;
+    }
+    ;
+primary_expression
+    : DOUBLE_LITERAL
+    ;
+%%
+
+
+int main(void)
+{
+    extern int yyparse(void);
+    extern FILE *yyin;
+
+    yyin = stdin;
+    if (yyparse()) {
+        fprintf(stderr, "Error ! Error ! Error !\n");
+        exit(1);
+    }
+}
+</pre>
+</div>
+　記述が終わりましたら、<b>ビルド－リビルド</b>します。<br />
+　以下のような出力があれば成功です。
+<p>&nbsp;</p>
+<img src="img/120225.png" width="80%" border="1" />
+<p>図020225</p>
+<p>&nbsp;</p>
+　また、<b>FlexBison</b>プロジェクト内を見てみましょう。以下のように<b>CLangProject.tab.h、CLangProject.tab.cpp、CLangProject.flex.cpp</b>ができていればOKです。
+<p>&nbsp;</p>
+<img src="img/120226.png" width="60%" border="1"/>
+<p>図120226</p>
+<p>&nbsp;</p>
+　続いて、メインのプロジェクトである<b>CLangProject</b>に<b>ソースファイル</b>を追加します。<b>既存の項目</b>で追加してください。
+<p>&nbsp;</p>
+<img src="img/120227.png" width="80%" border="1" />
+<p>図120227</p>
+<p>&nbsp;</p>
+　<b>FlexBison</b>プロジェクト内の<b>CLangProject.tab.cpp、CLangProject.flex.cpp</b>を追加します。
+<p>&nbsp;</p>
+<img src="img/120228.png" width="80%" border="1" />
+<p>図120228</p>
+<p>&nbsp;</p>
+　<b>ヘッダーファイル</b>も既存の項目を追加します。
+<p>&nbsp;</p>
+<img src="img/120229.png" width="80%" border="1" />
+<p>図120229</p>
+<p>&nbsp;</p>
+　<b>FlexBison</b>プロジェクト内の<b>CLangProject.tab.h</b>を追加します。
+<p>&nbsp;</p>
+<img src="img/120230.png" width="60%" border="1" />
+<p>図120230</p>
+<p>&nbsp;</p>
+　メインのプロジェクト<b>CLangProject</b>の<b>プロパティ</b>を開きます。
+<p>&nbsp;</p>
+<img src="img/120231.png" width="60%"/>
+<p>図120231</p>
+<p>&nbsp;</p>
+　<b>詳細設定</b>で<b>指定の警告を無効にする</b>を選び<b>編集</b>します。
+<p>&nbsp;</p>
+<img src="img/120232.png" width="80%" border="1" />
+<p>図120232</p>
+<p>&nbsp;</p>
+　<b>4996</b>と数字を記述します。これは<b>セキュリティに問題がある</b>関数<b>scanfなど</b>をビルドできないようになっている設定をなくすものです。<br />
+　本来は、<b>セキュリティが強化されたバージョン</b>を実装すべきですが、そのあたりはおいおい考えるとして、今は、警告を外しておきます。（これはこの章の最後のほうで元に戻します）
+<p>&nbsp;</p>
+<img src="img/120233.png" width="80%"/>
+<p>図120233</p>
+<p>&nbsp;</p>
+　続いて<b>oreProject</b>のプロパティで<b>リンカ－システム</b>の<b>サブシステム</b>に<b>コンソール</b>の設定をします。<br />
+　こうしておかないと、プログラムの実行が終わったときに、コンソールが閉じてしまいます。
+<p>&nbsp;</p>
+<img src="img/120234.png" width="80%"/>
+<p>図120234</p>1
+<p>&nbsp;</p>
+　<b>ソリューション</b>の<b>プロパティ</b>も設定します。
+<p>&nbsp;</p>
+<img src="img/120235.png" width="60%" border="1" />
+<p>図120235</p>
+<p>&nbsp;</p>
+　<b>CLangProject</b>の依存関係を<b>FlexBison</b>にチェックします。<br />
+　こうすることで、ビルドが<b>FlexBison</b>が行われた後で<b>CLangProject</b>を行う形になります。
+<p>&nbsp;</p>
+<img src="img/120236.png" width="80%"/>
+<p>図120236</p>
+<p>&nbsp;</p>
+　さあ、すべてが整いました。<b>ビルド－ソリューションのリビルド</b>を行います。
+<p>&nbsp;</p>
+<img src="img/120237.png" width="60%" border="1" />
+<p>図120237</p>
+<p>&nbsp;</p>
+　<b>CLangProject.exe</b>が作成され<b>すべてリビルド: 2 正常終了</b>と出力されれば成功です。
+<p>&nbsp;</p>
+<img src="img/120238.png" width="80%" border="1" />
+<p>図020238</p>
+<p>&nbsp;</p>
+<h4>プロジェクトの実行</h4>
+　それでは実行してみましょう。<b>デバッグ－デバッグなしで開始</b>を選びます。<br />
+　コンソールが出たら
+<div class="box1">
+<pre>
+10 + 35
+</pre>
+</div>
+　と入力して<b>Enter</b>を打ちましょう。
+<div class="box1">
+<pre>
+10 + 35
+>>45.000000
+</pre>
+</div>
+　と出れば、足し算はOKです。続いて四則演算を実行して見ましょう。
+<div class="box1">
+<pre>
+10 + 35
+>>45.000000
+34 * 23
+>>782.000000
+67 / 23
+>>2.913043
+984 - 34.5
+>>949.500000
+</pre>
+</div>
+　最後に、何も入力しないで<b>Enter</b>だけ打ってみましょう。
+<div class="box1">
+<pre>
+10 + 35
+>>45.000000
+34 * 23
+>>782.000000
+67 / 23
+>>2.913043
+984 - 34.5
+>>949.500000
+
+parser error near
+
+Error ! Error ! Error !
+
+....\CLangProject\Debug\CLangProject.exe (プロセス 9480) は、コード 1 を伴って終了しました。
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　このようにエラーが出て、プログラムが終了します。
+<div class="box1">
+<pre>
+このウィンドウを閉じるには、任意のキーを押してください . . .
+</pre>
+</div>
+　というのは、先ほどプロパティで設定した、サブシステムの<b>コンソール</b>が表示しています。<br />
+　サブシステムのコンソールは、プログラムが終了しても、コンソールが閉じずに出力が残るように、ロックをかけてくれます。<br />
+　ここで<b>何か入力</b>するとコンソールが閉じます。
+<h4>この後の作業</h4>
+　さて、次章ではいよいよ<b>言語の開発環境</b>を整えます。まず文法を考え、<b>FlexとBison</b>はどの部分で利用し、どの部分は自作しなければいけないのか、具体的な例をあげて説明したいと思います。<br />
+　また、今項のFlexおよびBisonのソースは、<br />
+<br />
+http://kmaebashi.com/programmer/devlang/index.html<br/>
+<br />
+　の<b>前橋和弥氏</b>の記事を参考にしたものです。このサイトは、具体的に言語の作成方法も詳しく載ってますので、参考になるでしょう。このドキュメントではこのソースを土台にどんどん変化させていきます。<br />
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="11_01.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="13_01.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

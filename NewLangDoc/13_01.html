@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2020年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>１３．シンプルな実装をする</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>１３－０１．構造の修正</h3>
+　この項では、前項で作成した<b>計算機</b>の構造を変え、<b>CLangProjectプロジェクト</b>側から、<b>FlexBison</b>を呼ぶような形にします。<br />
+　<b>oreProject</b>における、<b>０３－０１．プログラム入力インターフェイスの作成</b>と同じような処理です。<br/>
+　また、この項からは図版はあまり用意しませんので、注意してください。<br />
+<br />
+　まず、ソリューションエクスプローラの<b>CLangProject</b>プロジェクトを右クリックし<b>追加－新しいフィルタ</b>で<b>スクリプトファイル</b>を作成します。<br />
+　続いてそのフィルタを右クリックして<b>新しい項目</b>を追加します。<br />
+　C++ファイルを選び、ファイル名を<b>index.c</b>として、CLangProjectのプロジェクトディレクトリ内に追加します。<br />
+　追加したら、そのファイルのプロパティを開いて<b>ビルドから除外</b>を<b>はい</b>にしておきます。そうしないと、VisualStdioが、コンパイルしようとしてしまいます。<br />
+　プロパティの設定が終わったら、その中に
+<div class="box1">
+<pre>
+10 + 3
+10 * 3
+</pre>
+</div>
+　と記述し、保存（Ctrl+S）しておきます。<br />
+　続いて<b>CLangProject－ソースファイル</b>を右クリックし、<b>追加－新しい項目</b>で<b>main.cpp</b>を追加します。<br />
+　続いて<b>CLangProject.y</b>ファイルに記述されている<b>main()関数</b>を<b>main.cpp</b>に移動します。<b>CLangProject.y</b>内の<b>main()関数</b>は、コメントにするか削除しておきます。<br/>
+　そして<b>main.cpp</b>に以下を記述します。
+<div class="box1">
+<pre>
+#include &ltstdio.h>
+#include &ltstdlib.h>
+#include &ltiostream>
+#include &ltfstream>
+#include &ltvector>
+#include &ltstring>
+using namespace std;
+
+
+class InputParser {
+    vector &ltstring> tokens;
+public:
+    InputParser(int& argc, char** argv) {
+        for (int i = 1; i &lt argc; ++i) {
+            tokens.push_back(string(argv[i]));
+        }
+    }
+    const string& getCmdOption(const string& option) const {
+        vector&ltstring>::const_iterator itr;
+        itr = find(tokens.begin(), tokens.end(), option);
+        if (itr != tokens.end() && ++itr != tokens.end()) {
+            return *itr;
+        }
+        static const string empty_string("");
+        return empty_string;
+    }
+    bool cmdOptionExists(const string& option) const {
+        return find(tokens.begin(), tokens.end(), option)
+            != tokens.end();
+    }
+};
+
+
+int main(int argc, char** argv) {
+    InputParser input(argc, argv);
+    const string& filename = input.getCmdOption("-f");
+    if (filename.empty()) {
+        cerr &lt&lt "ファイルを指定してください" &lt&lt endl;
+        return 1;
+    }
+    extern int yyparse(void);
+    extern FILE* yyin;
+    if ((yyin = fopen(filename.c_str(), "r")) == NULL) {
+        cerr &lt&lt "ファイル読み込みに失敗しました" &lt&lt std::endl;
+        return 1;
+    }
+    if (yyparse()) {
+        cout &lt&lt "プログラム終了" &lt&lt endl;
+    }
+    return 0;
+}
+</pre>
+</div>
+　<b>CLangProject</b>プロジェクトののプロパティを選択します。<br />
+　<b>デバッグ</b>メニューの<b>コマンド引数</b>の項目に
+<div class="box1">
+<pre>
+-f index.c
+</pre>
+</div>
+　と記述して保存します。
+<h4>コンパイルと実行</h4>
+　コンパイルして実行してみましょう。<br />
+
+<div class="box1">
+<pre>
+>>13.000000
+>>30.000000
+
+...\CLangProject\Debug\CLangProject.exe (プロセス 10480) は、コード 0 で終了しました。
+このウィンドウを閉じるには、任意のキーを押してください...
+</pre>
+</div>
+　のように出力したら、成功です。以下</b>、現在のソリューションエクスプローラの内容です。
+<p>&nbsp;</p>
+<img src="img/130101.png" width="40%" border="1"/>
+<p>図130101</p>
+<p>&nbsp;</p>
+
+<h4>解説</h4>
+　今回の修正で<b>コマンドライン</b>からパラメータを取得して、<b>-f</b>オプションで指定される<b>スクリプトファイル</b>を読み込み、そこに記載されている命令文（前項で実装したもの）を同様に実行し、出力することができるようになりました。<br />
+　これは<b>main関数</b>を<b>CLangProject.y</b>から<b>main.cpp</b>に移動することで、修正します。<br />
+　その際<b>main.cpp</b>に新しく記載される<b>main関数</b>に手を加えます。<br />
+　すなわち、<b>コマンドラインの-fオプション</b>で指定される<b>スクリプトファイル</b>を読み込んで、その内容を実行します。<br/>
+　記載されているのは前項に実装された<b>計算の入力</b>に対する<b>結果の出力</b>です。<br />
+　<b>コンソールで受け付けていた入力</b>を<b>スクリプトファイルから入力</b>に変更します。<br />
+　こうすることで<b>スクリプトファイル</b>での<b>計算式の記載</b>が<b>入力</b>になるので、コンソールには<b>計算結果</b>が出力されます。<br />
+<br />
+　この修正は、単に<b>コンソール入力</b>を<b>ファイルからの入力</b>に切り替えただけのものです。ですので、計算はその都度行います。<br />
+　次項では、<b>スクリプトファイル</b>の内容を<b>コンパイル、実行</b>という2つのステップに分けます。<br />
+　そうすることで、<b>C言語を作ろう</b>の目的である<b>スタックマシンで実装する</b>というテーマが実装されます。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="index.html">目次</a></li>
+<li><a href="13_02.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
