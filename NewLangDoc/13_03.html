@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2020年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>１３．シンプルな実装をする</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>１３－０３．四則演算を作成する</h3>
+　<b>１３－０１．構造の修正</b>の時点では実装されていた<b>四則演算</b>ですが、前項では<b>スタックマシン</b>を作成するにあたって、実装をできるだけ単純にする関係で、いったん外しました。<br />
+　この項で改めて実装したいと思います。
+<h4>CLangProject.yの修正</h4>
+　まず<b>CLangProject.y</b>を修正します。<b>CLangProject.l</b>に、トークンとして<b>*、/、+、-</b>の記号はすでに登録されているので、<b>CLangProject.l</b>の修正は必要ありません。<br />
+　以下、修正した<b>CLangProject.y</b>です。全文差し替えましょう。
+<div class="box1">
+<pre>
+%{
+#include &ltstdio.h>
+#include &ltstdlib.h>
+#include "../CLangProject/proc.h"
+#define YYDEBUG 1
+extern int yylex(void);
+extern char *yytext;
+int yyerror(char const *str){
+    extern int gLine;
+    fprintf(stderr,"%s, line: %d, near %s\n",str, gLine, yytext);
+    return 0;
+}
+%}
+%code requires {
+#include "../CLangProject/proc.h"
+}
+%union {
+    const char* fixedString;
+}
+%token &ltfixedString> INT_LITERAL DMP SEMICOLON ADD SUB MUL DIV
+%type intliteral_expression mul_expression add_expression
+%type statement statement_list
+%%
+statement_list
+    : statement
+    | statement_list statement
+    ;
+statement
+    : SEMICOLON
+    | add_expression SEMICOLON
+    {
+        clg::stackMachine::get()->createEmpty();
+    }
+    | DMP add_expression SEMICOLON
+    {
+        clg::stackMachine::get()->createDump();
+    }
+    ;
+<span class="red">add_expression
+    : mul_expression
+    | add_expression ADD mul_expression
+    {
+        clg::stackMachine::get()->createAddExp();
+    }
+    | add_expression SUB mul_expression
+    {
+        clg::stackMachine::get()->createSubExp();
+    }
+    ;
+mul_expression
+    : intliteral_expression
+    | mul_expression MUL intliteral_expression 
+    {
+        clg::stackMachine::get()->createMulExp();
+    }
+    | mul_expression DIV intliteral_expression
+    {
+        clg::stackMachine::get()->createDivExp();
+    }
+    ;</span>
+intliteral_expression
+    : INT_LITERAL
+    {
+        clg::stackMachine::get()->createIntLiteralExp(yytext);
+    }
+    ;
+%%
+</pre>
+</div>
+　赤くなっているところは、四則演算を作り出す部分です。<br />
+　四則演算の優先順位は<b>*、/</b>は<b>+、-</b>より優先します。ですので、<b>+、-</b>より<b>*、/</b>は、下方に記述します。
+<h4>stackMachine.hの修正</h4>
+　続いて、<b>stackMachine.h</b>を修正します。以下全文です。赤くなっているところが重要な修正です。
+<div class="box1">
+<pre>
+namespace clg 
+{
+    //--------------------------------------------------------------------------------------
+    ///  ニーモニック
+    //--------------------------------------------------------------------------------------
+    enum class Mnemonic {
+        LDI,    //INT型定数のロード
+        DMP,    //デバッグ出力
+        MUL,
+        DIV,
+        ADD,
+        SUB
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  値
+    //--------------------------------------------------------------------------------------
+    union Value{
+        int intVal;
+        char* pChar;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  オペコード
+    //--------------------------------------------------------------------------------------
+    struct Opecode {
+        Mnemonic mmnic;
+        Value val;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  スタックマシンクラス
+    //--------------------------------------------------------------------------------------
+    class stackMachine {
+        vector&ltOpecode> m_codes;
+        vector&ltValue> m_stack;
+        //命令ポインタ
+        unsigned int m_ip = 0;
+        void stackPush(Value val);
+        Value stackPop();
+        void binaryExec(Mnemonic nmc);
+        stackMachine();
+    public:
+        virtual ~stackMachine();
+        int compile(FILE* fp);
+        void exec();
+        void destroy();
+        //インスタンス参照
+        static stackMachine* get();
+        //何もしない
+        void createEmpty();
+        /// INTリテラル
+        void createIntLiteralExp(const char* ptr);
+        <span class="red">//乗算
+        void createMulExp();
+        //除算
+        void createDivExp();
+        //加算
+        void createAddExp();
+        //減算
+        void createSubExp();</span>
+        //デバッグ出力
+        void createDump();
+    };
+}
+//end namespace clg
+</pre>
+</div>
+<h4>stackMachine.cppの修正</h4>
+　続いて<b>stackMachine.cpp</b>の修正です。以下全文です。
+<div class="box1">
+<pre>
+#include "proc.h"
+
+namespace clg
+{
+    //唯一のスタックマシンのインスタンス
+    stackMachine* g_pSackMachine;
+
+    stackMachine::stackMachine()
+    {}
+    stackMachine::~stackMachine() {
+    }
+    int stackMachine::compile(FILE* fp) {
+        extern int yyparse(void);
+        extern FILE* yyin;
+        yyin = fp;
+        if (yyparse()) {
+            return 1;
+        }
+        return 0;
+
+    }
+
+    void stackMachine::binaryExec(Mnemonic nmc) {
+        Value val;
+        val = stackPop();
+        if (m_stack.size() > 0) {
+            switch (nmc) {
+            case Mnemonic::MUL:
+                m_stack[m_stack.size() - 1].intVal *= val.intVal;
+                break;
+            case Mnemonic::DIV:
+                m_stack[m_stack.size() - 1].intVal /= val.intVal;
+                break;
+            case Mnemonic::ADD:
+                m_stack[m_stack.size() - 1].intVal += val.intVal;
+                break;
+            case Mnemonic::SUB:
+                m_stack[m_stack.size() - 1].intVal -= val.intVal;
+                break;
+            }
+        }
+    }
+
+    void stackMachine::exec() {
+        if (m_codes.size() &lt= 0) {
+            return;
+        }
+        while (m_ip &lt m_codes.size()) {
+            Opecode opcode = m_codes[m_ip];
+            switch (opcode.mmnic) {
+            case Mnemonic::LDI:
+                stackPush(opcode.val);
+                m_ip++;
+                break;
+            case Mnemonic::MUL:
+            case Mnemonic::DIV:
+            case Mnemonic::ADD:
+            case Mnemonic::SUB:
+                binaryExec(opcode.mmnic);
+                m_ip++;
+                break;
+            case Mnemonic::DMP:
+                cout &lt&lt stackPop().intVal &lt&lt endl;
+                m_ip++;
+                break;
+            }
+        }
+    }
+
+    void stackMachine::destroy() {
+        if (g_pSackMachine) {
+            delete g_pSackMachine;
+            g_pSackMachine = nullptr;
+        }
+    }
+
+    //インスタンス参照
+    stackMachine* stackMachine::get() {
+        if (!g_pSackMachine) {
+            g_pSackMachine = new stackMachine();
+        }
+        return g_pSackMachine;
+    }
+    //スタック操作
+    void stackMachine::stackPush(Value val) {
+        m_stack.push_back(val);
+    }
+    Value stackMachine::stackPop() {
+        if (m_stack.empty()) {
+            cout &lt&lt "スタックは空です" &lt&lt endl;
+            exit(1);
+        }
+        Value val = m_stack.back();
+        m_stack.pop_back();
+        return val;
+    }
+
+    //何もしない
+    void stackMachine::createEmpty(){
+
+    }
+
+    //乗算
+    void stackMachine::createMulExp() {
+        Opecode code;
+        code.mmnic = Mnemonic::MUL;
+        m_codes.push_back(code);
+    }
+    //除算
+    void stackMachine::createDivExp() {
+        Opecode code;
+        code.mmnic = Mnemonic::DIV;
+        m_codes.push_back(code);
+    }
+
+    //加算
+    void stackMachine::createAddExp() {
+        Opecode code;
+        code.mmnic = Mnemonic::ADD;
+        m_codes.push_back(code);
+
+    }
+    //減算
+    void stackMachine::createSubExp() {
+        Opecode code;
+        code.mmnic = Mnemonic::SUB;
+        m_codes.push_back(code);
+
+    }
+    /// INTリテラル
+    void stackMachine::createIntLiteralExp(const char* ptr) {
+        Opecode code;
+        code.mmnic = Mnemonic::LDI;
+        code.val.intVal = atoi(ptr);
+        m_codes.push_back(code);
+    }
+    //出力
+    void stackMachine::createDump() {
+        Opecode code;
+        code.mmnic = Mnemonic::DMP;
+        m_codes.push_back(code);
+    }
+
+}
+//end namespace clg
+</pre>
+</div>
+<h4>スクリプトの修正</h4>
+　最後に<b>スクリプトファイル</b>である<b>index.c</b>を修正します。
+<div class="box1">
+<pre>
+dump 10 + 30;
+dump 50 - 10 * 30;
+dump 30 / 30;
+dump 30 - 20;
+</pre>
+</div>
+　今度は計算結果を出力します。<br />
+<div class="box1">
+<pre>
+40
+-250
+1
+10
+
+...\CLangProject.exe (プロセス 16216) は、コード 0 で終了しました。
+このウィンドウを閉じるには、任意のキーを押してください...
+</pre>
+</div>
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="13_02.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="13_04.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
