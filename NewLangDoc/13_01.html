@@ -35,25 +35,25 @@
 　そして<b>main.cpp</b>に以下を記述します。
 <div class="box1">
 <pre>
-#include &ltstdio.h>
-#include &ltstdlib.h>
-#include &ltiostream>
-#include &ltfstream>
-#include &ltvector>
-#include &ltstring>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;vector>
+#include &lt;string>
 using namespace std;
 
 
 class InputParser {
-    vector &ltstring> tokens;
+    vector &lt;string> tokens;
 public:
     InputParser(int& argc, char** argv) {
-        for (int i = 1; i &lt argc; ++i) {
+        for (int i = 1; i &lt; argc; ++i) {
             tokens.push_back(string(argv[i]));
         }
     }
     const string& getCmdOption(const string& option) const {
-        vector&ltstring>::const_iterator itr;
+        vector&lt;string>::const_iterator itr;
         itr = find(tokens.begin(), tokens.end(), option);
         if (itr != tokens.end() && ++itr != tokens.end()) {
             return *itr;
@@ -72,17 +72,17 @@ int main(int argc, char** argv) {
     InputParser input(argc, argv);
     const string& filename = input.getCmdOption("-f");
     if (filename.empty()) {
-        cerr &lt&lt "ファイルを指定してください" &lt&lt endl;
+        cerr &lt;&lt; "ファイルを指定してください" &lt;&lt; endl;
         return 1;
     }
     extern int yyparse(void);
     extern FILE* yyin;
     if ((yyin = fopen(filename.c_str(), "r")) == NULL) {
-        cerr &lt&lt "ファイル読み込みに失敗しました" &lt&lt std::endl;
+        cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; std::endl;
         return 1;
     }
     if (yyparse()) {
-        cout &lt&lt "プログラム終了" &lt&lt endl;
+        cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
     }
     return 0;
 }

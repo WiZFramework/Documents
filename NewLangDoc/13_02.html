@@ -48,16 +48,16 @@
 #undef UINT16_MAX
 #undef UINT32_MAX
 
-#include &ltcstdlib>
-#include &ltcstring>
-#include &ltiostream>
-#include &ltfstream>
-#include &ltstring>
-#include &ltset>
-#include &ltmap>
-#include &ltvector>
-#include &ltlist>
-#include &ltmemory>
+#include &lt;cstdlib>
+#include &lt;cstring>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
 using namespace std;
 
 #include "stackMachine.h"
@@ -100,8 +100,8 @@ namespace clg
     ///  スタックマシンクラス
     //--------------------------------------------------------------------------------------
     class stackMachine {
-        vector&ltOpecode> m_codes;
-        vector&ltValue> m_stack;
+        vector&lt;Opecode> m_codes;
+        vector&lt;Value> m_stack;
         //命令ポインタ
         unsigned int m_ip = 0;
         void stackPush(Value val);
@@ -152,10 +152,10 @@ namespace clg
 
     }
     void stackMachine::exec() {
-        if (m_codes.size() &lt= 0) {
+        if (m_codes.size() &lt;= 0) {
             return;
         }
-        while (m_ip &lt m_codes.size()) {
+        while (m_ip &lt; m_codes.size()) {
             Opecode opcode = m_codes[m_ip];
             switch (opcode.mmnic) {
             case Mnemonic::LDI:
@@ -163,7 +163,7 @@ namespace clg
                 m_ip++;
                 break;
             case Mnemonic::DMP:
-                cout &lt&lt stackPop().intVal &lt&lt endl;
+                cout &lt;&lt; stackPop().intVal &lt;&lt; endl;
                 m_ip++;
                 break;
             }
@@ -190,7 +190,7 @@ namespace clg
     }
     Value stackMachine::stackPop() {
         if (m_stack.empty()) {
-            cout &lt&lt "スタックは空です" &lt&lt endl;
+            cout &lt;&lt; "スタックは空です" &lt;&lt; endl;
             exit(1);
         }
         Value val = m_stack.back();
@@ -228,7 +228,7 @@ namespace clg
 <div class="box1">
 <pre>
 %{
-#include &ltstdio.h>
+#include &lt;stdio.h>
 #include "CLangProject.tab.h"
 #define YY_SKIP_YYWRAP 1
 int gLine = 1;
@@ -238,7 +238,7 @@ int yywrap(void){ return 1; }
 %s COMMENT
 %s LINE_COMMENT
 %%
-&ltINITIAL>{
+&lt;INITIAL>{
     ";"     return SEMICOLON;
     "+"     return ADD;
     "-"     return SUB;
@@ -254,12 +254,12 @@ int yywrap(void){ return 1; }
     [ \t]   ;
     .   { return 0;}
 }
-&ltCOMMENT>{
+&lt;COMMENT>{
     "\n"    {gLine++;}
     "*/" {BEGIN(INITIAL);}
     .   ;
 }
-&ltLINE_COMMENT>{
+&lt;LINE_COMMENT>{
     "\n" { gLine++; BEGIN(INITIAL);}
     .   ;
 }
@@ -271,8 +271,8 @@ int yywrap(void){ return 1; }
 <div class="box1">
 <pre>
 %{
-#include &ltstdio.h>
-#include &ltstdlib.h>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
 #include "../CLangProject/proc.h"
 #define YYDEBUG 1
 extern int yylex(void);
@@ -289,7 +289,7 @@ int yyerror(char const *str){
 %union {
     const char* fixedString;
 }
-%token &ltfixedString> INT_LITERAL DMP SEMICOLON ADD SUB MUL DIV
+%token &lt;fixedString> INT_LITERAL DMP SEMICOLON ADD SUB MUL DIV
 %type intliteral_expression 
 %type statement statement_list
 %%
@@ -336,15 +336,15 @@ intliteral_expression
 #include "proc.h"
 
 class InputParser {
-    vector &ltstring> m_tokens;
+    vector &lt;string> m_tokens;
 public:
     InputParser(int& argc, char** argv) {
-        for (int i = 1; i &lt argc; ++i) {
+        for (int i = 1; i &lt; argc; ++i) {
             m_tokens.push_back(string(argv[i]));
         }
     }
     const string& getCmdOption(const string& option) const {
-        vector&ltstring>::const_iterator itr;
+        vector&lt;string>::const_iterator itr;
         itr = find(m_tokens.begin(), m_tokens.end(), option);
         if (itr != m_tokens.end() && ++itr != m_tokens.end()) {
             return *itr;
@@ -363,13 +363,13 @@ int main(int argc, char** argv) {
     InputParser input(argc, argv);
     const string& filename = input.getCmdOption("-f");
     if (filename.empty()) {
-        cout &lt&lt "スクリプトファイルが指定されていません。" &lt&lt endl;
+        cout &lt;&lt; "スクリプトファイルが指定されていません。" &lt;&lt; endl;
         return 1;
     }
     errno_t err;
     FILE* fp;
     if ((err = fopen_s(&fp, filename.c_str(), "r")) != 0) {
-        cout &lt&lt "スクリプトファイルの読み込みに失敗しました。" &lt&lt endl;
+        cout &lt;&lt; "スクリプトファイルの読み込みに失敗しました。" &lt;&lt; endl;
         return 1;
     }
     auto tntp = clg::stackMachine::get();
@@ -573,10 +573,10 @@ dump 10;
 <div class="box1">
 <pre>
     void stackMachine::exec() {
-        if (m_codes.size() &lt= 0) {
+        if (m_codes.size() &lt;= 0) {
             return;
         }
-        while (m_ip &lt m_codes.size()) {
+        while (m_ip &lt; m_codes.size()) {
             Opecode opcode = m_codes[m_ip];
             switch (opcode.mmnic) {
             case Mnemonic::LDI:
@@ -584,7 +584,7 @@ dump 10;
                 m_ip++;
                 break;
             case Mnemonic::DMP:
-                cout &lt&lt stackPop().intVal &lt&lt endl;
+                cout &lt;&lt; stackPop().intVal &lt;&lt; endl;
                 m_ip++;
                 break;
             }

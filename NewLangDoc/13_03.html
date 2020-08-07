@@ -22,8 +22,8 @@
 <div class="box1">
 <pre>
 %{
-#include &ltstdio.h>
-#include &ltstdlib.h>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
 #include "../CLangProject/proc.h"
 #define YYDEBUG 1
 extern int yylex(void);
@@ -40,7 +40,7 @@ int yyerror(char const *str){
 %union {
     const char* fixedString;
 }
-%token &ltfixedString> INT_LITERAL DMP SEMICOLON ADD SUB MUL DIV
+%token &lt;fixedString> INT_LITERAL DMP SEMICOLON ADD SUB MUL DIV
 %type intliteral_expression mul_expression add_expression
 %type statement statement_list
 %%
@@ -63,22 +63,22 @@ statement
     : mul_expression
     | add_expression ADD mul_expression
     {
-        clg::stackMachine::get()->createAddExp();
+        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::ADD);
     }
     | add_expression SUB mul_expression
     {
-        clg::stackMachine::get()->createSubExp();
+        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::SUB);
     }
     ;
 mul_expression
     : intliteral_expression
     | mul_expression MUL intliteral_expression 
     {
-        clg::stackMachine::get()->createMulExp();
+        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::MUL);
     }
     | mul_expression DIV intliteral_expression
     {
-        clg::stackMachine::get()->createDivExp();
+        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::DIV);
     }
     ;</span>
 intliteral_expression
@@ -96,6 +96,8 @@ intliteral_expression
 　続いて、<b>stackMachine.h</b>を修正します。以下全文です。赤くなっているところが重要な修正です。
 <div class="box1">
 <pre>
+#pragma once
+
 namespace clg 
 {
     //--------------------------------------------------------------------------------------
@@ -130,8 +132,8 @@ namespace clg
     ///  スタックマシンクラス
     //--------------------------------------------------------------------------------------
     class stackMachine {
-        vector&ltOpecode> m_codes;
-        vector&ltValue> m_stack;
+        vector&lt;Opecode> m_codes;
+        vector&lt;Value> m_stack;
         //命令ポインタ
         unsigned int m_ip = 0;
         void stackPush(Value val);
@@ -149,14 +151,8 @@ namespace clg
         void createEmpty();
         /// INTリテラル
         void createIntLiteralExp(const char* ptr);
-        <span class="red">//乗算
-        void createMulExp();
-        //除算
-        void createDivExp();
-        //加算
-        void createAddExp();
-        //減算
-        void createSubExp();</span>
+        <span class="red">//四則演算
+        void createBinaryExp(Mnemonic nmc);</span>
         //デバッグ出力
         void createDump();
     };
@@ -190,7 +186,7 @@ namespace clg
 
     }
 
-    void stackMachine::binaryExec(Mnemonic nmc) {
+    <span class="red">void stackMachine::binaryExec(Mnemonic nmc) {
         Value val;
         val = stackPop();
         if (m_stack.size() > 0) {
@@ -209,28 +205,28 @@ namespace clg
                 break;
             }
         }
-    }
+    }</span>
 
     void stackMachine::exec() {
-        if (m_codes.size() &lt= 0) {
+        if (m_codes.size() &lt;= 0) {
             return;
         }
-        while (m_ip &lt m_codes.size()) {
+        while (m_ip &lt; m_codes.size()) {
             Opecode opcode = m_codes[m_ip];
             switch (opcode.mmnic) {
             case Mnemonic::LDI:
                 stackPush(opcode.val);
                 m_ip++;
                 break;
-            case Mnemonic::MUL:
+            <span class="red">case Mnemonic::MUL:
             case Mnemonic::DIV:
             case Mnemonic::ADD:
             case Mnemonic::SUB:
                 binaryExec(opcode.mmnic);
                 m_ip++;
-                break;
+                break;</span>
             case Mnemonic::DMP:
-                cout &lt&lt stackPop().intVal &lt&lt endl;
+                cout &lt;&lt; stackPop().intVal &lt;&lt; endl;
                 m_ip++;
                 break;
             }
@@ -257,7 +253,7 @@ namespace clg
     }
     Value stackMachine::stackPop() {
         if (m_stack.empty()) {
-            cout &lt&lt "スタックは空です" &lt&lt endl;
+            cout &lt;&lt; "スタックは空です" &lt;&lt; endl;
             exit(1);
         }
         Value val = m_stack.back();
@@ -270,33 +266,13 @@ namespace clg
 
     }
 
-    //乗算
-    void stackMachine::createMulExp() {
+    //四則演算
+    void stackMachine::createBinaryExp(Mnemonic nmc) {
         Opecode code;
-        code.mmnic = Mnemonic::MUL;
-        m_codes.push_back(code);
-    }
-    //除算
-    void stackMachine::createDivExp() {
-        Opecode code;
-        code.mmnic = Mnemonic::DIV;
+        code.mmnic = nmc;
         m_codes.push_back(code);
     }
 
-    //加算
-    void stackMachine::createAddExp() {
-        Opecode code;
-        code.mmnic = Mnemonic::ADD;
-        m_codes.push_back(code);
-
-    }
-    //減算
-    void stackMachine::createSubExp() {
-        Opecode code;
-        code.mmnic = Mnemonic::SUB;
-        m_codes.push_back(code);
-
-    }
     /// INTリテラル
     void stackMachine::createIntLiteralExp(const char* ptr) {
         Opecode code;
@@ -310,6 +286,8 @@ namespace clg
         code.mmnic = Mnemonic::DMP;
         m_codes.push_back(code);
     }
+
+
 
 }
 //end namespace clg
