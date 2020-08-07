@@ -315,7 +315,84 @@ dump 30 - 20;
 このウィンドウを閉じるには、任意のキーを押してください...
 </pre>
 </div>
-
+<h4>解説</h4>
+　今回は、当初実装されていた<b>四則演算</b>を改めて実装した形です。<br />
+　<b>CLangProject.l</b>については、トークンとして
+<div class="box1">
+<pre>
+    "+"     return ADD;
+    "-"     return SUB;
+    "*"     return MUL;
+    "/"     return DIV;
+</pre>
+</div>
+　は実装されているので、修正する必要はありません。<b>FlexBison</b>側は<b>CLangProject.y</b>の修正を行います。<br />
+　Bisonファイルは、優先度の高いものを下に書くので、<b>MUL、DIV</b>は<b>mul_expression</b>として定義します。そしてその上に、<b>ADD、SUB</b>を<b>add_expression</b>として定義します。<br />
+　それぞれ<b>clg::stackMachine::get()->createBinaryExp()関数</b>で、コードをクリエイトします。パラメータはそれぞれのニーモニックです。<br />
+<h4>stackMachine.cppの実装</h4>
+　この項でポイントとなるのは、<b>stackMachine.cpp</b>です。クリエイト部では
+<div class="box1">
+<pre>
+    //四則演算
+    void stackMachine::createBinaryExp(Mnemonic nmc) {
+        Opecode code;
+        code.mmnic = nmc;
+        m_codes.push_back(code);
+    }
+</pre>
+</div>
+　のように単純化されます。<br />
+　実行部では、サブ関数として<b>stackMachine::binaryExec()関数</b>を用意し、以下の記述をします
+<div class="box1">
+<pre>
+    void stackMachine::binaryExec(Mnemonic nmc) {
+        Value val;
+        val = stackPop();
+        if (m_stack.size() > 0) {
+            switch (nmc) {
+            case Mnemonic::MUL:
+                m_stack[m_stack.size() - 1].intVal *= val.intVal;
+                break;
+            case Mnemonic::DIV:
+                m_stack[m_stack.size() - 1].intVal /= val.intVal;
+                break;
+            case Mnemonic::ADD:
+                m_stack[m_stack.size() - 1].intVal += val.intVal;
+                break;
+            case Mnemonic::SUB:
+                m_stack[m_stack.size() - 1].intVal -= val.intVal;
+                break;
+            }
+        }
+    }
+</pre>
+</div>
+　それを、以下の形で呼び出します
+<div class="box1">
+<pre>
+        while (m_ip &lt; m_codes.size()) {
+            Opecode opcode = m_codes[m_ip];
+            switch (opcode.mmnic) {
+            case Mnemonic::LDI:
+                stackPush(opcode.val);
+                m_ip++;
+                break;
+            <span class="red">case Mnemonic::MUL:
+            case Mnemonic::DIV:
+            case Mnemonic::ADD:
+            case Mnemonic::SUB:
+                binaryExec(opcode.mmnic);
+                m_ip++;
+                break;</span>
+            case Mnemonic::DMP:
+                cout &lt;&lt; stackPop().intVal &lt;&lt; endl;
+                m_ip++;
+                break;
+            }
+        }
+</pre>
+</div>
+ これで、<b>四則演算</b>が実装できます。
 </div>
 <!-- /コンテンツ　-->
 <hr>
