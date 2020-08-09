@@ -15,10 +15,52 @@
 <div id="contents">
 <h3>１３－０３．四則演算を作成する</h3>
 　<b>１３－０１．構造の修正</b>の時点では実装されていた<b>四則演算</b>ですが、前項では<b>スタックマシン</b>を作成するにあたって、実装をできるだけ単純にする関係で、いったん外しました。<br />
-　この項で改めて実装したいと思います。
-<h4>CLangProject.yの修正</h4>
-　まず<b>CLangProject.y</b>を修正します。<b>CLangProject.l</b>に、トークンとして<b>*、/、+、-</b>の記号はすでに登録されているので、<b>CLangProject.l</b>の修正は必要ありません。<br />
-　以下、修正した<b>CLangProject.y</b>です。全文差し替えましょう。
+　この項で改めて実装したいと思います。<br/>
+　また、各ファイルは修正が無くても、紹介します。ただし<b>CLangProject.tab.cpp</b>、<b>CLangProject.flex.cpp</b>、<b>CLangProject.tab.h</b>については<b>FlexBison</b>が作り出すファイルなので、紹介しません。<br />
+　赤くなっているところが今回の修正の重要な部分ですが、他にも修正箇所がありますので、このっま実装する場合は、すべてのファイルのすべての部分を書き換えてください。
+<h4>CLangProject.l</h4>
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include "CLangProject.tab.h"
+#define YY_SKIP_YYWRAP 1
+int gLine = 1;
+int yywrap(void){ return 1; }
+
+%}
+%s COMMENT
+%s LINE_COMMENT
+%%
+&lt;INITIAL>{
+    ";"     return SEMICOLON;
+    "+"     return ADD;
+    "-"     return SUB;
+    "*"     return MUL;
+    "/"     return DIV;
+    "dump"     return DMP;
+    "/*"    { BEGIN(COMMENT);}
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+    [1-9][0-9]* {
+        return INT_LITERAL;
+    }
+    "\n"    {gLine++;}
+    [ \t]   ;
+    .   { return 0;}
+}
+&lt;COMMENT>{
+    "\n"    {gLine++;}
+    "*/" {BEGIN(INITIAL);}
+    .   ;
+}
+&lt;LINE_COMMENT>{
+    "\n" { gLine++; BEGIN(INITIAL);}
+    .   ;
+}
+%%
+</pre>
+</div>
+<h4>CLangProject.y</h4>
 <div class="box1">
 <pre>
 %{
@@ -92,8 +134,37 @@ intliteral_expression
 </div>
 　赤くなっているところは、四則演算を作り出す部分です。<br />
 　四則演算の優先順位は<b>*、/</b>は<b>+、-</b>より優先します。ですので、<b>+、-</b>より<b>*、/</b>は、下方に記述します。
-<h4>stackMachine.hの修正</h4>
-　続いて、<b>stackMachine.h</b>を修正します。以下全文です。赤くなっているところが重要な修正です。
+<h4>proc.h</h4>
+<div class="box1">
+<pre>
+#pragma once
+
+#undef INT8_MIN
+#undef INT16_MIN
+#undef INT32_MIN
+#undef INT8_MAX
+#undef INT16_MAX
+#undef INT32_MAX
+#undef UINT8_MAX
+#undef UINT16_MAX
+#undef UINT32_MAX
+
+#include &lt;cstdlib>
+#include &lt;cstring>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+using namespace std;
+
+#include "stackMachine.h"
+</pre>
+</div>
+<h4>stackMachine.h</h4>
 <div class="box1">
 <pre>
 #pragma once
@@ -160,8 +231,7 @@ namespace clg
 //end namespace clg
 </pre>
 </div>
-<h4>stackMachine.cppの修正</h4>
-　続いて<b>stackMachine.cpp</b>の修正です。以下全文です。
+<h4>stackMachine.cpp</h4>
 <div class="box1">
 <pre>
 #include "proc.h"
@@ -287,14 +357,64 @@ namespace clg
         m_codes.push_back(code);
     }
 
-
-
 }
 //end namespace clg
 </pre>
 </div>
-<h4>スクリプトの修正</h4>
+<h4>main.cpp</h4>
+<div class="box1">
+<pre>
+#include "proc.h"
+
+class InputParser {
+    vector &lt;string> m_tokens;
+public:
+    InputParser(int& argc, char** argv) {
+        for (int i = 1; i &lt; argc; ++i) {
+            m_tokens.push_back(string(argv[i]));
+        }
+    }
+    const string& getCmdOption(const string& option) const {
+        vector&lt;string>::const_iterator itr;
+        itr = find(m_tokens.begin(), m_tokens.end(), option);
+        if (itr != m_tokens.end() && ++itr != m_tokens.end()) {
+            return *itr;
+        }
+        static const string empty_string("");
+        return empty_string;
+    }
+    bool cmdOptionExists(const string& option) const {
+        return find(m_tokens.begin(), m_tokens.end(), option)
+            != m_tokens.end();
+    }
+};
+
+
+int main(int argc, char** argv) {
+    InputParser input(argc, argv);
+    const string& filename = input.getCmdOption("-f");
+    if (filename.empty()) {
+        cout &lt;&lt; "スクリプトファイルが指定されていません。" &lt;&lt; endl;
+        return 1;
+    }
+    errno_t err;
+    FILE* fp;
+    if ((err = fopen_s(&fp, filename.c_str(), "r")) != 0) {
+        cout &lt;&lt; "スクリプトファイルの読み込みに失敗しました。" &lt;&lt; endl;
+        return 1;
+    }
+    auto tntp = clg::stackMachine::get();
+    if (tntp->compile(fp)) {
+        return 1;
+    }
+    tntp->exec();
+    tntp->destroy();
+    return 0;
+}
+</pre>
+</div>
 　最後に<b>スクリプトファイル</b>である<b>index.c</b>を修正します。
+<h4>index.c</h4>
 <div class="box1">
 <pre>
 dump 10 + 30;
