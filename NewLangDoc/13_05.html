@@ -13,9 +13,10 @@
 </div>
 <!-- コンテンツ　-->
 <div id="contents">
-<h3>１３－０４．変数を作成する</h3>
-　この項では、<b>変数</b>を作成します。<br />
-　まず、各ファイルを紹介します。赤くなっているところが今回の修正の重要な部分ですが、他にも修正箇所がありますので、このっま実装する場合は、すべてのファイルのすべての部分を書き換えてください。<br />
+<h3>１３－０５．変数宣言を作成する</h3>
+　この項では、<b>変数宣言</b>を作成します。<br />
+　<b>C言語</b>は変数は<b>宣言</b>しないと使えません。前項は宣言しなくても使えてました。
+　まず、各ファイルを紹介します。赤くなっているところが今回の修正の重要な部分ですが、他にも修正箇所がありますので、このまま実装する場合は、すべてのファイルのすべての部分を書き換えてください。<br />
 　また、各ファイルは修正が無くても、紹介します。ただし<b>CLangProject.tab.cpp</b>、<b>CLangProject.flex.cpp</b>、<b>CLangProject.tab.h</b>については<b>FlexBison</b>が作り出すファイルなので、紹介しません。
 <h4>CLangProject.l</h4>
 <div class="box1">
@@ -38,6 +39,7 @@ int yywrap(void){ return 1; }
     "*"     return MUL;
     "/"     return DIV;
     "="     return ASS;
+    "int"   return INT_TYPE;
     "dump"     return DMP;
     "/*"    { BEGIN(COMMENT);}
     [/][/]+ { BEGIN(LINE_COMMENT);}
@@ -86,6 +88,7 @@ int yyerror(char const *str){
     const char* fixedString;
 }
 %token &lt;fixedString> INT_LITERAL IDENTIFIER DMP SEMICOLON ADD SUB MUL DIV ASS
+%token INT_TYPE
 %right ASS 
 %left ADD SUB
 %left MUL DIV 
@@ -106,6 +109,10 @@ statement
     | DMP assign_expression SEMICOLON
     {
         clg::stackMachine::get()->createDump();
+    }
+    | INT_TYPE identifier_expression SEMICOLON
+    {
+        clg::stackMachine::get()->createIntVariableDecl();
     }
     ;
 assign_expression
@@ -205,6 +212,7 @@ namespace clg
         ADD,
         SUB,
         ASS,
+        DCI     //int宣言
     };
 
     //--------------------------------------------------------------------------------------
@@ -285,6 +293,8 @@ namespace clg
         void createAssExp();
         //四則演算
         void createBinaryExp(Mnemonic nmc);
+        //int型宣言
+        void createIntVariableDecl();
         //デバッグ出力
         void createDump();
     };
@@ -366,7 +376,8 @@ namespace clg
         case ValueType::indexType:
             scope = findVariableScope(val);
             if (!scope) {
-                scope = tgtScope();
+                cout &lt;&lt; m_strings[val.intVal] &lt;&lt; ": 変数が宣言されていません" &lt;&lt; endl;
+                exit(1);
             }
             return scope->m_variableMap[m_strings[val.intVal]].intVal;
             break;
@@ -393,6 +404,18 @@ namespace clg
                 binaryExec(opcode.mmnic);
                 m_ip++;
                 break;
+            case Mnemonic::DCI:
+            {
+                auto val = stackPop();
+                auto scope = tgtScope();
+                //とりあえず0初期化
+                Value val2;
+                val2.valType = ValueType::intType;
+                val2.intVal = 0;
+                scope->m_variableMap[m_strings[val.intVal]] = val2;
+                m_ip++;
+            }
+                break;
             case Mnemonic::ASS:
             {
                 auto val1 = stackPop();
@@ -402,20 +425,21 @@ namespace clg
                 val1.intVal = i;
                 auto tgtscope = findVariableScope(val2);
                 if (!tgtscope) {
-                    tgtscope = tgtScope();
+                    cout &lt;&lt; m_strings[val2.intVal] &lt;&lt; ": 変数が宣言されていません" &lt;&lt; endl;
+                    exit(1);
                 }
                 tgtscope->m_variableMap[m_strings[val2.intVal]] = val1;
                 //代入演算子は戻り値は代入した値そのものなので、代入した値をスタックに戻しておく。
                 stackPush(val1);
             }
-            m_ip++;
-            break;
+                m_ip++;
+                break;
             case Mnemonic::DMP:
             {
                 cout &lt;&lt; getValInt(stackPop()) &lt;&lt; endl;
             }
-            m_ip++;
-            break;
+                m_ip++;
+                break;
             }
         }
     }
@@ -531,6 +555,12 @@ namespace clg
         code.mmnic = Mnemonic::ASS;
         m_codes.push_back(code);
     }
+    //宣言
+    void stackMachine::createIntVariableDecl() {
+        Opecode code;
+        code.mmnic = Mnemonic::DCI;
+        m_codes.push_back(code);
+    }
     //出力
     void stackMachine::createDump() {
         Opecode code;
@@ -597,26 +627,16 @@ int main(int argc, char** argv) {
 <h4>index.c</h4>
 <div class="box1">
 <pre>
-dump 10 + 30;
-dump 50 - 10 * 30;
-dump 30 / 30;
-dump 30 - 20;
-val1 = 50;
-dump val1;
-val2 = 100;
-val1 = val2;
-dump val1;
+int val;
+int val2;
+val = val2 = 5 + 3 * 4;
+dump val;
 </pre>
 </div>
 　実行結果は以下のようになります。
 <div class="box1">
 <pre>
-40
--250
-1
-10
-50
-100
+17
 
 ...\CLangProject.exe (プロセス 5832) は、コード 0 で終了しました。
 このウィンドウを閉じるには、任意のキーを押してください...
@@ -630,9 +650,9 @@ dump val1;
 <hr>
 <!-- フッタ　-->
 <ul class="foot_navi">
-<li><a href="13_03.html">前ページ</a></li>
+<li><a href="13_04.html">前ページ</a></li>
 <li><a href="index.html">目次</a></li>
-<li><a href="13_05.html">次ページ</a></li>
+<li><a href="13_06.html">次ページ</a></li>
 </ul>
 <!-- /フッタ　-->
 </div>
