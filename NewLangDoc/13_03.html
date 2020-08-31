@@ -13,12 +13,13 @@
 </div>
 <!-- コンテンツ　-->
 <div id="contents">
-<h3>１３－０３．四則演算を作成する</h3>
-　<b>１３－０１．構造の修正</b>の時点では実装されていた<b>四則演算</b>ですが、前項では<b>スタックマシン</b>を作成するにあたって、実装をできるだけ単純にする関係で、いったん外しました。<br />
-　この項で改めて実装したいと思います。<br/>
-　また、各ファイルは修正が無くても、紹介します。ただし<b>CLangProject.tab.cpp</b>、<b>CLangProject.flex.cpp</b>、<b>CLangProject.tab.h</b>については<b>FlexBison</b>が作り出すファイルなので、紹介しません。<br />
-　赤くなっているところが今回の修正の重要な部分ですが、他にも修正箇所がありますので、このっま実装する場合は、すべてのファイルのすべての部分を書き換えてください。
+<h3>１３－０３．デバッグ出力を実装する</h3>
+　この項では、<b>文や式</b>という概念や、マネージャ的存在である<b>StackMachineクラス</b>の実装をします。<br />
+　合わせて<b>デバッグ出力</b>を実装する<b>dump命令</b>を実装します。<b>dump命令</b>は<b>C言語</b>の文法にはありません。しかし、言語開発途中において、実行途中の変数の状態やさまざまなデータの状態を監視するのに、こういう機能があると便利です。<br />
+　<b>C言語</b>は文法上、実行単位は<b>関数ごと</b>に行われます。つまり、グローバル領域に<b>実行文</b>は記述できません。通常グローバル領域には<b>関数宣言</b>や<b>データの初期化</b>を記述します。しかし<b>dump命令</b>はグローバル領域に記述しても、その時の変数などの状態を出力することができます。<b>C言語</b>の代表的な出力命令（関数）は<b>printf関数</b>ですが、これは、後ほど<b>関数</b>として実装します。<br />
+　今回の記述は、今後の制作のもとになるヘッダファイルやcppファイルを新しく作成するなどして、開発環境を整える、という役割も果たします。<br />
 <h4>CLangProject.l</h4>
+　まず<b>CLangProject.l</b>（Flexファイル）です、以下のように書き換えます。
 <div class="box1">
 <pre>
 %{
@@ -60,13 +61,14 @@ int yywrap(void){ return 1; }
 %%
 </pre>
 </div>
+　続いて<b>Bison</b>ファイルの<b>CLangProject.y</b>ですが、以下のようになります。
 <h4>CLangProject.y</h4>
-<div class="box1">
+ <div class="box1">
 <pre>
 %{
 #include &lt;stdio.h>
 #include &lt;stdlib.h>
-#include "../CLangProject/proc.h"
+#include "../CLangProject2/proc.h"
 #define YYDEBUG 1
 extern int yylex(void);
 extern char *yytext;
@@ -77,65 +79,75 @@ int yyerror(char const *str){
 }
 %}
 %code requires {
-#include "../CLangProject/proc.h"
+#include "../CLangProject2/proc.h"
 }
 %union {
     const char* fixedString;
+    clg::Expression* pExpression;
+    clg::Statement* pStatement;
+    clg::StatementList* pStatementList;
+    clg::Root* pRoot;
 }
 %token &lt;fixedString> INT_LITERAL DMP SEMICOLON ADD SUB MUL DIV
-%type intliteral_expression mul_expression add_expression
-%type statement statement_list
+%type &lt;fixedString> constant 
+%type &lt;pExpression> intliteral_expression 
+%type &lt;pStatement>  dump_statement statement
+%type &lt;pStatementList> statement_list
+%type &lt;pRoot> root
+%type expression_statement   
 %%
+root
+    :statement_list
+    {
+        $$ = clg::StackMachine::get()->createRoot($1);
+    }
+    ;
 statement_list
     : statement
+    {
+        $$ = clg::StackMachine::get()->createStatementList($1);
+    }
     | statement_list statement
+    {
+        $$ = clg::StackMachine::get()->createStatementList($1,$2);
+    }
     ;
 statement
+    : expression_statement
+    | dump_statement
+    ;
+expression_statement
     : SEMICOLON
-    | add_expression SEMICOLON
+    |intliteral_expression SEMICOLON
     {
-        clg::stackMachine::get()->createEmpty();
-    }
-    | DMP add_expression SEMICOLON
-    {
-        clg::stackMachine::get()->createDump();
+        clg::StackMachine::get()->createEmptyStm();
     }
     ;
-<span class="red">add_expression
-    : mul_expression
-    | add_expression ADD mul_expression
+dump_statement
+    :DMP intliteral_expression SEMICOLON
     {
-        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::ADD);
-    }
-    | add_expression SUB mul_expression
-    {
-        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::SUB);
+        $$ = clg::StackMachine::get()->createDumpStm($2);
     }
     ;
-mul_expression
-    : intliteral_expression
-    | mul_expression MUL intliteral_expression 
-    {
-        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::MUL);
-    }
-    | mul_expression DIV intliteral_expression
-    {
-        clg::stackMachine::get()->createBinaryExp(clg::Mnemonic::DIV);
-    }
-    ;</span>
 intliteral_expression
-    : INT_LITERAL
+    : constant
     {
-        clg::stackMachine::get()->createIntLiteralExp(yytext);
+       $$ = clg::StackMachine::get()->createIntLiteralExp($1);
+    }
+    ;
+constant
+    :INT_LITERAL
+    {
+       $$ = yytext;
     }
     ;
 %%
 </pre>
 </div>
-　赤くなっているところは、四則演算を作り出す部分です。<br />
-　四則演算の優先順位は<b>*、/</b>は<b>+、-</b>より優先します。ですので、<b>+、-</b>より<b>*、/</b>は、下方に記述します。
+　ここから、新しいファイルをいくつか作成します。いずれも<b>CLangProjectプロジェクト</b>内です。<br />
+　まずヘッダファイルです。<b>ヘッダー ファイル</b>フィルタに、以下のファイルを作成します。
 <h4>proc.h</h4>
-<div class="box1">
+ <div class="box1">
 <pre>
 #pragma once
 
@@ -161,91 +173,375 @@ intliteral_expression
 #include &lt;memory>
 using namespace std;
 
+#include "common.h"
+#include "expression.h"
+#include "statement.h"
 #include "stackMachine.h"
 </pre>
 </div>
-<h4>stackMachine.h</h4>
-<div class="box1">
+<h4>common.h</h4>
+ <div class="box1">
 <pre>
 #pragma once
 
-namespace clg 
-{
+namespace clg {
+
+#define ORE_MAX_TOKEN_LEN 255
+
+    ///stringを255文字に切り詰める
+    inline string clampToken(const char* ext) {
+        string str(ext);
+        if (str.size() > ORE_MAX_TOKEN_LEN) {
+            str.erase(ORE_MAX_TOKEN_LEN);
+        }
+        return str;
+    }
+
     //--------------------------------------------------------------------------------------
-    ///  ニーモニック
+    ///  値タイプ
     //--------------------------------------------------------------------------------------
-    enum class Mnemonic {
-        LDI,    //INT型定数のロード
-        DMP,    //デバッグ出力
-        MUL,
-        DIV,
-        ADD,
-        SUB
+    enum class ValueType {
+        voidVal = 0,
+        boolVal,
+        intVal,
+        doubleVal,
     };
+
 
     //--------------------------------------------------------------------------------------
     ///  値
     //--------------------------------------------------------------------------------------
-    union Value{
-        int intVal;
-        char* pChar;
+    struct Value {
+        ValueType m_type;
+        union {
+            bool boolV;
+            int intV;
+            double doubleV;
+        };
+        explicit Value();
+        explicit Value(bool b);
+        explicit Value(int i);
+        explicit Value(double d);
+        Value(const Value& other);
+        Value& operator=(const Value& other);
+        ~Value() {}
+    };
+
+
+    //--------------------------------------------------------------------------------------
+    ///  ステートメントレスポンスタイプ
+    //--------------------------------------------------------------------------------------
+    enum class SmtResType {
+        voidType,
     };
 
     //--------------------------------------------------------------------------------------
-    ///  オペコード
+    ///  ステートメントレスポンス
     //--------------------------------------------------------------------------------------
-    struct Opecode {
-        Mnemonic mmnic;
-        Value val;
+    struct SmtRes {
+        SmtResType m_type;
+        Value m_retValue;
+        SmtRes() :
+            m_type(SmtResType::voidType),
+            m_retValue() {}
     };
 
     //--------------------------------------------------------------------------------------
-    ///  スタックマシンクラス
+    ///  Objectベース（基底クラス）
     //--------------------------------------------------------------------------------------
-    class stackMachine {
-        vector&lt;Opecode> m_codes;
-        vector&lt;Value> m_stack;
-        //命令ポインタ
-        unsigned int m_ip = 0;
-        void stackPush(Value val);
-        Value stackPop();
-        void binaryExec(Mnemonic nmc);
-        stackMachine();
+    class ObjBase {
+    protected:
+        ObjBase() {}
     public:
-        virtual ~stackMachine();
-        int compile(FILE* fp);
-        void exec();
-        void destroy();
-        //インスタンス参照
-        static stackMachine* get();
-        //何もしない
-        void createEmpty();
-        /// INTリテラル
-        void createIntLiteralExp(const char* ptr);
-        <span class="red">//四則演算
-        void createBinaryExp(Mnemonic nmc);</span>
-        //デバッグ出力
-        void createDump();
+        virtual ~ObjBase() {}
+    };
+
+}
+//end namespace clg
+</pre>
+</div>
+<h4>expression.h</h4>
+ <div class="box1">
+<pre>
+#pragma once
+
+namespace clg {
+
+    //--------------------------------------------------------------------------------------
+    ///  式クラス
+    //--------------------------------------------------------------------------------------
+    class Expression : public ObjBase {
+    protected:
+        Expression() {}
+    public:
+        virtual ~Expression() {}
+        virtual Value execute() {
+            return Value();
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  intリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    class IntLiteralExp : public Expression {
+        int m_intValue;
+    public:
+        IntLiteralExp(int i = 0) {
+            m_intValue = i;
+        }
+        virtual ~IntLiteralExp() {}
+        virtual Value execute() override;
     };
 }
 //end namespace clg
 </pre>
 </div>
-<h4>stackMachine.cpp</h4>
+<h4>statement.h</h4>
+ <div class="box1">
+<pre>
+#pragma once
+
+namespace clg {
+
+    //--------------------------------------------------------------------------------------
+    ///  文クラス
+    //--------------------------------------------------------------------------------------
+    class Statement : public ObjBase {
+    protected:
+        Statement() {}
+    public:
+        virtual ~Statement() {}
+        //voidの実行関数
+        virtual SmtRes execute(){
+            return SmtRes();
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  Dump文クラス
+    //--------------------------------------------------------------------------------------
+    class DumpStm : public Statement {
+        Expression* m_expression;
+    public:
+        DumpStm(Expression* exp):
+            m_expression(exp)
+        {}
+        //実行関数
+        virtual SmtRes execute() override;
+        virtual ~DumpStm() {}
+    };
+
+
+    //--------------------------------------------------------------------------------------
+    ///  文リストクラス
+    //--------------------------------------------------------------------------------------
+    class StatementList : public ObjBase {
+        Statement* m_Statement;
+        StatementList* m_Next;
+    public:
+        StatementList(Statement* stm):
+            m_Statement(stm),
+            m_Next(nullptr)
+        {
+
+        }
+        Statement* getStm() const {
+            return m_Statement;
+
+        }
+        StatementList* getNext()const {
+            return m_Next;
+        }
+        void setNext(StatementList* next) {
+            m_Next = next;
+        }
+        virtual ~StatementList() {}
+    };
+}
+//end namespace clg
+</pre>
+</div>
+<h4>stackMachine.h</h4>
+ <div class="box1">
+<pre>
+#pragma once
+
+namespace clg
+{
+
+    //--------------------------------------------------------------------------------------
+    ///  ルートクラス
+    //--------------------------------------------------------------------------------------
+    class Root : public ObjBase {
+        StatementList* m_pStatementList;
+    public:
+        Root(StatementList* stml):
+            m_pStatementList(stml)
+        {}
+        virtual ~Root() {}
+        SmtRes execute();
+        StatementList* getStmeList()const {
+            return m_pStatementList;
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  スタックマシンクラス
+    //--------------------------------------------------------------------------------------
+    class StackMachine {
+        //命令ポインタ
+        unsigned int m_ip = 0;
+        //ルートオブジェクト
+        Root* m_pRoot;
+        //オブジェクトのプール
+        vector&lt;ObjBase*> m_objPool;
+        StackMachine();
+    public:
+        virtual ~StackMachine();
+        int compile(FILE* fp);
+        void execute();
+        void destroy();
+        //インスタンス参照
+        static StackMachine* get();
+        //式
+        /// INTリテラル
+        Expression* createIntLiteralExp(const char* ptr);
+        //文
+        //何もしない文
+        void createEmptyStm();
+        //デバッグ出力
+        Statement* createDumpStm(Expression* exp);
+        //文リスト
+        StatementList* createStatementList(Statement* stm);
+        StatementList* createStatementList(StatementList* stml,Statement* stm);
+        //ルートオブジェクト
+        Root* createRoot(StatementList* stml);
+
+    };
+}
+//end namespace clg
+</pre>
+</div>
+　続いてソースファイルです<b>CLangProject</b>プロジェクトの<b>ソースファイル</b>フィルタに以下のファイルを追加します。
+<h4>common.cpp</h4>
+ <div class="box1">
+<pre>
+#include "proc.h"
+
+namespace clg {
+
+    Value::Value()
+    {
+        m_type = ValueType::voidVal;
+        intV = 0;
+    }
+
+    Value::Value(bool b)
+    {
+        m_type = ValueType::boolVal;
+        boolV = b;
+    }
+
+    Value::Value(int i)
+    {
+        m_type = ValueType::intVal;
+        intV = i;
+    }
+
+    Value::Value(double d)
+    {
+        m_type = ValueType::doubleVal;
+        doubleV = d;
+    }
+
+
+    Value::Value(const Value& other)
+    {
+        *this = other;
+    }
+
+    Value& Value::operator=(const Value& other) {
+        if (this != &other) {
+            *this = other;
+        }
+        return *this;
+    }
+}
+//end namespace ore
+</pre>
+</div>
+<h4>expression.cpp</h4>
 <div class="box1">
+<pre>
+#include "proc.h"
+
+namespace clg {
+
+    Value IntLiteralExp::execute(){
+        return Value(m_intValue);
+    }
+
+
+}
+//end namespace clg
+</pre>
+</div>
+
+<h4>statement.cpp</h4>
+ <div class="box1">
 <pre>
 #include "proc.h"
 
 namespace clg
 {
-    //唯一のスタックマシンのインスタンス
-    stackMachine* g_pSackMachine;
-
-    stackMachine::stackMachine()
-    {}
-    stackMachine::~stackMachine() {
+    SmtRes DumpStm::execute() {
+        if (m_expression) {
+            auto val = m_expression->execute();
+            switch (val.m_type) {
+            case ValueType::intVal:
+                cout &lt;&lt; val.intV &lt;&lt; endl;
+                break;
+            }
+        }
+        return SmtRes();
     }
-    int stackMachine::compile(FILE* fp) {
+
+}
+// end namespace clg
+</pre>
+</div>
+<h4>stackMachine.cpp</h4>
+ <div class="box1">
+<pre>
+#include "proc.h"
+
+namespace clg
+{
+
+    SmtRes Root::execute() {
+        if (m_pStatementList) {
+            auto pos = m_pStatementList;
+            do {
+                auto stm = pos->getStm();
+                stm->execute();
+                pos = pos->getNext();
+            } while (pos);
+        }
+        return SmtRes();
+    }
+
+    //唯一のスタックマシンのインスタンス
+    StackMachine* g_pSackMachine;
+
+    StackMachine::StackMachine()
+    {}
+    StackMachine::~StackMachine() {
+        for (size_t i = 0; i &lt; m_objPool.size(); i++) {
+            delete m_objPool[i];
+        }
+        m_objPool.clear();
+    }
+    int StackMachine::compile(FILE* fp) {
         extern int yyparse(void);
         extern FILE* yyin;
         yyin = fp;
@@ -255,55 +551,13 @@ namespace clg
         return 0;
 
     }
-
-    <span class="red">void stackMachine::binaryExec(Mnemonic nmc) {
-        Value val;
-        val = stackPop();
-        if (m_stack.size() > 0) {
-            switch (nmc) {
-            case Mnemonic::MUL:
-                m_stack[m_stack.size() - 1].intVal *= val.intVal;
-                break;
-            case Mnemonic::DIV:
-                m_stack[m_stack.size() - 1].intVal /= val.intVal;
-                break;
-            case Mnemonic::ADD:
-                m_stack[m_stack.size() - 1].intVal += val.intVal;
-                break;
-            case Mnemonic::SUB:
-                m_stack[m_stack.size() - 1].intVal -= val.intVal;
-                break;
-            }
-        }
-    }</span>
-
-    void stackMachine::exec() {
-        if (m_codes.size() &lt;= 0) {
-            return;
-        }
-        while (m_ip &lt; m_codes.size()) {
-            Opecode opcode = m_codes[m_ip];
-            switch (opcode.mmnic) {
-            case Mnemonic::LDI:
-                stackPush(opcode.val);
-                m_ip++;
-                break;
-            <span class="red">case Mnemonic::MUL:
-            case Mnemonic::DIV:
-            case Mnemonic::ADD:
-            case Mnemonic::SUB:
-                binaryExec(opcode.mmnic);
-                m_ip++;
-                break;</span>
-            case Mnemonic::DMP:
-                cout &lt;&lt; stackPop().intVal &lt;&lt; endl;
-                m_ip++;
-                break;
-            }
+    void StackMachine::execute() {
+        if (m_pRoot) {
+            m_pRoot->execute();
         }
     }
 
-    void stackMachine::destroy() {
+    void StackMachine::destroy() {
         if (g_pSackMachine) {
             delete g_pSackMachine;
             g_pSackMachine = nullptr;
@@ -311,56 +565,62 @@ namespace clg
     }
 
     //インスタンス参照
-    stackMachine* stackMachine::get() {
+    StackMachine* StackMachine::get() {
         if (!g_pSackMachine) {
-            g_pSackMachine = new stackMachine();
+            g_pSackMachine = new StackMachine();
         }
         return g_pSackMachine;
     }
-    //スタック操作
-    void stackMachine::stackPush(Value val) {
-        m_stack.push_back(val);
-    }
-    Value stackMachine::stackPop() {
-        if (m_stack.empty()) {
-            cout &lt;&lt; "スタックは空です" &lt;&lt; endl;
-            exit(1);
-        }
-        Value val = m_stack.back();
-        m_stack.pop_back();
-        return val;
-    }
 
     //何もしない
-    void stackMachine::createEmpty(){
+    void StackMachine::createEmptyStm() {
 
-    }
-
-    //四則演算
-    void stackMachine::createBinaryExp(Mnemonic nmc) {
-        Opecode code;
-        code.mmnic = nmc;
-        m_codes.push_back(code);
     }
 
     /// INTリテラル
-    void stackMachine::createIntLiteralExp(const char* ptr) {
-        Opecode code;
-        code.mmnic = Mnemonic::LDI;
-        code.val.intVal = atoi(ptr);
-        m_codes.push_back(code);
+    Expression* StackMachine::createIntLiteralExp(const char* ptr) {
+        string str = clampToken(ptr);
+        auto pObj = new IntLiteralExp(std::stoi(str));
+        m_objPool.push_back(pObj);
+        return pObj;
     }
+
+
     //出力
-    void stackMachine::createDump() {
-        Opecode code;
-        code.mmnic = Mnemonic::DMP;
-        m_codes.push_back(code);
+    Statement* StackMachine::createDumpStm(Expression* exp) {
+        auto pObj = new DumpStm(exp);
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+
+    StatementList* StackMachine::createStatementList(Statement* stm) {
+        auto pObj = new StatementList(stm);
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+
+    StatementList* StackMachine::createStatementList(StatementList* stml, Statement* stm) {
+        StatementList* pos;
+        if (stml == nullptr)
+            return createStatementList(stm);
+        for (pos = stml; pos->getNext(); pos = pos->getNext())
+            ;
+        pos->setNext(createStatementList(stm));
+        return stml;
+    }
+
+    //ルート
+    Root* StackMachine::createRoot(StatementList* stml) {
+        m_pRoot = new Root(stml);
+        return m_pRoot;
     }
 
 }
 //end namespace clg
+
 </pre>
 </div>
+　<b>main.cpp</b>は以下のように書き換えます。
 <h4>main.cpp</h4>
 <div class="box1">
 <pre>
@@ -403,116 +663,40 @@ int main(int argc, char** argv) {
         cout &lt;&lt; "スクリプトファイルの読み込みに失敗しました。" &lt;&lt; endl;
         return 1;
     }
-    auto tntp = clg::stackMachine::get();
+    auto tntp = clg::StackMachine::get();
     if (tntp->compile(fp)) {
         return 1;
     }
-    tntp->exec();
+    tntp->execute();
     tntp->destroy();
     return 0;
 }
 </pre>
 </div>
-　最後に<b>スクリプトファイル</b>である<b>index.c</b>を修正します。
+　あと<b>CLangProject.flex.cpp</b>および<b>CLangProject.tab.cpp</b>は<b>FlexとBison</b>が作り出すファイルなので、そのままにしておきます。<br />
+　最後に、スクリプトファイルの<b>index.c</b>です。以下の1行のみになります。
 <h4>index.c</h4>
 <div class="box1">
 <pre>
-dump 10 + 30;
-dump 50 - 10 * 30;
-dump 30 / 30;
-dump 30 - 20;
+dump 10;
 </pre>
 </div>
-　今度は計算結果を出力します。<br />
+　<b>.c</b>という拡張子のファイルなので<b>VisualStdio</b>はエラーを表示しますが、コンパイルには含めていないので、無視してかまいません。<br />
+　すべて記述が終わったら<b>リビルド</b>します。<br />
+　エラーがなく<b>リビルド</b>できれば成功です。<br />
+　<b>デバッグなしで開始</b>すると
 <div class="box1">
 <pre>
-40
--250
-1
 10
 
-...\CLangProject.exe (プロセス 16216) は、コード 0 で終了しました。
+...\CLangProject.exe (プロセス 16592) は、コード 0 で終了しました。
 このウィンドウを閉じるには、任意のキーを押してください...
 </pre>
 </div>
-<h4>解説</h4>
-　今回は、当初実装されていた<b>四則演算</b>を改めて実装した形です。<br />
-　<b>CLangProject.l</b>については、トークンとして
-<div class="box1">
-<pre>
-    "+"     return ADD;
-    "-"     return SUB;
-    "*"     return MUL;
-    "/"     return DIV;
-</pre>
-</div>
-　は実装されているので、修正する必要はありません。<b>FlexBison</b>側は<b>CLangProject.y</b>の修正を行います。<br />
-　Bisonファイルは、優先度の高いものを下に書くので、<b>MUL、DIV</b>は<b>mul_expression</b>として定義します。そしてその上に、<b>ADD、SUB</b>を<b>add_expression</b>として定義します。<br />
-　それぞれ<b>clg::stackMachine::get()->createBinaryExp()関数</b>で、コードをクリエイトします。パラメータはそれぞれのニーモニックです。<br />
-<h4>stackMachine.cppの実装</h4>
-　この項でポイントとなるのは、<b>stackMachine.cpp</b>です。クリエイト部では
-<div class="box1">
-<pre>
-    //四則演算
-    void stackMachine::createBinaryExp(Mnemonic nmc) {
-        Opecode code;
-        code.mmnic = nmc;
-        m_codes.push_back(code);
-    }
-</pre>
-</div>
-　のように単純化されます。<br />
-　実行部では、サブ関数として<b>stackMachine::binaryExec()関数</b>を用意し、以下の記述をします
-<div class="box1">
-<pre>
-    void stackMachine::binaryExec(Mnemonic nmc) {
-        Value val;
-        val = stackPop();
-        if (m_stack.size() > 0) {
-            switch (nmc) {
-            case Mnemonic::MUL:
-                m_stack[m_stack.size() - 1].intVal *= val.intVal;
-                break;
-            case Mnemonic::DIV:
-                m_stack[m_stack.size() - 1].intVal /= val.intVal;
-                break;
-            case Mnemonic::ADD:
-                m_stack[m_stack.size() - 1].intVal += val.intVal;
-                break;
-            case Mnemonic::SUB:
-                m_stack[m_stack.size() - 1].intVal -= val.intVal;
-                break;
-            }
-        }
-    }
-</pre>
-</div>
-　それを、以下の形で呼び出します
-<div class="box1">
-<pre>
-        while (m_ip &lt; m_codes.size()) {
-            Opecode opcode = m_codes[m_ip];
-            switch (opcode.mmnic) {
-            case Mnemonic::LDI:
-                stackPush(opcode.val);
-                m_ip++;
-                break;
-            <span class="red">case Mnemonic::MUL:
-            case Mnemonic::DIV:
-            case Mnemonic::ADD:
-            case Mnemonic::SUB:
-                binaryExec(opcode.mmnic);
-                m_ip++;
-                break;</span>
-            case Mnemonic::DMP:
-                cout &lt;&lt; stackPop().intVal &lt;&lt; endl;
-                m_ip++;
-                break;
-            }
-        }
-</pre>
-</div>
- これで、<b>四則演算</b>が実装できます。
+　と出れば実行も成功です。<br />
+　それでは、次項からは、今項で作成したファイルを修正しながら<b>C言語</b>を実装していきます。
+
+
 </div>
 <!-- /コンテンツ　-->
 <hr>
