@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2020年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>１３．シンプルな実装をする</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>１３－０７．CLangProjectプロジェクト側</h3>
+　<b>Bison</b>の定義ファイル<b>CLangProject.y</b>からは<b>CLangProjectプロジェクト側</b>で定義された、<b>式クラス</b>や<b>文クラス</b>のオブジェクトを構築します。<br />
+　構築作業を担うのは<b>StackMachineクラス</b>です。マネージャーのような役割を持っていて、起動時にインスタンスが構築されています。<br />
+　そのオブジェクトに<b>Bisonの定義ファイル</b>からアクセスするには
+<div class="box1">
+<pre>
+clg::StackMachine::get();
+</pre>
+</div>
+　です。これで<b>StackMachineクラス</b>のインスタンスのポインタにアクセスできます。<br />
+　実際に<b>式や文</b>などのオブジェクトの構築は、このポインタ経由で
+<div class="box1">
+<pre>
+clg::StackMachine::get()->createIntLiteralExp(yytext);
+</pre>
+</div>
+　のように記述します。この例では<b>int型のリテラル式</b>が構築されます。パラメータに<b>yytext</b>を渡していますが、これは<b>50</b>などの<b>整数リテラル文字列</b>です。
+<h4>クラス階層</h4>
+　このように<b>式や文</b>は階層化されたクラスとして定義されていますが、その第一階層は以下のようになっています。<br >
+<p>&nbsp;</p>
+<img src="img/130701.png" width="80%" border="1" />
+<p>&nbsp;</p>
+<p>図130701</p>
+<h4>Expressionクラス</h4>
+　<b>Expressionクラス</b>は、様々な式のクラスの親クラスです。<b>Expressionクラス</b>を直接構築することはなく、派生クラスを構築します。<br />
+　<b>Expression</b>の派生クラスは以下です。今後、まだまだいろんな<b>式クラス</b>が増える予定です。
+<p>&nbsp;</p>
+<img src="img/130702.png" width="60%" border="1" />
+<p>図130702</p>
+<p>&nbsp;</p>
+<h4>IntLiteralExpクラス</h4>
+　<b>int型のリテラル式</b>です。たとえば<b>50</b>というソースファイル上の記述は<b>5という文字</b>と<b>0という文字</b>が並んだものです。これを<b>50</b>という<b>整数に変換をかける式</b>が<b>int型のリテラル式</b>です。
+<h4>IdentifierExpクラス</h4>
+　<b>Identifier</b>は<b>識別子</b>です。<b>変数名や関数名</b>など、プログラムには様々な<b>識別子</b>が存在します。IdentifierExpクラスは、それを<b>式</b>として構築したものです。
+<h4>FunctionCallExpクラス</h4>
+　<b>関数呼び出し</b>は<b>式</b>です。まだ、戻り値を返す処理は実装してませんが、<b>return文</b>によって<b>戻り値が返る</b>ように実装していきます。
+<h4>Statementクラス</h4>
+　<b>Statement</b>クラスの派生クラスは以下です。
+<p>&nbsp;</p>
+<img src="img/130703.png" width="60%" border="1" />
+<p>図130703</p>
+<p>&nbsp;</p>
+<h4>DumpStmクラス</h4>
+　デバッグ出力用の文クラスです。実装が進んだら、<b>printf関数呼び出し</b>で出力できるようにします。
+<h4>ExpressionStmクラス</h4>
+　<b>式文</b>といわれる文です。<b>式を実行</b>します。プログラムは大部分がこの<b>式文</b>と言われています。
+<h4>Declarationクラス</h4>
+　<b>Declaration</b>クラスの派生クラスは以下です。<br />
+　<b>Declaration</b>というのは<b>宣言や定義</b>です。実行されるわけではありません。<b>宣言</b>は例えば変数の宣言とか。<b>定義</b>は<b>関数定義</b>とか。関数が記述されていても、<b>関数呼び出し</b>が行われなければ、実行されませんが、<b>定義</b>は作成する必要があります。
+<p>&nbsp;</p>
+<img src="img/130704.png" width="40%" border="1" />
+<p>図130704</p>
+<p>&nbsp;</p>
+<h4>IntFunctionDeclarationクラス</h4>
+　<b>int型を返す</b>関数の定義です。しかし、まだ<b>return文</b>を実装してませんので何も返しません。
+<h4>そのほかのクラス</h4>
+　そのほかの<b>DeclarationListクラス、StatementListクラス、ParameterListクラス</b>はそれぞれ複数のオブジェクトを1つにまとめるクラスです。<br />
+　例えば<b>StatementList</b>は<b>複数の文の集合クラス</b>です。最終的に関数内のプログラム本体は<b>StatementList</b>にまとめられます。<br />
+<br />
+　さて、このようにして、オブジェクト化されたプログラムコードですが、実行は<b>main関数</b>から始まります。解説は次項で行います。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="13_06.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="13_08.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

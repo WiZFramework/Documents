@@ -13,62 +13,66 @@
 </div>
 <!-- コンテンツ　-->
 <div id="contents">
-<h3>１３－０３．デバッグ出力を実装する</h3>
-　この項では、<b>文や式</b>という概念や、マネージャ的存在である<b>StackMachineクラス</b>の実装をします。<br />
-　合わせて<b>デバッグ出力</b>を実装する<b>dump命令</b>を実装します。<b>dump命令</b>は<b>C言語</b>の文法にはありません。しかし、言語開発途中において、実行途中の変数の状態やさまざまなデータの状態を監視するのに、こういう機能があると便利です。<br />
-　<b>C言語</b>は文法上、実行単位は<b>関数ごと</b>に行われます。つまり、グローバル領域に<b>実行文</b>は記述できません。通常グローバル領域には<b>関数宣言</b>や<b>データの初期化</b>を記述します。しかし<b>dump命令</b>はグローバル領域に記述しても、その時の変数などの状態を出力することができます。<b>C言語</b>の代表的な出力命令（関数）は<b>printf関数</b>ですが、これは、後ほど<b>関数</b>として実装します。<br />
-　今回の記述は、今後の制作のもとになるヘッダファイルやcppファイルを新しく作成するなどして、開発環境を整える、という役割も果たします。<br />
+<h3>１３－０３．ファイル構成の設定と、関数定義</h3>
+　この項では、このソリューションで作成するざっとしたファイル群を作成し、<b>関数</b>を実装できるようにします。<br />
+　<b>C言語</b>は、その言語構造自体に<b>main関数</b>は含まれません。<b>関数の定義方法</b>と<b>関数の実行方法</b>が決まっているだけで、一般的には<b>main関数から始まる</b>というだけです。<br />
+　ですから、例えば<b>Windowsアプリ</b>は<b>WinMain関数</b>から始まります。C言語の技術書やマニュアルには<b>C言語はmain関数に始まって、main関数の終了がプログラムの終了である</b>と記載されていますが、それは、一般論であって、言語を自作する場合、変更できます。<br />
+　なので<b>C言語を作成する</b>場合は、そのことは知っておく必要があります。<br />
+　つまりは<b>main関数を定義し、実行する</b>ということと<b>funcという自作関数を定義し、実行する</b>というメカニズムは、同じなのです。<br />
+　この項で作成するプロジェクトでは、<b>関数の定義</b>の最小なものが実装されます。そして、最初に<b>main関数</b>を探して、見つかれば、それを<b>実行</b>します。<br />
+　このことだけを念頭に置いて、以下を記述しましょう。
 <h4>CLangProject.l</h4>
-　まず<b>CLangProject.l</b>（Flexファイル）です、以下のように書き換えます。
+　まず<b>FlexBison</b>プロジェクトにある<b>CLangProject.l</b>ファイルです。以下のように書き換えます。計算の演算子<b>ADDやMULなど</b>はいったん外してあります。
 <div class="box1">
 <pre>
 %{
-#include &lt;stdio.h>
+#include &ltstdio.h>
 #include "CLangProject.tab.h"
 #define YY_SKIP_YYWRAP 1
 int gLine = 1;
 int yywrap(void){ return 1; }
-
 %}
 %s COMMENT
 %s LINE_COMMENT
 %%
-&lt;INITIAL>{
+&ltINITIAL>{
+    "("     return LP;
+    ")"     return RP;
+    "{"     return LC;
+    "}"     return RC;
     ";"     return SEMICOLON;
-    "+"     return ADD;
-    "-"     return SUB;
-    "*"     return MUL;
-    "/"     return DIV;
     "dump"     return DMP;
+    "int"       return INT_TYPE;
     "/*"    { BEGIN(COMMENT);}
     [/][/]+ { BEGIN(LINE_COMMENT);}
     [1-9][0-9]* {
         return INT_LITERAL;
     }
+    [A-Za-z_][A-Za-z_0-9]* {
+        return IDENTIFIER;
+    }
     "\n"    {gLine++;}
     [ \t]   ;
     .   { return 0;}
 }
-&lt;COMMENT>{
+&ltCOMMENT>{
     "\n"    {gLine++;}
     "*/" {BEGIN(INITIAL);}
     .   ;
 }
-&lt;LINE_COMMENT>{
+&ltLINE_COMMENT>{
     "\n" { gLine++; BEGIN(INITIAL);}
     .   ;
 }
 %%
 </pre>
 </div>
-　続いて<b>Bison</b>ファイルの<b>CLangProject.y</b>ですが、以下のようになります。
 <h4>CLangProject.y</h4>
- <div class="box1">
+　同じく<b>FlexBison</b>プロジェクトにある<b>CLangProject.y</b>ファイルです。
+<div class="box1">
 <pre>
 %{
-#include &lt;stdio.h>
-#include &lt;stdlib.h>
-#include "../CLangProject2/proc.h"
+#include "../CLangProject/proc.h"
 #define YYDEBUG 1
 extern int yylex(void);
 extern char *yytext;
@@ -79,27 +83,53 @@ int yyerror(char const *str){
 }
 %}
 %code requires {
-#include "../CLangProject2/proc.h"
+#include "../CLangProject/proc.h"
 }
 %union {
-    const char* fixedString;
     clg::Expression* pExpression;
     clg::Statement* pStatement;
     clg::StatementList* pStatementList;
+    clg::Declaration* pDeclaration;
+    clg::DeclarationList* pDeclarationList;
+    clg::ParameterList* pParameterList;
     clg::Root* pRoot;
 }
-%token &lt;fixedString> INT_LITERAL DMP SEMICOLON ADD SUB MUL DIV
-%type &lt;fixedString> constant 
-%type &lt;pExpression> intliteral_expression 
-%type &lt;pStatement>  dump_statement statement
-%type &lt;pStatementList> statement_list
-%type &lt;pRoot> root
-%type expression_statement   
+%token IDENTIFIER INT_LITERAL DMP  INT_TYPE SEMICOLON 
+%token LC RC LP RP
+%type &ltpExpression> expression intliteral_expression identifier_expression postfix_expression
+%type &ltpStatementList> statement_list
+%type &ltpStatement>  dump_statement expression_statement compound_statement statement
+%type &ltpDeclaration> declaration
+%type &ltpDeclarationList> declaration_list
+%type &ltpRoot> root
+%type &ltpParameterList> parameter_list
 %%
 root
-    :statement_list
+    : declaration_list
     {
-        $$ = clg::StackMachine::get()->createRoot($1);
+        $$ = clg::StackMachine::get()->addRootDeclarationList($1);
+    }
+    ;
+declaration_list
+    : declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1);
+    }
+    | declaration_list declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1,$2);
+    }
+    ;
+declaration
+    : INT_TYPE identifier_expression LP parameter_list RP compound_statement
+    {
+        $$ = clg::StackMachine::get()->createIntFunctionDeclaration($2,$6);
+    }
+    ;
+parameter_list
+    : /*empty*/
+    {
+        $$ = clg::StackMachine::get()->createParameterList();
     }
     ;
 statement_list
@@ -113,41 +143,267 @@ statement_list
     }
     ;
 statement
-    : expression_statement
-    | dump_statement
+    : dump_statement
+    | compound_statement
+    | expression_statement
     ;
 expression_statement
-    : SEMICOLON
-    |intliteral_expression SEMICOLON
+    : expression SEMICOLON
     {
-        clg::StackMachine::get()->createEmptyStm();
+        $$ = clg::StackMachine::get()->createExpressionStm($1);
     }
     ;
 dump_statement
-    :DMP intliteral_expression SEMICOLON
+    :DMP expression SEMICOLON
     {
         $$ = clg::StackMachine::get()->createDumpStm($2);
     }
     ;
-intliteral_expression
-    : constant
+compound_statement
+    : LC RC
     {
-       $$ = clg::StackMachine::get()->createIntLiteralExp($1);
+        $$ = clg::StackMachine::get()->createCompoundStatement();
+    }
+    | LC statement_list RC
+    {
+        $$ = clg::StackMachine::get()->createCompoundStatement($2);
     }
     ;
-constant
-    :INT_LITERAL
+expression
+    :intliteral_expression
+    |identifier_expression
+    |postfix_expression 
+    ;
+postfix_expression
+    : identifier_expression LP  RP
     {
-       $$ = yytext;
+        $$ = clg::StackMachine::get()->createFunctionCallExp($1);
+    }
+    ;
+identifier_expression
+    : IDENTIFIER
+    {
+        $$ = clg::StackMachine::get()->createIdentifierExp(yytext);
+    }
+    ;
+intliteral_expression
+    : INT_LITERAL
+    {
+       $$ = clg::StackMachine::get()->createIntLiteralExp(yytext);
     }
     ;
 %%
 </pre>
 </div>
-　ここから、新しいファイルをいくつか作成します。いずれも<b>CLangProjectプロジェクト</b>内です。<br />
-　まずヘッダファイルです。<b>ヘッダー ファイル</b>フィルタに、以下のファイルを作成します。
+　ここからは<b>CLangProject</b>プロジェクトに実装します。<br />
+　ファイルがない場合は追加してください。その際<b>.hファイル</b>であれば<b>ヘッダー ファイル</b>フィルタ、<b>.cppファイル</b>であれば<b>ソース ファイル</b>フィルタ内に追加しましょう。<br />
+　まずは<b>.hファイル</b>です。
+<h4>common.h</h4>
+<div class="box1">
+<pre>
+#pragma once
+
+namespace clg {
+
+#define ORE_MAX_TOKEN_LEN 255
+
+    ///stringを255文字に切り詰める
+    inline string clampToken(const char* ext) {
+        string str(ext);
+        if (str.size() > ORE_MAX_TOKEN_LEN) {
+            str.erase(ORE_MAX_TOKEN_LEN);
+        }
+        return str;
+    }
+
+    //--------------------------------------------------------------------------------------
+    ///  Objectベース（基底クラス）
+    //--------------------------------------------------------------------------------------
+    class ObjBase {
+    protected:
+        ObjBase() {}
+    public:
+        virtual ~ObjBase() {}
+    };
+
+}
+//end namespace clg
+</pre>
+</div>
+<h4>declaration.h</h4>
+<div class="box1">
+<pre>
+#pragma once
+
+namespace clg {
+
+
+    //--------------------------------------------------------------------------------------
+    ///  パラメータリストクラス
+    //--------------------------------------------------------------------------------------
+    class ParameterList : public ObjBase {
+        const char* m_pIdent;
+        ParameterList* m_Next;
+    public:
+        ParameterList() :
+            m_pIdent(nullptr),
+            m_Next(nullptr)
+        {
+
+        }
+        ParameterList(const char* ident) :
+            m_pIdent(ident),
+            m_Next(nullptr)
+        {
+
+        }
+        virtual ~ParameterList() {}
+        const char* getIdent() const {
+            return m_pIdent;
+        }
+        ParameterList* getNext()const {
+            return m_Next;
+        }
+        void setNext(ParameterList* next) {
+            m_Next = next;
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  宣言クラス
+    //--------------------------------------------------------------------------------------
+    class Declaration : public ObjBase {
+    protected:
+        Declaration() {}
+    public:
+        virtual ~Declaration() {}
+    };
+
+
+    //--------------------------------------------------------------------------------------
+    ///  int型関数定義
+    //--------------------------------------------------------------------------------------
+    class IntFunctionDeclaration : public Declaration {
+        const char* m_pIdent;
+        CompoundStatement* m_pCompoundStatement;
+    public:
+        IntFunctionDeclaration(IdentifierExp* pIdent, Statement* stm):
+            m_pIdent{ pIdent->getIdentity() }
+        {
+            m_pCompoundStatement = dynamic_cast&ltCompoundStatement*>(stm);
+        }
+        const char* getIdentity() const {
+            return m_pIdent;
+        }
+        void excute();
+        virtual ~IntFunctionDeclaration() {}
+    };
+
+
+
+    //--------------------------------------------------------------------------------------
+    ///  宣言リストクラス
+    //--------------------------------------------------------------------------------------
+    class DeclarationList : public ObjBase {
+        Declaration* m_Declaration;
+        DeclarationList* m_Next;
+    public:
+        DeclarationList(Declaration* decl) :
+            m_Declaration(decl),
+            m_Next(nullptr)
+        {
+
+        }
+        Declaration* getDecl() const {
+            return m_Declaration;
+
+        }
+        DeclarationList* getNext()const {
+            return m_Next;
+        }
+        void setNext(DeclarationList* next) {
+            m_Next = next;
+        }
+        virtual ~DeclarationList() {}
+    };
+
+}
+// end namespace clg
+</pre>
+</div>
+<h4>expression.h</h4>
+<div class="box1">
+<pre>
+#pragma once
+
+namespace clg {
+
+    //--------------------------------------------------------------------------------------
+    ///  式クラス
+    //--------------------------------------------------------------------------------------
+    class Expression : public ObjBase {
+    protected:
+        Expression() {}
+    public:
+        virtual ~Expression() {}
+        virtual Value execute() {
+            return Value();
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  intリテラル式クラス
+    //--------------------------------------------------------------------------------------
+    class IntLiteralExp : public Expression {
+        int m_intValue;
+    public:
+        IntLiteralExp(int i = 0) {
+            m_intValue = i;
+        }
+        virtual ~IntLiteralExp() {}
+        virtual Value execute() override;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  識別子式クラス
+    //--------------------------------------------------------------------------------------
+    class IdentifierExp : public Expression {
+        const char* m_Identity;
+    public:
+        IdentifierExp(const char* ident):
+            m_Identity(ident)
+        {
+        }
+        const char* getIdentity() const {
+            return m_Identity;
+        }
+        virtual ~IdentifierExp() {}
+        virtual Value execute() override;
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  関数呼び出し式クラス
+    //--------------------------------------------------------------------------------------
+    class FunctionCallExp : public Expression {
+        const char* m_Identity;
+    public:
+        FunctionCallExp(const char* ident) :
+            m_Identity(ident) {
+        }
+        const char* getIdentity() const {
+            return m_Identity;
+        }
+        virtual ~FunctionCallExp() {}
+        virtual Value execute() override;
+    };
+
+    
+}
+//end namespace clg
+</pre>
+</div>
 <h4>proc.h</h4>
- <div class="box1">
+<div class="box1">
 <pre>
 #pragma once
 
@@ -174,28 +430,203 @@ constant
 using namespace std;
 
 #include "common.h"
+#include "value.h"
 #include "expression.h"
 #include "statement.h"
+#include "declaration.h"
 #include "stackMachine.h"
 </pre>
 </div>
-<h4>common.h</h4>
- <div class="box1">
+<h4>stackMachine.h</h4>
+<div class="box1">
+<pre>
+#pragma once
+
+namespace clg
+{
+
+    //--------------------------------------------------------------------------------------
+    ///  ルートクラス
+    //--------------------------------------------------------------------------------------
+    class Root : public ObjBase {
+        DeclarationList* m_pDeclarationList;
+    public:
+        Root() :
+            m_pDeclarationList(nullptr)
+        {}
+        virtual ~Root() {}
+        Value execute();
+        void setDeclList(DeclarationList* decl) {
+            m_pDeclarationList = decl;
+        }
+        DeclarationList* getDeclList()const {
+            return m_pDeclarationList;
+        }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  スタックマシンクラス
+    //--------------------------------------------------------------------------------------
+    class StackMachine {
+        //命令ポインタ
+        unsigned int m_ip = 0;
+        //ルートオブジェクト
+        Root* m_pRoot;
+        //オブジェクトのプール
+        vector&lt;ObjBase*> m_objPool;
+        //文字列のプール
+        set&lt;string> m_fixedStringPool;
+        const char* createFixedString(const char* ext);
+        StackMachine();
+    public:
+        virtual ~StackMachine();
+        int compile(FILE* fp);
+        void execute();
+        void destroy();
+        //インスタンス参照
+        static StackMachine* get();
+        Root* getRoot() {
+            return m_pRoot;
+        }
+        //式
+        /// INTリテラル
+        Expression* createIntLiteralExp(const char* ptr);
+        //識別子
+        Expression* createIdentifierExp(const char* ptr);
+        //関数呼び出し
+        Expression* createFunctionCallExp(Expression* pIdent);
+        //文
+        //デバッグ出力
+        Statement* createDumpStm(Expression* exp);
+        //式文
+        Statement* createExpressionStm(Expression* exp);
+        //Compound文
+        Statement* createCompoundStatement(StatementList* stml = nullptr);
+        //文リスト
+        StatementList* createStatementList(Statement* stm);
+        StatementList* createStatementList(StatementList* stml, Statement* stm);
+        //パラメータリスト
+        ParameterList* createParameterList();
+        //宣言
+        //int型関数定義
+        Declaration* createIntFunctionDeclaration(Expression* pExp, Statement* stm);
+
+        //宣言リスト
+        DeclarationList* createDeclarationList(Declaration* decl);
+        DeclarationList* createDeclarationList(DeclarationList* declList,Declaration* decl);
+
+        //ルートへのDeclarationListの追加
+        Root* addRootDeclarationList(DeclarationList* decl);
+
+    };
+}
+//end namespace clg
+</pre>
+</div>
+<h4>statement.h</h4>
+<div class="box1">
 <pre>
 #pragma once
 
 namespace clg {
 
-#define ORE_MAX_TOKEN_LEN 255
-
-    ///stringを255文字に切り詰める
-    inline string clampToken(const char* ext) {
-        string str(ext);
-        if (str.size() > ORE_MAX_TOKEN_LEN) {
-            str.erase(ORE_MAX_TOKEN_LEN);
+    //--------------------------------------------------------------------------------------
+    ///  文クラス
+    //--------------------------------------------------------------------------------------
+    class Statement : public ObjBase {
+    protected:
+        Statement() {}
+    public:
+        virtual ~Statement() {}
+        //voidの実行関数
+        virtual Value execute() {
+            return Value();
         }
-        return str;
-    }
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  Dump文クラス
+    //--------------------------------------------------------------------------------------
+    class DumpStm : public Statement {
+        Expression* m_expression;
+    public:
+        DumpStm(Expression* exp) :
+            m_expression(exp)
+        {}
+        //実行関数
+        virtual Value execute() override;
+        virtual ~DumpStm() {}
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  式文クラス
+    //--------------------------------------------------------------------------------------
+    class ExpressionStm : public Statement {
+        Expression* m_expression;
+    public:
+        ExpressionStm(Expression* exp) :
+            m_expression(exp)
+        {}
+        //実行関数
+        virtual Value execute() override;
+        virtual ~ExpressionStm() {}
+    };
+
+
+
+
+    //--------------------------------------------------------------------------------------
+    ///  文リストクラス
+    //--------------------------------------------------------------------------------------
+    class StatementList : public ObjBase {
+        Statement* m_Statement;
+        StatementList* m_Next;
+    public:
+        StatementList(Statement* stm) :
+            m_Statement(stm),
+            m_Next(nullptr)
+        {
+
+        }
+        Statement* getStm() const {
+            return m_Statement;
+
+        }
+        StatementList* getNext()const {
+            return m_Next;
+        }
+        void setNext(StatementList* next) {
+            m_Next = next;
+        }
+        void execute();
+        virtual ~StatementList() {}
+    };
+
+    //--------------------------------------------------------------------------------------
+    ///  Compoundステートメント
+    //--------------------------------------------------------------------------------------
+    class CompoundStatement : public Statement {
+        StatementList* m_pStatementList;
+    public:
+        CompoundStatement(StatementList* stml) :
+            m_pStatementList(stml)
+        {}
+        virtual ~CompoundStatement() {}
+        //実行関数
+        virtual Value execute() override;
+    };
+
+
+}
+//end namespace clg
+</pre>
+</div>
+<h4>value.h</h4>
+<div class="box1">
+<pre>
+#pragma once
+
+namespace clg {
 
     //--------------------------------------------------------------------------------------
     ///  値タイプ
@@ -228,246 +659,27 @@ namespace clg {
     };
 
 
-    //--------------------------------------------------------------------------------------
-    ///  ステートメントレスポンスタイプ
-    //--------------------------------------------------------------------------------------
-    enum class SmtResType {
-        voidType,
-    };
-
-    //--------------------------------------------------------------------------------------
-    ///  ステートメントレスポンス
-    //--------------------------------------------------------------------------------------
-    struct SmtRes {
-        SmtResType m_type;
-        Value m_retValue;
-        SmtRes() :
-            m_type(SmtResType::voidType),
-            m_retValue() {}
-    };
-
-    //--------------------------------------------------------------------------------------
-    ///  Objectベース（基底クラス）
-    //--------------------------------------------------------------------------------------
-    class ObjBase {
-    protected:
-        ObjBase() {}
-    public:
-        virtual ~ObjBase() {}
-    };
 
 }
-//end namespace clg
+// end namespace clg
 </pre>
 </div>
-<h4>expression.h</h4>
- <div class="box1">
-<pre>
-#pragma once
-
-namespace clg {
-
-    //--------------------------------------------------------------------------------------
-    ///  式クラス
-    //--------------------------------------------------------------------------------------
-    class Expression : public ObjBase {
-    protected:
-        Expression() {}
-    public:
-        virtual ~Expression() {}
-        virtual Value execute() {
-            return Value();
-        }
-    };
-
-    //--------------------------------------------------------------------------------------
-    ///  intリテラル式クラス
-    //--------------------------------------------------------------------------------------
-    class IntLiteralExp : public Expression {
-        int m_intValue;
-    public:
-        IntLiteralExp(int i = 0) {
-            m_intValue = i;
-        }
-        virtual ~IntLiteralExp() {}
-        virtual Value execute() override;
-    };
-}
-//end namespace clg
-</pre>
-</div>
-<h4>statement.h</h4>
- <div class="box1">
-<pre>
-#pragma once
-
-namespace clg {
-
-    //--------------------------------------------------------------------------------------
-    ///  文クラス
-    //--------------------------------------------------------------------------------------
-    class Statement : public ObjBase {
-    protected:
-        Statement() {}
-    public:
-        virtual ~Statement() {}
-        //voidの実行関数
-        virtual SmtRes execute(){
-            return SmtRes();
-        }
-    };
-
-    //--------------------------------------------------------------------------------------
-    ///  Dump文クラス
-    //--------------------------------------------------------------------------------------
-    class DumpStm : public Statement {
-        Expression* m_expression;
-    public:
-        DumpStm(Expression* exp):
-            m_expression(exp)
-        {}
-        //実行関数
-        virtual SmtRes execute() override;
-        virtual ~DumpStm() {}
-    };
-
-
-    //--------------------------------------------------------------------------------------
-    ///  文リストクラス
-    //--------------------------------------------------------------------------------------
-    class StatementList : public ObjBase {
-        Statement* m_Statement;
-        StatementList* m_Next;
-    public:
-        StatementList(Statement* stm):
-            m_Statement(stm),
-            m_Next(nullptr)
-        {
-
-        }
-        Statement* getStm() const {
-            return m_Statement;
-
-        }
-        StatementList* getNext()const {
-            return m_Next;
-        }
-        void setNext(StatementList* next) {
-            m_Next = next;
-        }
-        virtual ~StatementList() {}
-    };
-}
-//end namespace clg
-</pre>
-</div>
-<h4>stackMachine.h</h4>
- <div class="box1">
-<pre>
-#pragma once
-
-namespace clg
-{
-
-    //--------------------------------------------------------------------------------------
-    ///  ルートクラス
-    //--------------------------------------------------------------------------------------
-    class Root : public ObjBase {
-        StatementList* m_pStatementList;
-    public:
-        Root(StatementList* stml):
-            m_pStatementList(stml)
-        {}
-        virtual ~Root() {}
-        SmtRes execute();
-        StatementList* getStmeList()const {
-            return m_pStatementList;
-        }
-    };
-
-    //--------------------------------------------------------------------------------------
-    ///  スタックマシンクラス
-    //--------------------------------------------------------------------------------------
-    class StackMachine {
-        //命令ポインタ
-        unsigned int m_ip = 0;
-        //ルートオブジェクト
-        Root* m_pRoot;
-        //オブジェクトのプール
-        vector&lt;ObjBase*> m_objPool;
-        StackMachine();
-    public:
-        virtual ~StackMachine();
-        int compile(FILE* fp);
-        void execute();
-        void destroy();
-        //インスタンス参照
-        static StackMachine* get();
-        //式
-        /// INTリテラル
-        Expression* createIntLiteralExp(const char* ptr);
-        //文
-        //何もしない文
-        void createEmptyStm();
-        //デバッグ出力
-        Statement* createDumpStm(Expression* exp);
-        //文リスト
-        StatementList* createStatementList(Statement* stm);
-        StatementList* createStatementList(StatementList* stml,Statement* stm);
-        //ルートオブジェクト
-        Root* createRoot(StatementList* stml);
-
-    };
-}
-//end namespace clg
-</pre>
-</div>
-　続いてソースファイルです<b>CLangProject</b>プロジェクトの<b>ソースファイル</b>フィルタに以下のファイルを追加します。
-<h4>common.cpp</h4>
- <div class="box1">
+　これより<b>cppファイル</b>です。<b>CLangProject</b>プロジェクトの<b>ソース ファイル</b>フィルタに設置します。
+<h4>declaration.cpp</h4>
+<div class="box1">
 <pre>
 #include "proc.h"
 
 namespace clg {
 
-    Value::Value()
-    {
-        m_type = ValueType::voidVal;
-        intV = 0;
-    }
-
-    Value::Value(bool b)
-    {
-        m_type = ValueType::boolVal;
-        boolV = b;
-    }
-
-    Value::Value(int i)
-    {
-        m_type = ValueType::intVal;
-        intV = i;
-    }
-
-    Value::Value(double d)
-    {
-        m_type = ValueType::doubleVal;
-        doubleV = d;
-    }
-
-
-    Value::Value(const Value& other)
-    {
-        *this = other;
-    }
-
-    Value& Value::operator=(const Value& other) {
-        if (this != &other) {
-            *this = other;
+    void IntFunctionDeclaration::excute() {
+        if (m_pCompoundStatement) {
+            m_pCompoundStatement->execute();
         }
-        return *this;
     }
+
 }
-//end namespace ore
+//end namespace clg
 </pre>
 </div>
 <h4>expression.cpp</h4>
@@ -477,150 +689,43 @@ namespace clg {
 
 namespace clg {
 
-    Value IntLiteralExp::execute(){
+    Value IntLiteralExp::execute() {
         return Value(m_intValue);
     }
 
+    Value IdentifierExp::execute() {
+        return Value();
+    }
 
-}
-//end namespace clg
-</pre>
-</div>
-
-<h4>statement.cpp</h4>
- <div class="box1">
-<pre>
-#include "proc.h"
-
-namespace clg
-{
-    SmtRes DumpStm::execute() {
-        if (m_expression) {
-            auto val = m_expression->execute();
-            switch (val.m_type) {
-            case ValueType::intVal:
-                cout &lt;&lt; val.intV &lt;&lt; endl;
-                break;
+    Value FunctionCallExp::execute() {
+        bool flg = false;
+        auto pRoot = StackMachine::get()->getRoot();
+        auto pos = pRoot->getDeclList();
+        do {
+            auto decl = pos->getDecl();
+            auto tgt = dynamic_cast&lt;IntFunctionDeclaration*>(decl);
+            if (tgt) {
+                string str = tgt->getIdentity();
+                if (str == m_Identity) {
+                    flg = true;
+                    tgt->excute();
+                    break;
+                }
             }
+            pos = pos->getNext();
+        } while (pos);
+        if (!flg) {
+            cout &lt;&lt; "関数が見つかりません。: " &lt;&lt; m_Identity &lt;&lt; endl;
+            exit(1);
         }
-        return SmtRes();
+        return Value();
     }
 
-}
-// end namespace clg
-</pre>
-</div>
-<h4>stackMachine.cpp</h4>
- <div class="box1">
-<pre>
-#include "proc.h"
-
-namespace clg
-{
-
-    SmtRes Root::execute() {
-        if (m_pStatementList) {
-            auto pos = m_pStatementList;
-            do {
-                auto stm = pos->getStm();
-                stm->execute();
-                pos = pos->getNext();
-            } while (pos);
-        }
-        return SmtRes();
-    }
-
-    //唯一のスタックマシンのインスタンス
-    StackMachine* g_pSackMachine;
-
-    StackMachine::StackMachine()
-    {}
-    StackMachine::~StackMachine() {
-        for (size_t i = 0; i &lt; m_objPool.size(); i++) {
-            delete m_objPool[i];
-        }
-        m_objPool.clear();
-    }
-    int StackMachine::compile(FILE* fp) {
-        extern int yyparse(void);
-        extern FILE* yyin;
-        yyin = fp;
-        if (yyparse()) {
-            return 1;
-        }
-        return 0;
-
-    }
-    void StackMachine::execute() {
-        if (m_pRoot) {
-            m_pRoot->execute();
-        }
-    }
-
-    void StackMachine::destroy() {
-        if (g_pSackMachine) {
-            delete g_pSackMachine;
-            g_pSackMachine = nullptr;
-        }
-    }
-
-    //インスタンス参照
-    StackMachine* StackMachine::get() {
-        if (!g_pSackMachine) {
-            g_pSackMachine = new StackMachine();
-        }
-        return g_pSackMachine;
-    }
-
-    //何もしない
-    void StackMachine::createEmptyStm() {
-
-    }
-
-    /// INTリテラル
-    Expression* StackMachine::createIntLiteralExp(const char* ptr) {
-        string str = clampToken(ptr);
-        auto pObj = new IntLiteralExp(std::stoi(str));
-        m_objPool.push_back(pObj);
-        return pObj;
-    }
-
-
-    //出力
-    Statement* StackMachine::createDumpStm(Expression* exp) {
-        auto pObj = new DumpStm(exp);
-        m_objPool.push_back(pObj);
-        return pObj;
-    }
-
-    StatementList* StackMachine::createStatementList(Statement* stm) {
-        auto pObj = new StatementList(stm);
-        m_objPool.push_back(pObj);
-        return pObj;
-    }
-
-    StatementList* StackMachine::createStatementList(StatementList* stml, Statement* stm) {
-        StatementList* pos;
-        if (stml == nullptr)
-            return createStatementList(stm);
-        for (pos = stml; pos->getNext(); pos = pos->getNext())
-            ;
-        pos->setNext(createStatementList(stm));
-        return stml;
-    }
-
-    //ルート
-    Root* StackMachine::createRoot(StatementList* stml) {
-        m_pRoot = new Root(stml);
-        return m_pRoot;
-    }
 
 }
 //end namespace clg
-
 </pre>
 </div>
-　<b>main.cpp</b>は以下のように書き換えます。
 <h4>main.cpp</h4>
 <div class="box1">
 <pre>
@@ -673,30 +778,339 @@ int main(int argc, char** argv) {
 }
 </pre>
 </div>
-　あと<b>CLangProject.flex.cpp</b>および<b>CLangProject.tab.cpp</b>は<b>FlexとBison</b>が作り出すファイルなので、そのままにしておきます。<br />
-　最後に、スクリプトファイルの<b>index.c</b>です。以下の1行のみになります。
+<h4>stackMachine.cpp</h4>
+<div class="box1">
+<pre>
+#include "proc.h"
+
+namespace clg
+{
+
+    Value Root::execute() {
+        //  main関数を探して実行
+        FunctionCallExp* pFunc = new FunctionCallExp("main");
+        pFunc->execute();
+        return Value();
+    }
+
+    //唯一のスタックマシンのインスタンス
+    StackMachine* g_pSackMachine;
+
+    StackMachine::StackMachine()
+    {}
+    StackMachine::~StackMachine() {
+        for (size_t i = 0; i &lt; m_objPool.size(); i++) {
+            delete m_objPool[i];
+        }
+        m_objPool.clear();
+    }
+
+    const char* StackMachine::createFixedString(const char* ext) {
+        //255文字に切り詰める。
+        auto str = clampToken(ext);
+        auto it = m_fixedStringPool.insert(str);
+        return it.first->c_str();
+    }
+
+    int StackMachine::compile(FILE* fp) {
+        m_pRoot = new Root();
+        extern int yyparse(void);
+        extern FILE* yyin;
+        yyin = fp;
+        if (yyparse()) {
+            return 1;
+        }
+        return 0;
+
+    }
+    void StackMachine::execute() {
+        if (m_pRoot) {
+            m_pRoot->execute();
+        }
+    }
+
+    void StackMachine::destroy() {
+        if (g_pSackMachine) {
+            delete g_pSackMachine;
+            g_pSackMachine = nullptr;
+        }
+    }
+
+    //インスタンス参照
+    StackMachine* StackMachine::get() {
+        if (!g_pSackMachine) {
+            g_pSackMachine = new StackMachine();
+        }
+        return g_pSackMachine;
+    }
+
+    /// INTリテラル
+    Expression* StackMachine::createIntLiteralExp(const char* ptr) {
+        string str = clampToken(ptr);
+        auto pObj = new IntLiteralExp(std::stoi(str));
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+
+    Expression* StackMachine::createIdentifierExp(const char* ptr) {
+        auto pStr = createFixedString(ptr);
+        auto pObj = new IdentifierExp(pStr);
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+
+    //関数呼び出し
+    Expression* StackMachine::createFunctionCallExp(Expression* pIdent) {
+        auto tgt = dynamic_cast&lt;IdentifierExp*>(pIdent);
+        if (tgt) {
+            auto pObj = new FunctionCallExp(tgt->getIdentity());
+            m_objPool.push_back(pObj);
+            return pObj;
+        }
+        else {
+            cout &lt;&lt; "関数呼び出しが間違っています" &lt;&lt; endl;
+            exit(1);
+        }
+        return nullptr;
+    }
+
+
+
+
+    //出力
+    Statement* StackMachine::createDumpStm(Expression* exp) {
+        auto pObj = new DumpStm(exp);
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+
+    Statement* StackMachine::createExpressionStm(Expression* exp) {
+        auto pObj = new ExpressionStm(exp);
+        m_objPool.push_back(pObj);
+        return pObj;
+
+    }
+
+
+    //Compound文
+    Statement* StackMachine::createCompoundStatement(StatementList* stml) {
+        auto pObj = new CompoundStatement(stml);
+        m_objPool.push_back(pObj);
+        return pObj;
+
+    }
+
+
+
+    StatementList* StackMachine::createStatementList(Statement* stm) {
+        auto pObj = new StatementList(stm);
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+
+    StatementList* StackMachine::createStatementList(StatementList* stml, Statement* stm) {
+        StatementList* pos;
+        if (stml == nullptr)
+            return createStatementList(stm);
+        for (pos = stml; pos->getNext(); pos = pos->getNext())
+            ;
+        pos->setNext(createStatementList(stm));
+        return stml;
+    }
+
+    //パラメータリスト
+    ParameterList* StackMachine::createParameterList() {
+        auto ptr = new ParameterList();
+        m_objPool.push_back(ptr);
+        return ptr;
+    }
+
+    //宣言
+
+    //int型関数定義
+    Declaration* StackMachine::createIntFunctionDeclaration(Expression* pExp, Statement* stm) {
+        IdentifierExp* pIdent = dynamic_cast&lt;IdentifierExp*>(pExp);
+        CompoundStatement* pComp = dynamic_cast&lt;CompoundStatement*>(stm);
+        if (pIdent && stm) {
+            auto pObj = new IntFunctionDeclaration(pIdent, stm);
+            m_objPool.push_back(pObj);
+            return pObj;
+        }
+        else {
+            cout &lt;&lt; "関数定義が間違っています" &lt;&lt; endl;
+            exit(1);
+        }
+        return nullptr;
+    }
+
+
+
+    DeclarationList* StackMachine::createDeclarationList(Declaration* decl) {
+        auto pObj = new DeclarationList(decl);
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+    DeclarationList* StackMachine::createDeclarationList(DeclarationList* declList, Declaration* decl) {
+        DeclarationList* pos;
+        if (declList == nullptr)
+            return createDeclarationList(decl);
+        for (pos = declList; pos->getNext(); pos = pos->getNext())
+            ;
+        pos->setNext(createDeclarationList(decl));
+        return declList;
+    }
+
+    //ルートへのDeclarationListの追加
+    Root* StackMachine::addRootDeclarationList(DeclarationList* decl) {
+        if (m_pRoot) {
+            m_pRoot->setDeclList(decl);
+        }
+        return m_pRoot;
+    }
+
+
+}
+//end namespace clg
+</pre>
+</div>
+<h4>statement.cpp</h4>
+<div class="box1">
+<pre>
+#include "proc.h"
+
+namespace clg
+{
+
+    //--------------------------------------------------------------------------------------
+    ///  Dump文クラス
+    //--------------------------------------------------------------------------------------
+    Value DumpStm::execute() {
+        if (m_expression) {
+            auto val = m_expression->execute();
+            switch (val.m_type) {
+            case ValueType::intVal:
+                cout &lt;&lt; val.intV &lt;&lt; endl;
+                break;
+            }
+        }
+        return Value();
+    }
+
+    //--------------------------------------------------------------------------------------
+    ///  式文クラス
+    //--------------------------------------------------------------------------------------
+    Value ExpressionStm::execute() {
+        if (m_expression) {
+            auto val = m_expression->execute();
+        }
+        return Value();
+    }
+
+
+    void StatementList::execute() {
+        auto pos = this;
+        do {
+            auto stm = pos->getStm();
+            stm->execute();
+            pos = pos->getNext();
+        } while (pos);
+
+    }
+
+    Value CompoundStatement::execute() {
+        if (m_pStatementList) {
+            m_pStatementList->execute();
+        }
+        return Value();
+    }
+
+
+
+}
+// end namespace clg
+</pre>
+</div>
+<h4>value.cpp</h4>
+<div class="box1">
+<pre>
+#include "proc.h"
+
+namespace clg {
+
+    Value::Value()
+    {
+        m_type = ValueType::voidVal;
+        intV = 0;
+    }
+
+    Value::Value(bool b)
+    {
+        m_type = ValueType::boolVal;
+        boolV = b;
+    }
+
+    Value::Value(int i)
+    {
+        m_type = ValueType::intVal;
+        intV = i;
+    }
+
+    Value::Value(double d)
+    {
+        m_type = ValueType::doubleVal;
+        doubleV = d;
+    }
+
+
+    Value::Value(const Value& other)
+    {
+        *this = other;
+    }
+
+    Value& Value::operator=(const Value& other) {
+        if (this != &other) {
+            *this = other;
+        }
+        return *this;
+    }
+}
+//end namespace ore
+</pre>
+</div>
+<h4>警告を外す</h4>
+　ここまで記述すると<b>１２－０２．FlexとBisonで計算機（VS2019版）</b>で設定した<b>CLangProject</b>に対する<b>4996</b>という警告無視の設定を外すことができます。<br />
+　<b>CLangProjectプロジェクト</b>の<b>プロパティ</b>を開いて<b>C/C++ー詳細設定</b>メニューで<b>指定の警告を無効にする</b>に記載されている<b>4996</b>を削除します。削除したら<b>OK</b>をクリックします。<br />
+<h4>スクリプトの編集</h4>
+　最後に、スクリプトファイルである<b>index.c</b>です。<b>CLangProject</b>プロジェクトの<b>スクリプトファイル</b>フィルタにあります。
 <h4>index.c</h4>
 <div class="box1">
 <pre>
-dump 10;
+
+int func() {
+    dump 30;
+
+}
+
+int main () {
+    dump 10;
+    dump 20;
+    func();
+}
 </pre>
 </div>
-　<b>.c</b>という拡張子のファイルなので<b>VisualStdio</b>はエラーを表示しますが、コンパイルには含めていないので、無視してかまいません。<br />
-　すべて記述が終わったら<b>リビルド</b>します。<br />
-　エラーがなく<b>リビルド</b>できれば成功です。<br />
-　<b>デバッグなしで開始</b>すると
+　子こまっで記述したら<b>ビルド－ソリューションのリビルド</b>を行い、エラーがなければ<b>デバッグ－デバッグなしで開始</b>を行います。コンソールが開き
 <div class="box1">
 <pre>
 10
+20
+30
 
-...\CLangProject.exe (プロセス 16592) は、コード 0 で終了しました。
+...\CLangProject.exe (プロセス 11884) は、コード 0 で終了しました。
 このウィンドウを閉じるには、任意のキーを押してください...
 </pre>
 </div>
-　と出れば実行も成功です。<br />
-　それでは、次項からは、今項で作成したファイルを修正しながら<b>C言語</b>を実装していきます。
-
-
+　がでたら成功です。もしビルド中にエラーが出るか、あるいは実行できなければ、上記のファイルのどこかに、作成漏れがあるか、記述漏れがあります。成功するまで、トライしましょう。<br />
+　次項から、この項で作成したプロジェクトについて、できるだけ詳しく解説します。
 </div>
 <!-- /コンテンツ　-->
 <hr>

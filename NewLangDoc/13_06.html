@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2020年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>１３．シンプルな実装をする</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>１３－０６．構文解析（Bisonファイルの記述）</h3>
+<h4>CLangProject.y</h4>
+　<b>Flex</b>の定義ファイルは<b>CLangProject.l</b>ですが、<b>Bison</b>の定義ファイルは<b>CLangProject.y</b>です。<br />
+　まず全体像を紹介します。
+<div class="box1">
+<pre>
+%{
+#include "../CLangProject/proc.h"
+#define YYDEBUG 1
+extern int yylex(void);
+extern char *yytext;
+int yyerror(char const *str){
+    extern int gLine;
+    fprintf(stderr,"%s, line: %d, near %s\n",str, gLine, yytext);
+    return 0;
+}
+%}
+%code requires {
+#include "../CLangProject/proc.h"
+}
+%union {
+    clg::Expression* pExpression;
+    clg::Statement* pStatement;
+    clg::StatementList* pStatementList;
+    clg::Declaration* pDeclaration;
+    clg::DeclarationList* pDeclarationList;
+    clg::ParameterList* pParameterList;
+    clg::Root* pRoot;
+}
+%token IDENTIFIER INT_LITERAL DMP  INT_TYPE SEMICOLON 
+%token LC RC LP RP
+%type &lt;pExpression> expression intliteral_expression identifier_expression postfix_expression
+%type &lt;pStatementList> statement_list
+%type &lt;pStatement>  dump_statement expression_statement compound_statement statement
+%type &lt;pDeclaration> declaration
+%type &lt;pDeclarationList> declaration_list
+%type &lt;pRoot> root
+%type &lt;pParameterList> parameter_list
+%%
+root
+    : declaration_list
+    {
+        $$ = clg::StackMachine::get()->addRootDeclarationList($1);
+    }
+    ;
+declaration_list
+    : declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1);
+    }
+    | declaration_list declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1,$2);
+    }
+    ;
+declaration
+    : INT_TYPE identifier_expression LP parameter_list RP compound_statement
+    {
+        $$ = clg::StackMachine::get()->createIntFunctionDeclaration($2,$6);
+    }
+    ;
+parameter_list
+    : /*empty*/
+    {
+        $$ = clg::StackMachine::get()->createParameterList();
+    }
+    ;
+statement_list
+    : statement
+    {
+        $$ = clg::StackMachine::get()->createStatementList($1);
+    }
+    | statement_list statement
+    {
+        $$ = clg::StackMachine::get()->createStatementList($1,$2);
+    }
+    ;
+statement
+    : dump_statement
+    | compound_statement
+    | expression_statement
+    ;
+expression_statement
+    : expression SEMICOLON
+    {
+        $$ = clg::StackMachine::get()->createExpressionStm($1);
+    }
+    ;
+dump_statement
+    :DMP expression SEMICOLON
+    {
+        $$ = clg::StackMachine::get()->createDumpStm($2);
+    }
+    ;
+compound_statement
+    : LC RC
+    {
+        $$ = clg::StackMachine::get()->createCompoundStatement();
+    }
+    | LC statement_list RC
+    {
+        $$ = clg::StackMachine::get()->createCompoundStatement($2);
+    }
+    ;
+expression
+    :intliteral_expression
+    |identifier_expression
+    |postfix_expression 
+    ;
+postfix_expression
+    : identifier_expression LP  RP
+    {
+        $$ = clg::StackMachine::get()->createFunctionCallExp($1);
+    }
+    ;
+identifier_expression
+    : IDENTIFIER
+    {
+        $$ = clg::StackMachine::get()->createIdentifierExp(yytext);
+    }
+    ;
+intliteral_expression
+    : INT_LITERAL
+    {
+       $$ = clg::StackMachine::get()->createIntLiteralExp(yytext);
+    }
+    ;
+%%
+</pre>
+</div>
+<h4>CLangProjectとのかかわり</h4>
+　<b>１３－０１．構造の修正</b>で実装した内容は、<b>四則演算</b>を<b>乗除算優先</b>で実行できる簡易的なものでしたが、実際にプログラム言語を作成するには、<b>順次処理</b>のほかに<b>分岐、ループ、関数呼び出し</b>などの機能が必要になります。<br />
+　それらを実装するには、単純にスクリプトを順次トレースして実行するのではなく、いったん、何らかの形でコード全体を保持しておき、文法に従って実行する、という手順を踏む必要があります。<br />
+　とくに<b>C言語</b>では、あらかじめ<b>いくつもの関数</b>が定義され、実行は<b>main関数を探して、そこから実行</b>という文法になります。<br />
+　<b>コード全体を保持する</b>方法として、いくつか手法がありますが、このドキュメントでは<b>スタックマシーン</b>にするというのが最終目標です。<b>スタックマシーン</b>は、プログラムのソースコードを、<b>バイナリコード</b>に変換して保存します。ここで<b>バイナリコード</b>というのは、CPUを直接操作できる、いわゆる<b>マシン語</b>ではありません。<b>擬似マシン語</b>といわれる、<b>マシン語を模した、単純なニーモニック言語</b>です。その形にしておくのが一番なのですが、その一歩手前の手順として、せっかく<b>VisualStudio</b>を使っているので<b>C++のオブジェクト</b>として、保持しておき、実行はそのオブジェクトに任せる、という手法で実装したいと思います。<br />
+　こうすることで、細かなオブジェクトを作成することができ、オブジェクト指向で作成することができます。<br />
+　そしてある程度形になった段階で、<b>スタックマシーン</b>として、再実装していきたいと思います。<br />
+　ということで、<b>Bisonファイル</b>では、各文法ごとに<b>CLangProjectに含まれるオブジェクトを作成する</b>という処理を行います。<br />
+　ここでは、まずその構造を説明します。
+<h4>StackMachineクラス</h4>
+　<b>CLangProjectプロジェクト</b>には<b>stackMachine.h/cpp</b>ファイルに<b>StackMachineクラス</b>が定義されています。名前こそ<b>スタックマシン</b>ですが、まだスタックマシンではありません。今のところ<b>CLangProject.y</b>とのインターフェイスが実装されています。<br />
+　<b>StackMachineクラス</b>には<b>Createなんとか</b>というメンバ関数が多数存在します。それぞれ、<b>CLangProject.y</b>から呼び出されることを想定した関数群です。<br />
+　これらの関数では、オブジェクト化された<b>式</b>や<b>文</b>や<b>文リスト</b>などを構築します。<b>関数</b>も構築します。<br />
+　それらは、例えば<b>整数リテラル式</b>であれば<b>IntLiteralExpクラス</b>のインスタンスを作成し、オブジェクトプールに保持する、という役割を担います。<br />
+　ですので、<b>CLangProject.y</b>は、解析した構文によって、<b>式クラスや文クラスなど</b>を構築するメンバ関数を呼び出します。<br />
+　そこまで説明したところで、<b>CLangProject.y</b>を詳しく見ていきましょう。<br />
+　まず
+<div class="box1">
+<pre>
+%{
+#include "../CLangProject/proc.h"
+#define YYDEBUG 1
+extern int yylex(void);
+extern char *yytext;
+int yyerror(char const *str){
+    extern int gLine;
+    fprintf(stderr,"%s, line: %d, near %s\n",str, gLine, yytext);
+    return 0;
+}
+%}
+</pre>
+</div>
+　の部分は、ほぼ定番の内容です。<br />
+<div class="box1">
+<pre>
+#include "../CLangProject/proc.h"
+</pre>
+</div>
+　は<b>CLangProjectプロジェクト</b>の<b>proc.h</b>をインクルードしていて、これは
+<div class="box1">
+<pre>
+#pragma once
+
+#undef INT8_MIN
+#undef INT16_MIN
+#undef INT32_MIN
+#undef INT8_MAX
+#undef INT16_MAX
+#undef INT32_MAX
+#undef UINT8_MAX
+#undef UINT16_MAX
+#undef UINT32_MAX
+
+#include &lt;cstdlib>
+#include &lt;cstring>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;string>
+#include &lt;set>
+#include &lt;map>
+#include &lt;vector>
+#include &lt;list>
+#include &lt;memory>
+using namespace std;
+
+#include "common.h"
+#include "value.h"
+#include "expression.h"
+#include "statement.h"
+#include "declaration.h"
+#include "stackMachine.h"
+</pre>
+</div>
+　といった内容になっています。すなわち<b>CLangProjectプロジェクト</b>に含まれる多くのヘッダファイルをインクルードしています。これにより、<b>CLangProjectプロジェクト</b>で宣言される<b>クラスや構造体</b>にアクセスできます。<br />
+　続く
+<div class="box1">
+<pre>
+%code requires {
+#include "../CLangProject/proc.h"
+}
+</pre>
+</div>
+　でもどうようのインクルードをしています。<b>Bison</b>の定義ではこのように2か所必要なようです。<br />
+　続く
+<div class="box1">
+<pre>
+%union {
+    clg::Expression* pExpression;
+    clg::Statement* pStatement;
+    clg::StatementList* pStatementList;
+    clg::Declaration* pDeclaration;
+    clg::DeclarationList* pDeclarationList;
+    clg::ParameterList* pParameterList;
+    clg::Root* pRoot;
+}
+</pre>
+</div>
+　は<b>Bison</b>の定義で使用する、<b>型</b>と<b>その型の変数名</b>について登録します。例えば
+<div class="box1">
+<pre>
+    clg::Expression* pExpression;
+</pre>
+</div>
+　というのは<b>clg::Expression*</b>型の<b>pExpression</b>変数、という意味です。これらの設定は、後ほど<b>%type</b>の設定で重要になります。<br />
+　続く
+<div class="box1">
+<pre>
+%token IDENTIFIER INT_LITERAL DMP  INT_TYPE SEMICOLON 
+%token LC RC LP RP
+%type &lt;pExpression> expression intliteral_expression identifier_expression postfix_expression
+%type &lt;pStatementList> statement_list
+%type &lt;pStatement>  dump_statement expression_statement compound_statement statement
+%type &lt;pDeclaration> declaration
+%type &lt;pDeclarationList> declaration_list
+%type &lt;pRoot> root
+%type &lt;pParameterList> parameter_list
+</pre>
+</div>
+　で<b>%token</b>および<b>%type</b>の設定をします。<br />
+　<b>%token</b>構文は
+<div class="box1">
+<pre>
+%token IDENTIFIER INT_LITERAL DMP  INT_TYPE SEMICOLON 
+%token LC RC LP RP
+</pre>
+</div>
+　のように<b>Flexと共有するトークンの名前</b>を登録します。<br />
+　すなわち前項で述べた<b>IDENTIFIER</b>とか<b>INT_LITERAL</b>とかです。<b>Flexでも使用するトークンの名前</b>をここで登録します。複数行にわたってもかまいません。<br />
+　<b>%type</b>構文は
+<div class="box1">
+<pre>
+%type &lt;変数名> 使用する定義ブロック
+</pre>
+</div>
+　という使い方をします。例えば
+<div class="box1">
+<pre>
+%type &lt;pExpression> expression intliteral_expression identifier_expression postfix_expression
+</pre>
+</div>
+　というのは
+<div class="box1">
+<pre>
+pExpression　は　expression intliteral_expression identifier_expression postfix_expression
+で使用する変数名である、
+</pre>
+</div>
+　ということです。
+<h4>BNF法による表記</h4>
+　<b>Bison</b>は<b>バッカス・ナウア記法（英: Backus-Naur form）</b>という方法を使って、演算の優先順位などを設定します。<br />
+　具体的には、以下の部分です。
+<div class="box1">
+<pre>
+%%
+root
+    : declaration_list
+    {
+        $$ = clg::StackMachine::get()->addRootDeclarationList($1);
+    }
+    ;
+declaration_list
+    : declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1);
+    }
+    | declaration_list declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1,$2);
+    }
+    ;
+declaration
+    : INT_TYPE identifier_expression LP parameter_list RP compound_statement
+    {
+        $$ = clg::StackMachine::get()->createIntFunctionDeclaration($2,$6);
+    }
+    ;
+parameter_list
+    : /*empty*/
+    {
+        $$ = clg::StackMachine::get()->createParameterList();
+    }
+    ;
+statement_list
+    : statement
+    {
+        $$ = clg::StackMachine::get()->createStatementList($1);
+    }
+    | statement_list statement
+    {
+        $$ = clg::StackMachine::get()->createStatementList($1,$2);
+    }
+    ;
+statement
+    : dump_statement
+    | compound_statement
+    | expression_statement
+    ;
+expression_statement
+    : expression SEMICOLON
+    {
+        $$ = clg::StackMachine::get()->createExpressionStm($1);
+    }
+    ;
+dump_statement
+    :DMP expression SEMICOLON
+    {
+        $$ = clg::StackMachine::get()->createDumpStm($2);
+    }
+    ;
+compound_statement
+    : LC RC
+    {
+        $$ = clg::StackMachine::get()->createCompoundStatement();
+    }
+    | LC statement_list RC
+    {
+        $$ = clg::StackMachine::get()->createCompoundStatement($2);
+    }
+    ;
+expression
+    :intliteral_expression
+    |identifier_expression
+    |postfix_expression 
+    ;
+postfix_expression
+    : identifier_expression LP  RP
+    {
+        $$ = clg::StackMachine::get()->createFunctionCallExp($1);
+    }
+    ;
+identifier_expression
+    : IDENTIFIER
+    {
+        $$ = clg::StackMachine::get()->createIdentifierExp(yytext);
+    }
+    ;
+intliteral_expression
+    : INT_LITERAL
+    {
+       $$ = clg::StackMachine::get()->createIntLiteralExp(yytext);
+    }
+    ;
+%%
+</pre>
+</div>
+　<b>Bison</b>は、下方ほど優先順位が高くなります。上記の記述では
+<div class="box1">
+<pre>
+intliteral_expression
+    : INT_LITERAL
+    {
+       $$ = clg::StackMachine::get()->createIntLiteralExp(yytext);
+    }
+    ;
+</pre>
+</div>
+　が最上位です。
+<div class="box1">
+<pre>
+intliteral_expression
+は <b>INT_LITERAL</b>　が1つだけあるトークンです。
+clg::StackMachine::get()->createIntLiteralExp()関数に
+<b>yytext（トークンの文字列）</b>を渡して実行しなさい。
+</pre>
+</div>
+　という意味になります。<br />
+　では<b>clg::StackMachine::get()->createIntLiteralExp()関数</b>とは、どのような関数でしょうか？<br />
+<div class="box1">
+<pre>
+    Expression* StackMachine::createIntLiteralExp(const char* ptr) {
+        string str = clampToken(ptr);
+        auto pObj = new IntLiteralExp(std::stoi(str));
+        m_objPool.push_back(pObj);
+        return pObj;
+    }
+</pre>
+</div>
+　といった関数です。<b>yytext</b>は<b>const char* ptr</b>で受けられます。ここでは<b>IntLiteralExpクラス</b>を構築し、m_objPoolという領域に保存しておきます。<br />
+　そして、そのポインタを返します。<b>IntLiteralExpクラス</b>は<b>Expressionクラス</b>の派生クラスですので、<b>Expression*型の戻り値</b>として使用できるのです。<br />
+　<b>Bison</b>側に戻ります
+<div class="box1">
+<pre>
+intliteral_expression
+    : INT_LITERAL
+    {
+       $$ = clg::StackMachine::get()->createIntLiteralExp(yytext);
+    }
+    ;
+</pre>
+</div>
+　では<b>$$</b>に戻り値を代入してます。この<b>$$</b>こそが
+<div class="box1">
+<pre>
+%type &lt;pExpression> expression <span class="red">intliteral_expression</span> identifier_expression postfix_expression
+</pre>
+</div>
+　で指定した<b>pExpression変数</b>なわけです。ここで赤くなっている部分のように<b>intliteral_expression</b>を指定しています。ですので、<b>intliteral_expression</b>と、<b>ここでの$$</b>は等価であり、それは<b>pExpression変数</b>といいことになります。<br />
+　このように、<b>clg::StackMachine::get()->createIntLiteralExp(yytext);</b>の実行により、<b>intliteral_expression</b>は<b>pExpression変数</b>になりました。<br />
+　そうすると
+<div class="box1">
+<pre>
+expression
+    :<span class="red">intliteral_expression</span>
+    |identifier_expression
+    |postfix_expression 
+    ;
+</pre>
+</div>
+　のように<b>expression</b>とまとめられるようになり、それは
+<div class="box1">
+<pre>
+dump_statement
+    :DMP <span class="red">expression</span> SEMICOLON
+    {
+        $$ = clg::StackMachine::get()->createDumpStm($2);
+    }
+    ;
+</pre>
+</div>
+　と<b>dump_statement</b>の定義に再利用できるようになります。<br />
+　ここで
+<div class="box1">
+<pre>
+        $$ = clg::StackMachine::get()->createDumpStm($2);
+</pre>
+</div>
+　の<b>$2</b>は<b>2番目のトークン</b>という意味で、
+<div class="box1">
+<pre>
+DMP  1番目
+expression  2番目
+SEMICOLON  3番目
+</pre>
+</div>
+　と数えますので、<b>clg::StackMachine::get()->createDumpStm関数</b>には<b>pExpression変数</b>が渡されます。ですので<b>CLangProject側</b>の<b>createDumpStm関数</b>は以下のような宣言になります。
+<div class="box1">
+<pre>
+   Statement* createDumpStm(Expression* exp);
+</pre>
+</div>
+　このような形で<b>CLangProject.y</b>では、優先順位の高いブロックで取得した<b>文字列</b>を、優先順位の低いブロックで再利用しながら、<b>CLangProject側</b>の関数に渡すことで、オブジェクトとして構築していきます。<br/>
+<br />
+　さて、この項では<b>Bisonファイル</b>による<b>CLangProject側</b>の関数呼び出しの構造を説明しました。<br />
+　必ずしもこの構造が、よいとも限りません。あくまで<b>ぼくの書き方</b>がこの構造なので、例えばオブジェクト指向を使用しない設計方法もあると思います。<br />
+　このドキュメントを参考にしながら<b>自分のC言語</b>を考えてみるのもよいと思います。
+
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="13_05.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="13_07.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

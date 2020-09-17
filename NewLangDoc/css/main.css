@@ -187,10 +187,11 @@ ul.foot_navi li {
 
 #contents .box1 pre {
     margin: 0px;
-    line-height: 120%;
+    line-height: 150%;
     font-weight: bold;
     background-color: #fffdee;
 }
+
 
 #contents .red {
     color: #FF0000; 

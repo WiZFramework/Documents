@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2020年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>１３．シンプルな実装をする</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>１３－０５．字句解析（Flexファイルの記述）</h3>
+　この項からは<b>１３－０３．ファイル構成の設定と、関数定義</b>で記述した内容について細かく見ていきます。<br />
+　まず手始めに<b>字句解析</b>をになう<b>Flex</b>用のファイル<b>CLangProject.l</b>から解説します。
+<h4>字句解析とはなにか</h4>
+　プログラムソースファイルは<b>テキストファイル</b>です。中には<b>アスキーコード</b>が並んでいます。コメントや、文字列の中には日本語も使えますが、それ以外は<b>日本語コード</b>は記述できません。<br />
+　まず、言語を作成するには<b>ソースコードをトークンに分割</b>しなければなりません。<b>トークン</b>というのは文法上意味のある<b>文字列</b>です。<br />
+　それは<b> + </b>のように<b>記号</b>であることもあるし<b>int</b>といった予約語であることもあります。それらに分割します。<br />
+　その役割を担うのが<b>Flex</b>です。<b>Flex</b>の定義ファイルである<b>CLangProject.l</b>に<b>トークン</b>を定義します。<br />
+　まず、冒頭
+<div class="box1">
+<pre>
+%{
+#include &lt;stdio.h>
+#include "CLangProject.tab.h"
+#define YY_SKIP_YYWRAP 1
+int gLine = 1;
+int yywrap(void){ return 1; }
+%}
+</pre>
+</div>
+　の部分は<b>お決まり</b>の部分なので、あんまり気にしないでください。<br />
+　続く
+<div class="box1">
+<pre>
+%s COMMENT
+%s LINE_COMMENT
+</pre>
+</div>
+　は<b>状態</b>を定義します。<b>Flex</b>は、解析を行う際<b>状態</b>というのを持っています。デフォルトは<b>INITIAL</b>という状態です。<b>INITIAL</b>状態は、ここで定義しなくても使用できます。<br />
+　では<b>INITIAL</b>状態から見ていきます。<b>Flex</b>の解析ブロックは
+<div class="box1">
+<pre>
+%%
+</pre>
+</div>
+　ではじまり
+<div class="box1">
+<pre>
+%%
+</pre>
+</div>
+　で終わります。<b>INITIAL</b>状態は
+<div class="box1">
+<pre>
+&lt;INITIAL>{
+    "("     return LP;
+    ")"     return RP;
+    "{"     return LC;
+    "}"     return RC;
+    ";"     return SEMICOLON;
+    "dump"     return DMP;
+    "int"       return INT_TYPE;
+    "/*"    { BEGIN(COMMENT);}
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+    [1-9][0-9]* {
+        return INT_LITERAL;
+    }
+    [A-Za-z_][A-Za-z_0-9]* {
+        return IDENTIFIER;
+    }
+    "\n"    {gLine++;}
+    [ \t]   ;
+    .   { return 0;}
+}
+</pre>
+</div>
+　のように<b>&lt;</b>と<b>></b>で状態名を挟んで定義します。<br />
+　まず<b>状態</b>の変更から見ていきます。
+<div class="box1">
+<pre>
+    "/*"    { BEGIN(COMMENT);}
+</pre>
+</div>
+　というのは、<b>"/*"</b>というトークンが現れたら<b>COMMENT</b>という状態に推移しなさい、という意味です。<b> /* </b>は<b>複数行コメント</b>です。<br />
+　複数行コメントが始まると<b>COMMENT</b>という状態の定義にのっとって解析します。
+<div class="box1">
+<pre>
+&lt;COMMENT>{
+    "\n"    {gLine++;}
+    "*/" {BEGIN(INITIAL);}
+    .   ;
+}
+
+</pre>
+</div>
+　は<b>改行が来たら、行数変数をインクリメント</b>と<b> */ </b>が現れたら、<b>状態</b>を<b>INITIAL</b>にもどします。それ以外は
+<div class="box1">
+<pre>
+    .   ;
+</pre>
+</div>
+　のように何もしません（つまり無視します）。<br />
+　<b>INITIAL</b>状態で<b>//</b>が現れたら<b>LINE_COMMENT</b>状態に推移します。その定義は
+<div class="box1">
+<pre>
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+</pre>
+</div>
+　です。<b>Flex</b>は<b>正規表現</b>という文法にのっとって、トークンを解析します。<b> [/][/]+</b>というのは<b> / が二つ以上つつく</b>って意味です。<br />
+　<b>LINE_COMMENT</b>状態の定義は以下になります。
+<div class="box1">
+<pre>
+&lt;LINE_COMMENT>{
+    "\n" { gLine++; BEGIN(INITIAL);}
+    .   ;
+}
+</pre>
+</div>
+　ここでは、改行が来たときに行数変数をインクリメントして、<b>状態</b>を<b>INITIAL</b>にもどします。それ以外は何もしません。<br/>
+　それでは<b>INITIAL</b>状態を詳しく見ていきましょう。重複しますがもう一度記します。
+<div class="box1">
+<pre>
+&lt;INITIAL>{
+    "("     return LP;
+    ")"     return RP;
+    "{"     return LC;
+    "}"     return RC;
+    ";"     return SEMICOLON;
+    "dump"     return DMP;
+    "int"       return INT_TYPE;
+    "/*"    { BEGIN(COMMENT);}
+    [/][/]+ { BEGIN(LINE_COMMENT);}
+    [1-9][0-9]* {
+        return INT_LITERAL;
+    }
+    [A-Za-z_][A-Za-z_0-9]* {
+        return IDENTIFIER;
+    }
+    "\n"    {gLine++;}
+    [ \t]   ;
+    .   { return 0;}
+}
+</pre>
+</div>
+　ここで
+<div class="box1">
+<pre>
+    "("     return LP;
+</pre>
+</div>
+　は<b> ( が現れたらLPをリターンしなさい</b>という意味です。<br />
+　<b>何に対してリターンするのか</b>というと、次項に説明する<b>Bison</b>に対してです。<br />
+　ここでは<b>Flex</b>を先に説明していますが、<b>Flexの定義</b>というのは、<b>Bisonの定義</b>から呼ばれます。それで、<b>トークンに分けたらBisonに返す</b>という形になります。<br />
+　ここで<b>LP</b>というのは<b>Bisonの定義</b>で、<b>トークンとして命名されている</b>名前です。その命名方法は次項で述べます。<br />
+　<b>Flex定義</b>ではこのように<b>LP、RP、LC、RC、SEMICOLON</b>のように、記号に対してトークン分けしてますが、そのほかに<b>dump、int</b>といった文字列に対してもトークンに分けます。それぞれ<b>DMP、INT_TYPE</b>という名前を返しています。<br />
+　<b>dump</b>というのは、C言語の予約語にはない文字列です。この文字列は<b>デバッグ出力</b>をするために用意しました。<br />
+　通常、C言語では<b>出力</b>は<b>printf関数</b>を使いますが、<b>printf関数</b>の定義はもう少し後で行いたいので、気軽に出力できる<b>dump</b>という予約語を作成しました。<br />
+　このほかに
+<div class="box1">
+<pre>
+    [1-9][0-9]* {
+        return INT_LITERAL;
+    }
+</pre>
+</div>
+　というのは<b>10進整数リテラル</b>をあらわします。<b>1から9</b>で始まり、次からは<b>0から9</b>の文字列が続くトークンを<b>10進整数リテラル</b>と定義します。<br />
+<div class="box1">
+<pre>
+    [A-Za-z_][A-Za-z_0-9]* {
+        return IDENTIFIER;
+    }
+</pre>
+</div>
+　は<b>識別子</b>です。<b>識別子</b>は<b>関数名や変数名</b>に使われる文字列です。ここでは<b>アルファベットか、_（アンダースコア）ではじまり、アルファベットか、_ か、数字が続く</b>のを<b>識別子</b>としました。
+<div class="box1">
+<pre>
+    [ \t]   ;
+    .   { return 0;}
+</pre>
+</div>
+　は<b>タブや空白は無視</b>で、それ以外は<b>意味なし</b>をあらわす<b>return 0;</b>とします。<br />
+　このように定義された<b>Flexの定義</b>は<b>Bison</b>から<b>次のトークンをくれ</b>という要求にしたがって、実行されます。<br />
+　次項では<b>構文解析</b>をになう<b>Bison</b>の定義を解説します。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="13_04.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="13_06.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>

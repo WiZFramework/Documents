@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<link href="css/main.css" rel="stylesheet" type="text/css">
+<title>言語を作ろうプロジェクト（2020年）</title>
+</head>
+<body>
+<!-- 全体コンテナ　-->
+<div id="container">
+<div id="header">
+<h3>１３．シンプルな実装をする</h3>
+</div>
+<!-- コンテンツ　-->
+<div id="contents">
+<h3>１３－０８．スクリプトの実行</h3>
+　<b>CLangProject</b>側の<b>main.cpp</b>には以下の記述があります。
+
+
+<div class="box1">
+<pre>
+#include "proc.h"
+
+//中略
+
+int main(int argc, char** argv) {
+    InputParser input(argc, argv);
+    const string& filename = input.getCmdOption("-f");
+    if (filename.empty()) {
+        cout << "スクリプトファイルが指定されていません。" << endl;
+        return 1;
+    }
+    errno_t err;
+    FILE* fp;
+    if ((err = fopen_s(&fp, filename.c_str(), "r")) != 0) {
+        cout << "スクリプトファイルの読み込みに失敗しました。" << endl;
+        return 1;
+    }
+    <span class="red">auto tntp = clg::StackMachine::get();
+    if (tntp->compile(fp)) {
+        return 1;
+    }
+    tntp->execute();
+    tntp->destroy();</span>
+    return 0;
+}
+</pre>
+</div>
+　赤くなっているところですが、<b>tntpポインタ</b>に<b>StackMachineクラス</b>のインスタンスのポインタを代入し、以降はそのポインタ経由で操作しています。<br />
+<div class="box1">
+<pre>
+    if (tntp->compile(fp)) {
+        return 1;
+    }
+</pre>
+</div>
+　は、BisonやFlexの字句解析や構文解析を行います。失敗すれば終了します。<br />
+　前項で説明した内容が処理されます。
+<div class="box1">
+<pre>
+    tntp->execute();
+</pre>
+</div>
+　は<b>実行</b>です。この関数は以下のような内容になります。
+
+<div class="box1">
+<pre>
+    void StackMachine::execute() {
+        if (m_pRoot) {
+            m_pRoot->execute();
+        }
+    }
+</pre>
+</div>
+　<b>m_pRoot</b>というのは<b>Rootクラス</b>のインスタンスのポインタです。コンパイル時に構築されます。<br />
+<div class="box1">
+<pre>
+            m_pRoot->execute();
+</pre>
+</div>
+　は以下の内容になります。
+
+<div class="box1">
+<pre>
+    Value Root::execute() {
+        //  main関数を探して実行
+        FunctionCallExp* pFunc = new FunctionCallExp("main");
+        pFunc->execute();
+        return Value();
+    }
+</pre>
+</div>
+　ここでは、<b>main関数</b>を<b>スクリプト</b>を探して、見つかったら実行します。<br />
+　関数は<b>関数の定義リスト</b>として、
+<div class="box1">
+<pre>
+        DeclarationList* m_pDeclarationList;
+</pre>
+</div>
+　という<b>Rootクラスのメンバ変数</b>として保持しています。<br />
+　関数は、前項で説明した
+<div class="box1">
+<pre>
+clg::StackMachine::get()->createIntFunctionDeclaration関数;
+</pre>
+</div>
+　によって定義ずみです。この内容は
+<div class="box1">
+<pre>
+    //int型関数定義
+    Declaration* StackMachine::createIntFunctionDeclaration(Expression* pExp, Statement* stm) {
+        IdentifierExp* pIdent = dynamic_cast&ltIdentifierExp*>(pExp);
+        CompoundStatement* pComp = dynamic_cast&ltCompoundStatement*>(stm);
+        if (pIdent && stm) {
+            auto pObj = new IntFunctionDeclaration(pIdent, stm);
+            m_objPool.push_back(pObj);
+            return pObj;
+        }
+        else {
+            cout &lt&lt "関数定義が間違っています" &lt&lt endl;
+            exit(1);
+        }
+        return nullptr;
+    }
+</pre>
+</div>
+　のようになっています。この中で<b>IntFunctionDeclarationクラスのインスタンス</b>が構築されますが、そのオブジェクトは<b>CLangProject.y</b>にて
+<div class="box1">
+<pre>
+declaration_list
+    : declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1);
+    }
+    | declaration_list declaration
+    {
+        $$ = clg::StackMachine::get()->createDeclarationList($1,$2);
+    }
+    ;
+</pre>
+</div>
+　と<b>定義リスト</b>に追加されます。その内容は、最終的には<b>CLangProject.y</b>の
+<div class="box1">
+<pre>
+root
+    : declaration_list
+    {
+        $$ = clg::StackMachine::get()->addRootDeclarationList($1);
+    }
+    ;
+</pre>
+</div>
+　と<b>Rootオブジェクト</b>の
+<div class="box1">
+<pre>
+        DeclarationList* m_pDeclarationList;
+</pre>
+</div>
+　に追加されます。そのコードは
+<div class="box1">
+<pre>
+    //ルートへのDeclarationListの追加
+    Root* StackMachine::addRootDeclarationList(DeclarationList* decl) {
+        if (m_pRoot) {
+            m_pRoot->setDeclList(decl);
+        }
+        return m_pRoot;
+    }
+</pre>
+</div>
+　です。<br />
+　スクリプトでは
+<div class="box1">
+<pre>
+int func() {
+	dump 30;
+
+}
+
+int main () {
+	dump 10;
+	dump 20;
+	func();
+}
+</pre>
+</div>
+　のように<b>main関数</b>も存在します。<br />
+　さて、<b>実行</b>の前置きが長くなりました。<br />
+　いずれにせよ、
+<div class="box1">
+<pre>
+    Value Root::execute() {
+        //  main関数を探して実行
+        FunctionCallExp* pFunc = new FunctionCallExp("main");
+        pFunc->execute();
+        return Value();
+    }
+</pre>
+</div>
+　のように<b>main関数</b>を実行します。<b>関数の実行式</b>は
+
+<div class="box1">
+<pre>
+    Value FunctionCallExp::execute() {
+        bool flg = false;
+        auto pRoot = StackMachine::get()->getRoot();
+        auto pos = pRoot->getDeclList();
+        do {
+            auto decl = pos->getDecl();
+            auto tgt = dynamic_cast&ltIntFunctionDeclaration*>(decl);
+            if (tgt) {
+                string str = tgt->getIdentity();
+                if (str == m_Identity) {
+                    flg = true;
+                    tgt->excute();
+                    break;
+                }
+            }
+            pos = pos->getNext();
+        } while (pos);
+        if (!flg) {
+            cout &lt&lt "関数が見つかりません。: " &lt&lt m_Identity &lt&lt endl;
+            exit(1);
+        }
+        return Value();
+    }
+</pre>
+</div>
+　となります。<br />
+<h4>実行結果</h4>
+　ここまでの実装で、
+<div class="box1">
+<pre>
+int func() {
+	dump 30;
+
+}
+
+int main () {
+	dump 10;
+	dump 20;
+	func();
+}
+</pre>
+</div>
+　というスクリプトは
+<div class="box1">
+<pre>
+10
+20
+30
+
+...\Debug\CLangProject.exe (プロセス 18652) は、コード 0 で終了しました。
+このウィンドウを閉じるには、任意のキーを押してください...
+</pre>
+</div>
+　という実行結果になります。<br />
+　なーんだ、つまんない、とか思わないでください。<br />
+　これが<b>言語の開発</b>です。ゆっくりゆっくり進むのです。<br />
+<br />
+　次項からは、いよいよ<b>変数</b>を実装したいと思います。<br />
+　ゆっくりお付き合いいただければ幸いです。
+</div>
+<!-- /コンテンツ　-->
+<hr>
+<!-- フッタ　-->
+<ul class="foot_navi">
+<li><a href="13_07.html">前ページ</a></li>
+<li><a href="index.html">目次</a></li>
+<li><a href="13_09.html">次ページ</a></li>
+</ul>
+<!-- /フッタ　-->
+</div>
+<!-- /全体コンテナ　-->
+</body>
+</html>
