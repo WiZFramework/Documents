@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link href="css/style.css" rel="stylesheet">
+
+<title>言語を作ろうプロジェクト（2022年）</title>
+</head>
+<body>
+<header class="sticky-top">
+  <div>
+<h3>２１．Ubuntuでひな形を作る</h3>
+  </div>
+</header>
+<!--container-->
+<div class="container">
+  <main>
+    <!--row-->
+    <div class="row">
+      <!--col-->
+      <div class="col">
+<h4>２１－０１．Bison3.8.1</h4>
+<h5>開発環境を構築する</h5>
+　ネット上にある記事は、Windows用よりも、UNIX/Linux用のほうが数多くあります。そういった記事を参考にするためには、Unix/Linux環境を作ったうえでFlexとかBisonを使う必要があります。ここでは<strong>Ubuntu</strong>内に開発環境を構築する方法を説明します。<br>
+　Windows10とか11の環境であれば<strong>wsl2</strong>を使うことで、デスクトップ内に<strong>Ubuntu</strong>の環境を構築できます。<br>
+　ただここで注意してほしいのはこの項からの説明で必要な環境は<strong>Bison3.8.1</strong>が動作しないいけません。ですので<strong>powershell</strong>や<strong>コマンドプロンプト</strong>で<strong>Ubuntu</strong>をセットアップした環境だと、2022年7月現在、対応できません。ですので<strong>MicrosoftStore</strong>から最新版のUbuntuを入手します。<br>
+　<strong>MicrosoftStore</strong>のアプリを起動して検索テキストボックスで<strong>Ubuntu</strong>と検索すると<strong>Ubuntu 22.04 LTS</strong>が出てきます。これをセットアップします。<br>
+　セットアップして<strong>Ubuntu</strong>にログイン後最初にやるのは、<strong>アップデート</strong>です
+<pre>
+ sudo apt update
+</pre>
+　を実行し、その後
+<pre>
+ sudo apt upgrade
+</pre>
+　を実行します。アップデートが終わりましたら、<strong>C/C++コンパイラなど</strong>をインストールしないといけません。Ubuntuには、オールインワンでインストールすることができます。
+<pre>
+ sudo apt install build-essential
+</pre>
+　で開発環境がインストールされます。しかしこれで<strong>Flex/Bison</strong>環境が整ったわけではなく、もう一つコマンドがあります。
+<pre>
+ sudo apt install flex bison
+</pre>
+　で開発環境が整います。
+<h5>C++で作る簡単な計算機</h5>
+　最初に、簡単な計算機を作ってみましょう。<br>
+　<strong>Bison3.8.1</strong>のサイトにあります、<a href="https://www.gnu.org/software/bison/manual/bison.html">バイソンのマニュアル</a>の中の<a href="https://www.gnu.org/software/bison/manual/bison.html#C_002b_002b-Parsers">10.1 C++ Parsers</a>にC++で<strong>Flex/Bison</strong>を使う方法が記述されています。その中の<a href="https://www.gnu.org/software/bison/manual/bison.html#A-Complete-C_002b_002b-Example">C++で作る簡単な計算機</a>の記述がありますので、これを作成してみます。<br>
+　<strong>Ubuntu</strong>のホームディレクトリの中に適当な作業用ディレクトリを作成します。その中に<strong>driver.hh</strong>というファイルを作成します。コマンドラインで<strong>vi</strong>などを使っても作業できますが、<strong>wsl2環境</strong>であれば、作業用ディレクトリに入って
+<pre>
+  explorer.exe .
+</pre>
+　（最後の<strong>.</strong>ドットは必須です）<br>
+　で、GUIのエクスプローラが起動します。
+<p>&nbsp;</p>
+<img src="img/210101.png" width="80%" border="1"/>
+<p>図210101</p>
+<p>&nbsp;</p>
+　こうすると<strong>VSCode</strong>などのWindowsのテキストエディタでコードを書けるので便利です。ここで右ボタンクリックで<strong>新規作成－テキストドキュメント</strong>で新しいファイルを作成します。<br>
+　<strong>新規 テキスト ドキュメント.txt</strong>という名前で作成されますが、これを<strong>driver.hh</strong>に変更して作業を始めます。<br>
+　<strong>Bison3.8.1</strong>のマニュアルの<a href="https://www.gnu.org/software/bison/manual/bison.html#Calc_002b_002b-Parsing-Driver">10.1.8.2 Calc++ Parsing Driver</a>で紹介されている記述は以下です。これを<strong>driver.hh</strong>に記述します。
+<pre>
+# ifndef DRIVER_HH
+# define DRIVER_HH
+# include &lt;string>
+# include &lt;map>
+# include "parser.hh"
+
+// Give Flex the prototype of yylex we want ...
+# define YY_DECL \
+  yy::parser::symbol_type yylex (driver& drv)
+// ... and declare it for the parser's sake.
+YY_DECL;
+
+// Conducting the whole scanning and parsing of Calc++.
+class driver
+{
+public:
+  driver ();
+
+  std::map&lt;std::string, int> variables;
+
+  int result;
+
+  // Run the parser on file F.  Return 0 on success.
+  int parse (const std::string& f);
+  // The name of the file being parsed.
+  std::string file;
+  // Whether to generate parser debug traces.
+  bool trace_parsing;
+
+  // Handling the scanner.
+  void scan_begin ();
+  void scan_end ();
+  // Whether to generate scanner debug traces.
+  bool trace_scanning;
+  // The token's location used by the scanner.
+  yy::location location;
+};
+#endif // ! DRIVER_HH
+
+</pre>
+　続いて<strong>driver.cc</strong>を作成し、以下を記述します。
+<pre>
+#include "driver.hh"
+#include "parser.hh"
+
+driver::driver ()
+  : trace_parsing (false), trace_scanning (false)
+{
+  variables["one"] = 1;
+  variables["two"] = 2;
+}
+
+int
+driver::parse (const std::string &f)
+{
+  file = f;
+  location.initialize (&file);
+  scan_begin ();
+  yy::parser parse (*this);
+  parse.set_debug_level (trace_parsing);
+  int res = parse ();
+  scan_end ();
+  return res;
+}
+
+</pre>
+　続いて<strong>parser.yy</strong>を作成します。<strong>Bison</strong>のファイルです。<a href="https://www.gnu.org/software/bison/manual/bison.html#Calc_002b_002b-Parser">Calc++ Parser</a>で説明されている部分です。<br>
+<pre>
+%skeleton "lalr1.cc" // -*- C++ -*-
+%require "3.8.1"
+%header
+
+%define api.token.raw
+
+%define api.token.constructor
+%define api.value.type variant
+%define parse.assert
+
+%code requires {
+  # include &lt;string>
+  class driver;
+}
+
+// The parsing context.
+%param { driver& drv }
+
+%locations
+
+%define parse.trace
+%define parse.error detailed
+%define parse.lac full
+
+%code {
+# include "driver.hh"
+}
+
+%define api.token.prefix {TOK_}
+%token
+  ASSIGN  ":="
+  MINUS   "-"
+  PLUS    "+"
+  STAR    "*"
+  SLASH   "/"
+  LPAREN  "("
+  RPAREN  ")"
+;
+
+%token &lt;std::string> IDENTIFIER "identifier"
+%token &lt;int> NUMBER "number"
+%nterm &lt;int> exp
+
+%printer { yyo &lt;&lt; $$; } &lt;*>;
+
+%%
+%start unit;
+unit: assignments exp  { drv.result = $2; };
+
+assignments:
+  %empty                 {}
+| assignments assignment {};
+
+assignment:
+  "identifier" ":=" exp { drv.variables[$1] = $3; };
+
+%left "+" "-";
+%left "*" "/";
+exp:
+  "number"
+| "identifier"  { $$ = drv.variables[$1]; }
+| exp "+" exp   { $$ = $1 + $3; }
+| exp "-" exp   { $$ = $1 - $3; }
+| exp "*" exp   { $$ = $1 * $3; }
+| exp "/" exp   { $$ = $1 / $3; }
+| "(" exp ")"   { $$ = $2; }
+%%
+
+void
+yy::parser::error (const location_type& l, const std::string& m)
+{
+  std::cerr &lt;&lt; l &lt;&lt; ": " &lt;&lt; m &lt;&lt; '\n';
+}
+
+</pre>
+　続いて<strong>scanner.l</strong>を作成します。<strong>Flex</strong>のファイルですね。<a href="https://www.gnu.org/software/bison/manual/bison.html#Calc_002b_002b-Scanner">Calc++ Scanner</a>の部分です。
+<pre>
+%{ /* -*- C++ -*- */
+# include &lt;cerrno>
+# include &lt;climits>
+# include &lt;cstdlib>
+# include &lt;cstring> // strerror
+# include &lt;string>
+# include "driver.hh"
+# include "parser.hh"
+%}
+
+%option noyywrap nounput noinput batch debug
+
+%{
+  // A number symbol corresponding to the value in S.
+  yy::parser::symbol_type
+  make_NUMBER (const std::string &s, const yy::parser::location_type& loc);
+%}
+
+id    [a-zA-Z][a-zA-Z_0-9]*
+int   [0-9]+
+blank [ \t\r]
+
+
+%{
+  // Code run each time a pattern is matched.
+  # define YY_USER_ACTION  loc.columns (yyleng);
+%}
+%%
+%{
+  // A handy shortcut to the location held by the driver.
+  yy::location& loc = drv.location;
+  // Code run each time yylex is called.
+  loc.step ();
+%}
+{blank}+   loc.step ();
+\n+        loc.lines (yyleng); loc.step ();
+"-"        return yy::parser::make_MINUS  (loc);
+"+"        return yy::parser::make_PLUS   (loc);
+"*"        return yy::parser::make_STAR   (loc);
+"/"        return yy::parser::make_SLASH  (loc);
+"("        return yy::parser::make_LPAREN (loc);
+")"        return yy::parser::make_RPAREN (loc);
+":="       return yy::parser::make_ASSIGN (loc);
+
+{int}      return make_NUMBER (yytext, loc);
+{id}       return yy::parser::make_IDENTIFIER (yytext, loc);
+.          {
+             throw yy::parser::syntax_error
+               (loc, "invalid character: " + std::string(yytext));
+}
+&lt;&lt;EOF>>    return yy::parser::make_YYEOF (loc);
+%%
+yy::parser::symbol_type
+make_NUMBER (const std::string &s, const yy::parser::location_type& loc)
+{
+  errno = 0;
+  long n = strtol (s.c_str(), NULL, 10);
+  if (! (INT_MIN &lt;= n && n &lt;= INT_MAX && errno != ERANGE))
+    throw yy::parser::syntax_error (loc, "integer is out of range: " + s);
+  return yy::parser::make_NUMBER ((int) n, loc);
+}
+
+void
+driver::scan_begin ()
+{
+  yy_flex_debug = trace_scanning;
+  if (file.empty () || file == "-")
+    yyin = stdin;
+  else if (!(yyin = fopen (file.c_str (), "r")))
+    {
+      std::cerr &lt;&lt; "cannot open " &lt;&lt; file &lt;&lt; ": " &lt;&lt; strerror (errno) &lt;&lt; '\n';
+      exit (EXIT_FAILURE);
+    }
+}
+
+void
+driver::scan_end ()
+{
+  fclose (yyin);
+}
+
+</pre>
+　最後に<strong>main()関数</strong>が入るファイルを作成します。ファイル名は何でもよいのですが<strong>calcCpp.cc</strong>とします。ファイルを作成したら以下を記述します。<a href="https://www.gnu.org/software/bison/manual/bison.html#Calc_002b_002b-Top-Level">Top Level</a>で説明されている部分です。
+<pre>
+#include &lt;iostream>
+#include "driver.hh"
+
+int
+main (int argc, char *argv[])
+{
+  int res = 0;
+  driver drv;
+  for (int i = 1; i &lt; argc; ++i)
+    if (argv[i] == std::string ("-p")){
+    std::cout &lt;&lt; "no1" &lt;&lt; std::endl; 
+      drv.trace_parsing = true;
+  }
+    else if (argv[i] == std::string ("-s"))
+      drv.trace_scanning = true;
+    else if (!drv.parse (argv[i]))
+      std::cout &lt;&lt; drv.result &lt;&lt; '\n';
+    else
+      res = 1;
+  return res;
+}
+
+</pre>
+　ソースコードはこれで終わりですが、コンパイルするのにコマンドラインでいちいちやるのは大変なので<strong>make</strong>を使いましょう。<strong>Makefile</strong>という名前のファイルを作成し、以下を記述します。
+<pre>
+calcCpp : calcCpp.cc driver.cc parser.cc scanner.cc
+&#009;g++ -o calcCpp calcCpp.cc driver.cc parser.cc scanner.cc
+
+scanner.cc : scanner.l
+&#009;flex -o scanner.cc scanner.l
+
+parser.cc parser.hh location.hh : parser.yy
+&#009;bison -o parser.cc parser.yy
+
+</pre>
+　これで、<strong>make</strong>を実行すればコンパイルできるのですが、テスト用のテキストファイル（スクリプトファイル）を作成しておきます。<strong>test.txt</strong>という名前で以下を記述します。<br>
+　<strong>Makefile</strong>を書く時の<strong>コマンド行</strong>の先頭は<strong>タブ文字</strong>ですので気を付けましょう。
+<pre>
+three := 3
+seven := one + two * three
+seven * seven
+
+</pre>
+　それでは、コンパイルして実行しましょう。<strong>Ubuntu</strong>のコマンドラインから
+<pre>
+make
+</pre>
+　を打ち込みます。コンパイル出来たら
+<pre>
+./calcCpp test.txt
+</pre>
+　を実行してみましょう。
+<pre>
+49
+</pre>
+　という数字が出力されたら、成功です。
+<br>
+      </div>
+      <!--/col-->
+    </div>
+    <!--/row-->
+  </main>
+  <!--/main-->
+  <footer id="footer" class="fixed-bottom text-center">
+    <ul>
+      <li class="list-inline-item"><a href="index.html">目次</a></li>
+      <li class="list-inline-item"><a href="21_02.html">次ページ</a></li>
+    </ul>
+  </footer>
+</div>
+<!--/container-->
+<!-- Optional JavaScript; choose one of the two! -->
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+-->
+</body>
+</html>

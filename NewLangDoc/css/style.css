@@ -1,0 +1,75 @@
+@charset "utf-8";
+body, h1, h2, h3, h4, h5, p {
+font-family: "游ゴシック", YuGothic, "ヒラギノ角ゴ Pro", "Hiragino Kaku Gothic Pro", "メイリオ", "Meiryo", sans-serif;
+font-weight: 500;
+}
+
+body {
+	background-color: #ffffff;
+	margin-bottom: 40px;
+}
+
+main{
+	margin-bottom:120px;
+}
+
+
+h1{
+font-size: 60px;
+font-weight : bold;
+margin-top: 50px;
+margin-bottom: 40px;
+}
+
+
+h2{
+font-size: 40px;
+font-weight : bold;
+margin-top: 30px;
+margin-bottom: 24px;
+}
+
+h3{
+font-size: 30px;
+font-weight : bold;
+/*margin-top: 24px;*/
+margin-bottom: 20px;
+padding: 20px;
+background-color: #ee82ee;
+}
+
+h4{
+font-size: 24px;
+font-weight : bold;
+margin-top: 28px;
+margin-bottom: 18px;
+border-bottom: 2px solid #000000;
+}
+
+h5{
+font-size: 20px;
+font-weight : bold;
+margin-top: 18px;
+margin-bottom: 16px;
+border-bottom: 1px solid #080808;
+}
+
+pre{
+font-weight : bold;
+margin-top: 10px;
+margin-bottom: 10px;
+padding: 10px;
+background-color: #f5f5dc;
+border: 1px solid #080808;
+}
+
+footer{
+margin-top: 20px;
+height:100px;
+background-color: #ee82ee;
+}
+
+footer .list-inline-item{
+  margin:30px;
+}
+
