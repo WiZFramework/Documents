@@ -25,10 +25,104 @@
       <!--col-->
       <div class="col">
 <h4>２１－０２．Bison3.8.1でのC++</h4>
-<h5>特徴</h5>
+<h5>Bison3.8.1でのC++の特徴</h5>
+　前項では「簡単な計算機」を作成しました。「Bisonのコード（parser.yy）」を見ると、例えば「【１】WindowsでＣ言語を作る」で説明したような「Bisonファイル」とは、かなり感じが違うと思います。この項では、ソースコードを細かく見ていくことによって、どういう仕組みで「Parser」を作成するのかを見てみたいと思います。
+　もちろん、このサンプルは<a href="https://www.gnu.org/software/bison/manual/bison.html">バイソンのマニュアル</a>に書いてあるものを作成したので、ドキュメントを詳しく読めばわかると思いますが、英語で書かれているので、日本語で理解するためには「翻訳」などをしながら読み進める必要がありますし、また、C++の使い方も高度な部分もあるので、そのあたりを補足しながら説明したいと思います。<br>
+　また、「FlexおよびBison」は「.lファイルや.yyファイル」をもとに、C++のソースコードを作り出します。「コンパイル（ビルド）」はこのように、生成されたファイルが重要ですのでその中身も検討します。<br>
+<h5>calcCpp.ccと、その関連</h5>
+　ではまず「main関数」があります、「calcCpp.cc」から見ていきましょう。<br>
+　「calcCpp.cc」では、冒頭に
 <pre>
+#include &lt;iostream>
+#include "driver.hh"
 </pre>
-　という数字が出力されたら、成功です。
+　という記述があります。「iostream」はSTLのコンテナで、「std::cout」などを保持します。<br>
+　「driver.hh」先ほど記述したヘッダファイルですね。続いて「main()関数」ですが、「forループ」の中では、コマンドラインの入力（コマンド引数）を見て、それによって「Parser」の動きを変えています。<br>
+　ループが
+<pre>
+  for (int i = 1; i &lt; argc; ++i)
+</pre>
+　のように「1」から始まっているのは、argv[0]には、プログラム名、すなわち、「calcCpp」が入っているので、ここは使わないからです。<br>
+　コマンド引数に、「-p」があれば「drv.trace_parsing」を「true」にします。「-s」があれば、「drv.trace_scanning」を「true」にします。<br>
+　それ以外の場合は「ファイル名が入力された」、と仮定して、「drv.parse (argv[i])」と「driverクラスのparse関数」を呼び出します。<br>
+　何もコマンド引数が入力されなければ「1を返して終了」します。<br>
+　「-p」や「-s」を確認する場合は、実行のコマンドを
+<pre>
+./calcCpp -p test.txt
+</pre>
+　と実行してみましょう。「パーサーの動き」をトレースして出力します。「-s」も追加すれば「スキャナーの動き」もトレースします（-sだけつけても問題ありません）。<br>
+　では「drv.parse (argv[i])」では何をやっているか見てみましょう。「driver.cc」にその実体があります。
+<pre>
+int
+driver::parse (const std::string &f)
+{
+  file = f;
+  location.initialize (&file);
+  scan_begin ();
+  yy::parser parse (*this);
+  parse.set_debug_level (trace_parsing);
+  int res = parse ();
+  scan_end ();
+  return res;
+}
+</pre>
+　「file」という変数は「driverクラス」のメンバ変数です。「std::string型」で、「f」（すなわちファイル名）を代入します。<br>
+　その後「location.initialize」という関数を読んでますが、「location」は、「driverクラスのメンバ変数で」「yy::location location」とヘッダで宣言されています。<br>
+
+これは「bison」が作り出す「location.hh」に記述があります。
+
+<pre>
+    /// Initialization.
+    void initialize (filename_type* f = YY_NULLPTR,
+                     counter_type l = 1,
+                     counter_type c = 1)
+    {
+      begin.initialize (f, l, c);
+      end = begin;
+    }
+</pre>
+　このように記述されています。「location」の初期化です。<br>
+　ここで、「yy::location」や「yy::parser」のように「yy」がついていますが、これは「bison」が作り出すクラスの「namespace」です。<br>
+　別名の「namespace」にすることもできますが、このサンプルではやってないです。<br>
+　「scan_begin ()とscan_end ()」は「driverクラスのメンバ関数」ですが、実体は「driver.cc」ではなく「scanner.l」に記述しました。
+＜pre>
+void
+driver::scan_begin ()
+{
+  yy_flex_debug = trace_scanning;
+  if (file.empty () || file == "-")
+    yyin = stdin;
+  else if (!(yyin = fopen (file.c_str (), "r")))
+  {
+    std::cerr &lt;&lt; "cannot open " &lt;&lt; file &lt;&lt; ": " &lt;&lt; strerror (errno) &lt;&lt; '\n';
+    exit (EXIT_FAILURE);
+  }
+}
+
+void
+driver::scan_end ()
+{
+  fclose (yyin);
+}
+</pre>
+　この場所に記述したわけは、「yy_flex_debug、yyin」といった「flexのインターフェイス」にアクセスする必要があるからです。<br>
+　この2つの関数は「driver::parse関数」内で呼ばれています。<br>
+　さて、「driver::parse関数」には、少し難解な記述があります。
+<pre>
+  int res = parse ();
+</pre>
+　の記述です。「parse」というのは「yy::parser parse (*this);」で作成されるので、「yy::parserのインスタンス」のはずです。インスタンスに対して「parse ();」というのはC++の文法上許されるのでしょうか。<br>
+　実は、「yy::parserクラス」では「operator()」という形で、演算子の多重定義を行っています。以下「parser.cc（427行付近）」
+<pre>
+  int
+  parser::operator() ()
+  {
+    return parse ();
+  }
+</pre>
+　という形で「parserクラスのparse関数」を呼び出しています。これは「parse処理の関数」で「bisonの重要な関数」の一つです。それを「driver::parse関数」内で呼び出す場合、「parse.parse ()」のような記述ではなく、単純に「parse ()」と呼ぶほうが、わかりやすい、ということなんでしょう。
+
+
 <br>
       </div>
       <!--/col-->
@@ -38,8 +132,9 @@
   <!--/main-->
   <footer id="footer" class="fixed-bottom text-center">
     <ul>
+      <li class="list-inline-item"><a href="21_01.html">前ページ</a></li>
       <li class="list-inline-item"><a href="index.html">目次</a></li>
-      <li class="list-inline-item"><a href="21_02.html">次ページ</a></li>
+      <li class="list-inline-item"><a href="21_03.html">次ページ</a></li>
     </ul>
   </footer>
 </div>

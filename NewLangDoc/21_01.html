@@ -278,10 +278,10 @@ driver::scan_begin ()
   if (file.empty () || file == "-")
     yyin = stdin;
   else if (!(yyin = fopen (file.c_str (), "r")))
-    {
-      std::cerr &lt;&lt; "cannot open " &lt;&lt; file &lt;&lt; ": " &lt;&lt; strerror (errno) &lt;&lt; '\n';
-      exit (EXIT_FAILURE);
-    }
+  {
+    std::cerr &lt;&lt; "cannot open " &lt;&lt; file &lt;&lt; ": " &lt;&lt; strerror (errno) &lt;&lt; '\n';
+    exit (EXIT_FAILURE);
+  }
 }
 
 void
@@ -302,10 +302,8 @@ main (int argc, char *argv[])
   int res = 0;
   driver drv;
   for (int i = 1; i &lt; argc; ++i)
-    if (argv[i] == std::string ("-p")){
-    std::cout &lt;&lt; "no1" &lt;&lt; std::endl; 
+    if (argv[i] == std::string ("-p"))
       drv.trace_parsing = true;
-  }
     else if (argv[i] == std::string ("-s"))
       drv.trace_scanning = true;
     else if (!drv.parse (argv[i]))
