@@ -7,7 +7,7 @@
 
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link href="css/style.css" rel="stylesheet">
+<link href="css/bootStyle.css" rel="stylesheet">
 
 <title>言語を作ろうプロジェクト（2022年）</title>
 </head>
@@ -31,7 +31,29 @@
 　また、「FlexおよびBison」は「.lファイルや.yyファイル」をもとに、C++のソースコードを作り出します。「コンパイル（ビルド）」はこのように、生成されたファイルが重要ですのでその中身も検討します。<br>
 <h5>calcCpp.ccと、その関連</h5>
 　ではまず「main関数」があります、「calcCpp.cc」から見ていきましょう。<br>
-　「calcCpp.cc」では、冒頭に
+　まずはおさらいです。「calcCpp.cc」は以下の内容になっています。
+<pre>
+#include &lt;iostream>
+#include "driver.hh"
+
+int
+main (int argc, char *argv[])
+{
+  int res = 0;
+  driver drv;
+  for (int i = 1; i &lt; argc; ++i)
+    if (argv[i] == std::string ("-p"))
+      drv.trace_parsing = true;
+    else if (argv[i] == std::string ("-s"))
+      drv.trace_scanning = true;
+    else if (!drv.parse (argv[i]))
+      std::cout &lt;&lt; drv.result &lt;&lt; '\n';
+    else
+      res = 1;
+  return res;
+}
+</pre>
+　冒頭に
 <pre>
 #include &lt;iostream>
 #include "driver.hh"
@@ -84,8 +106,8 @@ driver::parse (const std::string &f)
 　このように記述されています。「location」の初期化です。<br>
 　ここで、「yy::location」や「yy::parser」のように「yy」がついていますが、これは「bison」が作り出すクラスの「namespace」です。<br>
 　別名の「namespace」にすることもできますが、このサンプルではやってないです。<br>
-　「scan_begin ()とscan_end ()」は「driverクラスのメンバ関数」ですが、実体は「driver.cc」ではなく「scanner.l」に記述しました。
-＜pre>
+　「scan_begin ()とscan_end ()」は「driverクラスのメンバ関数」ですが、実体は「driver.cc」ではなく「scanner.l」に記述されています。
+<pre>
 void
 driver::scan_begin ()
 {
@@ -121,6 +143,8 @@ driver::scan_end ()
   }
 </pre>
 　という形で「parserクラスのparse関数」を呼び出しています。これは「parse処理の関数」で「bisonの重要な関数」の一つです。それを「driver::parse関数」内で呼び出す場合、「parse.parse ()」のような記述ではなく、単純に「parse ()」と呼ぶほうが、わかりやすい、ということなんでしょう。
+<h5>driver.ccと、その関連</h5>
+　「driver.cc」と「driver.cc」は、「bisonとflex」と「コンテンツ側」の懸け橋となるクラスです。
 
 
 <br>

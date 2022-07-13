@@ -7,7 +7,7 @@
 
 <!-- Bootstrap CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-<link href="css/style.css" rel="stylesheet">
+<link href="css/bootStyle.css" rel="stylesheet">
 
 <title>言語を作ろうプロジェクト（2022年）</title>
 </head>
@@ -326,8 +326,8 @@ parser.cc parser.hh location.hh : parser.yy
 &#009;bison -o parser.cc parser.yy
 
 </pre>
+　<strong>Makefile</strong>を書く時の<strong>コマンド行</strong>の先頭は<strong>タブ文字</strong>ですので気を付けましょう。<br>
 　これで、<strong>make</strong>を実行すればコンパイルできるのですが、テスト用のテキストファイル（スクリプトファイル）を作成しておきます。<strong>test.txt</strong>という名前で以下を記述します。<br>
-　<strong>Makefile</strong>を書く時の<strong>コマンド行</strong>の先頭は<strong>タブ文字</strong>ですので気を付けましょう。
 <pre>
 three := 3
 seven := one + two * three
@@ -346,7 +346,21 @@ make
 <pre>
 49
 </pre>
-　という数字が出力されたら、成功です。
+　という数字が出力されたら、成功です。<br>
+　このサンプルは、<strong>パラメーター</strong>を指定すると、<strong>parser（Bison）</strong>あるいは<strong>scanner（flex）</strong>のトレース出力をしてくれます。<br>
+　試しに、
+<pre>
+./calcCpp -p test.txt
+</pre>
+　を実行してみましょう。<strong>parser（Bison）</strong>の処理が出力されます。
+<pre>
+./calcCpp -s test.txt
+</pre>
+　とすると<strong>scanner（flex）</strong>の処理が出力されます。
+<pre>
+./calcCpp -p -s test.txt
+</pre>
+　とすると、両方の処理が出力されます。このテクニックは、将来、デバッグの、大きな助けになると思います。
 <br>
       </div>
       <!--/col-->
