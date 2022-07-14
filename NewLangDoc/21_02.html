@@ -144,8 +144,305 @@ driver::scan_end ()
 </pre>
 　という形で「parserクラスのparse関数」を呼び出しています。これは「parse処理の関数」で「bisonの重要な関数」の一つです。それを「driver::parse関数」内で呼び出す場合、「parse.parse ()」のような記述ではなく、単純に「parse ()」と呼ぶほうが、わかりやすい、ということなんでしょう。
 <h5>driver.ccと、その関連</h5>
-　「driver.cc」と「driver.cc」は、「bisonとflex」と「コンテンツ側」の懸け橋となるクラスです。
+　「driver.hh」と「driver.cc」は、「bisonとflex」と「コンテンツ側」の懸け橋となるクラスです。<br>
+　サンプルの状態だとわかりにくいかもしれないので、いくつか仕掛けをして確認したいと思います。<br>
+　まず「driver.hh」の「driverクラス」に以下のように「create_prus関数」を追加します。
+<pre>
+class driver
+{
+public:
+  driver ();
 
+  std::map&lt;std::string, int> variables;
+  <span class="red">void create_prus(int a ,int b){
+    std::cout &lt;&lt; a &lt;&lt; "+" &lt;&lt; b &lt;&lt; std::endl;
+  }</span>
+
+//...中略
+</pre>
+　続いて「parser.yy」の「60行付近」
+<pre>
+//...中略
+exp:
+  "number"
+| "identifier"  { $$ = drv.variables[$1]; }
+| exp "+" exp   { $$ = $1 + $3; }
+| exp "-" exp   { $$ = $1 - $3; }
+| exp "*" exp   { $$ = $1 * $3; }
+| exp "/" exp   { $$ = $1 / $3; }
+| "(" exp ")"   { $$ = $2; }
+%%
+//...中略
+</pre>
+　となっている部分を
+<pre>
+//...中略
+exp:
+  "number"
+| "identifier"  { $$ = drv.variables[$1]; }
+| <span class="red">exp "+" exp   { 
+    drv.create_prus($1,$3);
+    $$ = $1 + $3; 
+  }</span>
+| exp "-" exp   { $$ = $1 - $3; }
+| exp "*" exp   { $$ = $1 * $3; }
+| exp "/" exp   { $$ = $1 / $3; }
+| "(" exp ")"   { $$ = $2; }
+%%
+//...中略
+</pre>
+　のように修正します。その後「make」でビルドし
+<pre>
+./calcCpp test.txt
+</pre>
+　を実行すると
+<pre>
+1+6
+49
+</pre>
+　と出力されます。つまり足し算が発生するところで「drv.create_prus($1,$3);」が実行されるわけです。<br>
+　これの意味するところは、「Parser」である「parser.yy」の構文解析の部分で、「driverクラス」のメンバ関数に簡単にアクセスできるということです。<br>
+　このサンプルでは「parser.yy」内で「計算」を行っていますが、「上から順番に実行される（順次実行）」の状態ならいいのですが、「分岐」とか「ループ」を実装しようとすると、うまくいきません。<br>
+　つまりは、「test.txt」の内容をいったんどこか（メモリ上）に保存しておき、実際の実行は、その保存領域で実行します。<br>
+　このどこかに「保存する」行為こそが「コンパイル（翻訳）」というわけです。<br>
+　とりあえず、この段階では「コンパイル（翻訳）」は実装せずに、元に戻しましょう。<br>
+　このように「parser.yy」からは「driverクラス」のメンバ関数には容易にアクセスできるので、今後はその辺を見据えながら説明します。
+<h5>parser.yyと、その周辺</h5>
+　さていよいよ本丸です。「parser.yy」は「言語を作る」ための道具です。様々な機能があり、また「Bison3.8.1」になって、強化された部分、そして「C++」で利用するためのいろんな機能が入っています。<br>
+　では「parser.yy」をおさらいしてみましょう。以下がその内容です。
+<pre>
+%skeleton "lalr1.cc" // -*- C++ -*-
+%require "3.8.1"
+%header
+
+%define api.token.raw
+
+%define api.token.constructor
+%define api.value.type variant
+%define parse.assert
+
+%code requires {
+  # include &lt;string>
+  class driver;
+}
+
+// The parsing context.
+%param { driver& drv }
+
+%locations
+
+%define parse.trace
+%define parse.error detailed
+%define parse.lac full
+
+%code {
+# include "driver.hh"
+}
+
+%define api.token.prefix {TOK_}
+%token
+  ASSIGN  ":="
+  MINUS   "-"
+  PLUS    "+"
+  STAR    "*"
+  SLASH   "/"
+  LPAREN  "("
+  RPAREN  ")"
+;
+
+%token &lt;std::string> IDENTIFIER "identifier"
+%token &lt;int> NUMBER "number"
+%nterm &lt;int> exp
+
+%printer { yyo &lt;&lt; $$; } &lt;*>;
+
+%%
+%start unit;
+unit: assignments exp  { drv.result = $2; };
+
+assignments:
+  %empty                 {}
+| assignments assignment {};
+
+assignment:
+  "identifier" ":=" exp { drv.variables[$1] = $3; };
+
+%left "+" "-";
+%left "*" "/";
+exp:
+  "number"
+| "identifier"  { $$ = drv.variables[$1]; }
+| exp "+" exp   { $$ = $1 + $3; }
+| exp "-" exp   { $$ = $1 - $3; }
+| exp "*" exp   { $$ = $1 * $3; }
+| exp "/" exp   { $$ = $1 / $3; }
+| "(" exp ")"   { $$ = $2; }
+%%
+
+void
+yy::parser::error (const location_type& l, const std::string& m)
+{
+  std::cerr &lt;&lt; l &lt;&lt; ": " &lt;&lt; m &lt;&lt; '\n';
+}
+</pre>
+　それでは先頭から見ていきましょう。
+<pre>
+%skeleton "lalr1.cc" // -*- C++ -*-
+%require "3.8.1"
+%header
+
+%define api.token.raw
+
+%define api.token.constructor
+<span class="red">%define api.value.type variant</span>
+%define parse.assert
+</pre>
+　この部分は「Bisonのバージョン」とか、環境設定をするところです。<br>
+　ここで、今、重要なのは「%define api.value.type variant」の部分です。この記述により「union」を使わなくて済みます。つまりは、自由度の高い「型」を扱えるようになります。<br>
+　続いて出てくるのが
+<pre>
+%code requires {
+  # include &lt;string>
+  class driver;
+}
+</pre>
+　です。ここでは「C/C++」のインクルードファイルなどを記述できます。「%code」というのは「C/C++」のコードを書くエリア、という意味です。「class driver;」というのは「クラス宣言」ですね。これから「driverクラス」が出てくるので、覚えておけよ、みたいな意味です。<br>
+　続く
+<pre>
+// The parsing context.
+%param { driver& drv }
+</pre>
+　で、その変数が宣言されます。今後この「drv」を「parser.yy」で使うことができるようになります。<br>
+　その後の
+<pre>
+%locations
+
+%define parse.trace
+%define parse.error detailed
+%define parse.lac full
+</pre>
+　は、今はあんまり重要ではないです。「location」を意識する場合は今後意味が出てくるかと思いますが、ここは流しましょう。<br>
+　続いて
+<pre>
+%code {
+# include "driver.hh"
+}
+</pre>
+　は重要です。ここで「driverクラス」の宣言が読み込まれます。<br>
+　続く
+<pre>
+%define api.token.prefix {TOK_}
+%token
+  ASSIGN  ":="
+  MINUS   "-"
+  PLUS    "+"
+  STAR    "*"
+  SLASH   "/"
+  LPAREN  "("
+  RPAREN  ")"
+;
+</pre>
+　は重要です。実はここで「ASSIGN、MINUS、PLUS」といった「parser」内の識別子が「":="」などで使えるようになります。結果として
+<pre>
+exp "+" exp   { $$ = $1 + $3; }
+</pre>
+　のような記述ができるのです。これがないと
+<pre>
+exp PLUS exp   { $$ = $1 + $3; }
+</pre>
+　のように書くことになります。その実験は、後ほどやってみます。<br>
+　続く
+<pre>
+%token &lt;std::string> IDENTIFIER "identifier"
+%token &lt;int> NUMBER "number"
+%nterm &lt;int> exp
+</pre>
+　は「<span class="red">%define api.value.type variant</span>」の記述で書けるようになります。<br>
+　つまりは、「parser」で扱える型が「std::string」や「int」であることを宣言しています。今後、別の型を扱いたいときは
+<pre>
+%token &lt;型名> トークン名
+</pre>
+　のようにできるのです。<br>
+　続く
+<pre>
+%printer { yyo &lt;&lt; $$; } &lt;*>;
+</pre>
+　は出力用の定義です。<br>
+　続くブロックが一番重要です。
+<pre>
+%%
+%start unit;
+unit: assignments exp  { drv.result = $2; };
+
+assignments:
+  %empty                 {}
+| assignments assignment {};
+
+assignment:
+  "identifier" ":=" exp { drv.variables[$1] = $3; };
+
+%left "+" "-";
+%left "*" "/";
+exp:
+  "number"
+| "identifier"  { $$ = drv.variables[$1]; }
+| exp "+" exp   { $$ = $1 + $3; }
+| exp "-" exp   { $$ = $1 - $3; }
+| exp "*" exp   { $$ = $1 * $3; }
+| exp "/" exp   { $$ = $1 / $3; }
+| "(" exp ")"   { $$ = $2; }
+%%
+</pre>
+　これが「bison」の本体です。「構文解析（parser）」の部分で、「字句解析（scanner）」である「scanner.l（flex向けファイル）」によってトークン分けされた「部品」を、「どういう並びならどういう処理をする」ということを決めます。<br>
+　また「優先順位」も重要です。「bison」は下のほうが優先順位が高くなります。<br>
+　書式については
+<pre>
+定義A:                          //定義Aとは何か
+  定義B{何かの処理（省略可）}   //定義Bである
+| 定義C{何かの処理（省略可）}   //もしくは定義Cである
+| 定義D{何かの処理（省略可）}   //もしくは定義Dである
+</pre>
+　となり、この場合、一番「定義D」の優先度が高くなります。<br>
+　この法則に従って、「exp」の定義を見てみますと
+<pre>
+exp:   //expと名何か
+  "number"    //トークン「"number"」である
+| "identifier"  { $$ = drv.variables[$1]; } //もしくは、トークン「identifier"」であり、
+                                            //drv.variables[$1]の結果を上位に渡す
+| exp "+" exp   { $$ = $1 + $3; }           //もしくは、トークン「"+"」の左右に「exp」が存在するものである
+                                            //「"+"」の左に右を足して上位に渡す
+| exp "-" exp   { $$ = $1 - $3; }           //もしくは、トークン「"-"」の左右に「exp」が存在するものである
+                                            //「"-"」の左から右を引いて上位に渡す
+| exp "*" exp   { $$ = $1 * $3; }           //もしくは、トークン「"*"」の左右に「exp」が存在するものである
+                                            //「"*"」の左に右を掛けて上位に渡す
+| exp "/" exp   { $$ = $1 / $3; }           //もしくは、トークン「"/"」の左右に「exp」が存在するものである
+                                            //「"/"」の左から右を割って上位に渡す
+| "(" exp ")"   { $$ = $2; }                //もしくは、トークン「exp」の左に「"("」、右に「")"」が存在するものである
+                                            //「exp」を上位に渡す
+</pre>
+　となります。「$1」とか「$3」とかは、トークン並びの順番を指します。「$1、$2、$3、$4、...」という感じに続きます<br>
+　また「$$」に渡すことで、結果を返す（上位に渡す）という意味になります。<br>
+　ですので
+<pre>
+exp "/" exp
+</pre>
+　は、トークン並びは
+<pre>
+$1 $2 $3
+</pre>
+　となるので「$1 / $3」という割り算をすることになります。<br>
+　基本的にこの書式で書いていき、下位の定義が、上位にまとまられていく感じになります。<br>
+　この上に記述がある
+<pre>
+%left "+" "-";
+%left "*" "/";
+</pre>
+　というのは、左から処理、の意味です。掛け算や足し算はどちらから処理をしてもいいですが、引き算と割り算は「左から右を引く（割る）」という処理になるので、この順番は大事です。<br>
+　ところで、これらのトークンの中で「exp」は特殊です。「parser.yy」の上位のほうで
+<pre>
+%nterm &lt;int> exp
+</pre>
+　と指定されていて、これは「非終端記号として使う」の意味で、いわゆる「左辺値」の意味
 
 <br>
       </div>
