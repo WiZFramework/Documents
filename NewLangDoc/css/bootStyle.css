@@ -63,6 +63,10 @@ background-color: #f5f5dc;
 border: 1px solid #080808;
 }
 
+pre.sub{
+background-color: #f5f5f5;
+}
+
 footer{
 margin-top: 20px;
 height:100px;

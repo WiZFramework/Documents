@@ -26,12 +26,12 @@
       <div class="col">
 <h4>２１－０２．Bison3.8.1でのC++</h4>
 <h5>Bison3.8.1でのC++の特徴</h5>
-　前項では「簡単な計算機」を作成しました。「Bisonのコード（parser.yy）」を見ると、例えば「【１】WindowsでＣ言語を作る」で説明したような「Bisonファイル」とは、かなり感じが違うと思います。この項では、ソースコードを細かく見ていくことによって、どういう仕組みで「Parser」を作成するのかを見てみたいと思います。
-　もちろん、このサンプルは<a href="https://www.gnu.org/software/bison/manual/bison.html">バイソンのマニュアル</a>に書いてあるものを作成したので、ドキュメントを詳しく読めばわかると思いますが、英語で書かれているので、日本語で理解するためには「翻訳」などをしながら読み進める必要がありますし、また、C++の使い方も高度な部分もあるので、そのあたりを補足しながら説明したいと思います。<br>
-　また、「FlexおよびBison」は「.lファイルや.yyファイル」をもとに、C++のソースコードを作り出します。「コンパイル（ビルド）」はこのように、生成されたファイルが重要ですのでその中身も検討します。<br>
+　前項では<strong>簡単な計算機</strong>を作成しました。<strong>Bisonのコード（parser.yy）</strong>を見ると、例えば<strong>【１】WindowsでＣ言語を作る</strong>で説明したような<strong>Bisonファイル</strong>とは、かなり感じが違うと思います。この項では、ソースコードを細かく見ていくことによって、どういう仕組みで<strong>Parser</strong>を作成するのかを見てみたいと思います。
+　もちろん、このサンプルは<a href="https://www.gnu.org/software/bison/manual/bison.html">バイソンのマニュアル</a>に書いてあるものを作成したので、ドキュメントを詳しく読めばわかると思いますが、英語で書かれているので、日本語で理解するためには<strong>翻訳</strong>などをしながら読み進める必要がありますし、また、C++の使い方も高度な部分もあるので、そのあたりを補足しながら説明したいと思います。<br>
+　また、<strong>FlexおよびBison</strong>は<strong>.lファイルや.yyファイル</strong>をもとに、C++のソースコードを作り出します。<strong>コンパイル（ビルド）</strong>はこのように、生成されたファイルが重要ですのでその中身も検討します。<br>
 <h5>calcCpp.ccと、その関連</h5>
-　ではまず「main関数」があります、「calcCpp.cc」から見ていきましょう。<br>
-　まずはおさらいです。「calcCpp.cc」は以下の内容になっています。
+　ではまず<strong>main関数</strong>があります、<strong>calcCpp.cc</strong>から見ていきましょう。<br>
+　まずはおさらいです。<strong>calcCpp.cc</strong>は以下の内容になっています。
 <pre>
 #include &lt;iostream>
 #include "driver.hh"
@@ -58,23 +58,23 @@ main (int argc, char *argv[])
 #include &lt;iostream>
 #include "driver.hh"
 </pre>
-　という記述があります。「iostream」はSTLのコンテナで、「std::cout」などを保持します。<br>
-　「driver.hh」先ほど記述したヘッダファイルですね。続いて「main()関数」ですが、「forループ」の中では、コマンドラインの入力（コマンド引数）を見て、それによって「Parser」の動きを変えています。<br>
+　という記述があります。<strong>iostream</strong>はSTLのコンテナで、<strong>std::cout</strong>などを保持します。<br>
+　<strong>driver.hh</strong>先ほど記述したヘッダファイルですね。続いて<strong>main()関数</strong>ですが、<strong>forループ</strong>の中では、コマンドラインの入力（コマンド引数）を見て、それによって<strong>Parser</strong>の動きを変えています。<br>
 　ループが
 <pre>
   for (int i = 1; i &lt; argc; ++i)
 </pre>
-　のように「1」から始まっているのは、argv[0]には、プログラム名、すなわち、「calcCpp」が入っているので、ここは使わないからです。<br>
-　コマンド引数に、「-p」があれば「drv.trace_parsing」を「true」にします。「-s」があれば、「drv.trace_scanning」を「true」にします。<br>
-　それ以外の場合は「ファイル名が入力された」、と仮定して、「drv.parse (argv[i])」と「driverクラスのparse関数」を呼び出します。<br>
-　何もコマンド引数が入力されなければ「1を返して終了」します。<br>
-　「-p」や「-s」を確認する場合は、実行のコマンドを
+　のように<strong>1</strong>から始まっているのは、argv[0]には、プログラム名、すなわち、<strong>calcCpp</strong>が入っているので、ここは使わないからです。<br>
+　コマンド引数に、<strong>-p</strong>があれば<strong>drv.trace_parsing</strong>を<strong>true</strong>にします。<strong>-s</strong>があれば、<strong>drv.trace_scanning</strong>を<strong>true</strong>にします。<br>
+　それ以外の場合は<strong>ファイル名が入力された</strong>、と仮定して、<strong>drv.parse (argv[i])</strong>と<strong>driverクラスのparse関数</strong>を呼び出します。<br>
+　何もコマンド引数が入力されなければ<strong>1を返して終了</strong>します。<br>
+　<strong>-p</strong>や<strong>-s</strong>を確認する場合は、実行のコマンドを
 <pre>
 ./calcCpp -p test.txt
 </pre>
-　と実行してみましょう。「パーサーの動き」をトレースして出力します。「-s」も追加すれば「スキャナーの動き」もトレースします（-sだけつけても問題ありません）。<br>
-　では「drv.parse (argv[i])」では何をやっているか見てみましょう。「driver.cc」にその実体があります。
-<pre>
+　と実行してみましょう。<strong>パーサーの動き</strong>をトレースして出力します。<strong>-s</strong>も追加すれば<strong>スキャナーの動き</strong>もトレースします（-sだけつけても問題ありません）。<br>
+　では<strong>drv.parse (argv[i])</strong>では何をやっているか見てみましょう。<strong>driver.cc</strong>にその実体があります。
+<pre class="sub">
 int
 driver::parse (const std::string &f)
 {
@@ -83,17 +83,17 @@ driver::parse (const std::string &f)
   scan_begin ();
   yy::parser parse (*this);
   parse.set_debug_level (trace_parsing);
-  int res = parse ();
+  <span class="red">int res = parse ();</span>
   scan_end ();
   return res;
 }
 </pre>
-　「file」という変数は「driverクラス」のメンバ変数です。「std::string型」で、「f」（すなわちファイル名）を代入します。<br>
-　その後「location.initialize」という関数を読んでますが、「location」は、「driverクラスのメンバ変数で」「yy::location location」とヘッダで宣言されています。<br>
+　<strong>file</strong>という変数は<strong>driverクラス</strong>のメンバ変数です。<strong>std::string型</strong>で、<strong>f</strong>（すなわちファイル名）を代入します。<br>
+　その後<strong>location.initialize</strong>という関数を読んでますが、<strong>location</strong>は、<strong>driverクラスのメンバ変数で</strong><strong>yy::location location</strong>とヘッダで宣言されています。<br>
 
-これは「bison」が作り出す「location.hh」に記述があります。
+これは<strong>bison</strong>が作り出す<strong>location.hh</strong>に記述があります。
 
-<pre>
+<pre class="sub">
     /// Initialization.
     void initialize (filename_type* f = YY_NULLPTR,
                      counter_type l = 1,
@@ -103,11 +103,11 @@ driver::parse (const std::string &f)
       end = begin;
     }
 </pre>
-　このように記述されています。「location」の初期化です。<br>
-　ここで、「yy::location」や「yy::parser」のように「yy」がついていますが、これは「bison」が作り出すクラスの「namespace」です。<br>
-　別名の「namespace」にすることもできますが、このサンプルではやってないです。<br>
-　「scan_begin ()とscan_end ()」は「driverクラスのメンバ関数」ですが、実体は「driver.cc」ではなく「scanner.l」に記述されています。
-<pre>
+　このように記述されています。<strong>location</strong>の初期化です。<br>
+　ここで、<strong>yy::location</strong>や<strong>yy::parser</strong>のように<strong>yy</strong>がついていますが、これは<strong>bison</strong>が作り出すクラスの<strong>namespace</strong>です。<br>
+　別名の<strong>namespace</strong>にすることもできますが、このサンプルではやってないです。<br>
+　<strong>scan_begin ()とscan_end ()</strong>は<strong>driverクラスのメンバ関数</strong>ですが、実体は<strong>driver.cc</strong>ではなく<strong>scanner.l</strong>に記述されています。
+<pre class="sub">
 void
 driver::scan_begin ()
 {
@@ -127,26 +127,26 @@ driver::scan_end ()
   fclose (yyin);
 }
 </pre>
-　この場所に記述したわけは、「yy_flex_debug、yyin」といった「flexのインターフェイス」にアクセスする必要があるからです。<br>
-　この2つの関数は「driver::parse関数」内で呼ばれています。<br>
-　さて、「driver::parse関数」には、少し難解な記述があります。
-<pre>
+　この場所に記述したわけは、<strong>yy_flex_debug、yyin</strong>といった<strong>flexのインターフェイス</strong>にアクセスする必要があるからです。<br>
+　この2つの関数は<strong>driver::parse関数</strong>内で呼ばれています。<br>
+　さて、<strong>driver::parse関数</strong>には、少し難解な記述があります。
+<pre class="sub">
   int res = parse ();
 </pre>
-　の記述です。「parse」というのは「yy::parser parse (*this);」で作成されるので、「yy::parserのインスタンス」のはずです。インスタンスに対して「parse ();」というのはC++の文法上許されるのでしょうか。<br>
-　実は、「yy::parserクラス」では「operator()」という形で、演算子の多重定義を行っています。以下「parser.cc（427行付近）」
-<pre>
+　の記述です。<strong>parse</strong>というのは<strong>yy::parser parse (*this);</strong>で作成されるので、<strong>yy::parserのインスタンス</strong>のはずです。インスタンスに対して<strong>parse ();</strong>というのはC++の文法上許されるのでしょうか。<br>
+　実は、<strong>yy::parserクラス</strong>では<strong>operator()</strong>という形で、演算子の多重定義を行っています。以下<strong>parser.cc（427行付近）</strong>
+<pre class="sub">
   int
   parser::operator() ()
   {
     return parse ();
   }
 </pre>
-　という形で「parserクラスのparse関数」を呼び出しています。これは「parse処理の関数」で「bisonの重要な関数」の一つです。それを「driver::parse関数」内で呼び出す場合、「parse.parse ()」のような記述ではなく、単純に「parse ()」と呼ぶほうが、わかりやすい、ということなんでしょう。
+　という形で<strong>parserクラスのparse関数</strong>を呼び出しています。これは<strong>parse処理の関数</strong>で<strong>bisonの重要な関数</strong>の一つです。それを<strong>driver::parse関数</strong>内で呼び出す場合、<strong>parse.parse ()</strong>のような記述ではなく、単純に<strong>parse ()</strong>と呼ぶほうが、わかりやすい、ということなんでしょう。
 <h5>driver.ccと、その関連</h5>
-　「driver.hh」と「driver.cc」は、「bisonとflex」と「コンテンツ側」の懸け橋となるクラスです。<br>
+　<strong>driver.hh</strong>と<strong>driver.cc</strong>は、<strong>bisonとflex</strong>と<strong>コンテンツ側</strong>の懸け橋となるクラスです。<br>
 　サンプルの状態だとわかりにくいかもしれないので、いくつか仕掛けをして確認したいと思います。<br>
-　まず「driver.hh」の「driverクラス」に以下のように「create_prus関数」を追加します。
+　まず<strong>driver.hh</strong>の<strong>driverクラス</strong>に以下のように<strong>create_prus関数</strong>を追加します。
 <pre>
 class driver
 {
@@ -160,7 +160,7 @@ public:
 
 //...中略
 </pre>
-　続いて「parser.yy」の「60行付近」
+　続いて<strong>parser.yy</strong>の<strong>60行付近</strong>
 <pre>
 //...中略
 exp:
@@ -191,7 +191,7 @@ exp:
 %%
 //...中略
 </pre>
-　のように修正します。その後「make」でビルドし
+　のように修正します。その後<strong>make</strong>でビルドし
 <pre>
 ./calcCpp test.txt
 </pre>
@@ -200,16 +200,16 @@ exp:
 1+6
 49
 </pre>
-　と出力されます。つまり足し算が発生するところで「drv.create_prus($1,$3);」が実行されるわけです。<br>
-　これの意味するところは、「Parser」である「parser.yy」の構文解析の部分で、「driverクラス」のメンバ関数に簡単にアクセスできるということです。<br>
-　このサンプルでは「parser.yy」内で「計算」を行っていますが、「上から順番に実行される（順次実行）」の状態ならいいのですが、「分岐」とか「ループ」を実装しようとすると、うまくいきません。<br>
-　つまりは、「test.txt」の内容をいったんどこか（メモリ上）に保存しておき、実際の実行は、その保存領域で実行します。<br>
-　このどこかに「保存する」行為こそが「コンパイル（翻訳）」というわけです。<br>
-　とりあえず、この段階では「コンパイル（翻訳）」は実装せずに、元に戻しましょう。<br>
-　このように「parser.yy」からは「driverクラス」のメンバ関数には容易にアクセスできるので、今後はその辺を見据えながら説明します。
-<h5>parser.yyと、その周辺</h5>
-　さていよいよ本丸です。「parser.yy」は「言語を作る」ための道具です。様々な機能があり、また「Bison3.8.1」になって、強化された部分、そして「C++」で利用するためのいろんな機能が入っています。<br>
-　では「parser.yy」をおさらいしてみましょう。以下がその内容です。
+　と出力されます。つまり足し算が発生するところで<strong>drv.create_prus($1,$3);</strong>が実行されるわけです。<br>
+　これの意味するところは、<strong>Parser</strong>である<strong>parser.yy</strong>の構文解析の部分で、<strong>driverクラス</strong>のメンバ関数に簡単にアクセスできるということです。<br>
+　このサンプルでは<strong>parser.yy</strong>内で<strong>計算</strong>を行っていますが、<strong>上から順番に実行される（順次実行）</strong>の状態ならいいのですが、<strong>分岐</strong>とか<strong>ループ</strong>を実装しようとすると、うまくいきません。<br>
+　つまりは、<strong>test.txt</strong>の内容をいったんどこか（メモリ上）に保存しておき、実際の実行は、その保存領域で実行します。<br>
+　このどこかに<strong>保存する</strong>行為こそが<strong>コンパイル（翻訳）</strong>というわけです。<br>
+　とりあえず、この段階では<strong>コンパイル（翻訳）</strong>は実装せずに、元に戻しましょう。<br>
+　このように<strong>parser.yy</strong>からは<strong>driverクラス</strong>のメンバ関数には容易にアクセスできるので、今後はその辺を見据えながら説明します。
+<h5>parser.yyと、その関連</h5>
+　さていよいよ本丸です。<strong>parser.yy</strong>は<strong>言語を作る</strong>ための道具です。様々な機能があり、また<strong>Bison3.8.1</strong>になって、強化された部分、そして<strong>C++</strong>で利用するためのいろんな機能が入っています。<br>
+　では<strong>parser.yy</strong>をおさらいしてみましょう。以下がその内容です。
 <pre>
 %skeleton "lalr1.cc" // -*- C++ -*-
 %require "3.8.1"
@@ -297,8 +297,8 @@ yy::parser::error (const location_type& l, const std::string& m)
 <span class="red">%define api.value.type variant</span>
 %define parse.assert
 </pre>
-　この部分は「Bisonのバージョン」とか、環境設定をするところです。<br>
-　ここで、今、重要なのは「%define api.value.type variant」の部分です。この記述により「union」を使わなくて済みます。つまりは、自由度の高い「型」を扱えるようになります。<br>
+　この部分は<strong>Bisonのバージョン</strong>とか、環境設定をするところです。<br>
+　ここで、今、重要なのは<strong>%define api.value.type variant</strong>の部分です。この記述により<strong>union</strong>を使わなくて済みます。つまりは、自由度の高い<strong>型</strong>を扱えるようになります。<br>
 　続いて出てくるのが
 <pre>
 %code requires {
@@ -306,13 +306,13 @@ yy::parser::error (const location_type& l, const std::string& m)
   class driver;
 }
 </pre>
-　です。ここでは「C/C++」のインクルードファイルなどを記述できます。「%code」というのは「C/C++」のコードを書くエリア、という意味です。「class driver;」というのは「クラス宣言」ですね。これから「driverクラス」が出てくるので、覚えておけよ、みたいな意味です。<br>
+　です。ここでは<strong>C/C++</strong>のインクルードファイルなどを記述できます。<strong>%code</strong>というのは<strong>C/C++</strong>のコードを書くエリア、という意味です。<strong>class driver;</strong>というのは<strong>クラス宣言</strong>ですね。これから<strong>driverクラス</strong>が出てくるので、覚えておけよ、みたいな意味です。<br>
 　続く
 <pre>
 // The parsing context.
 %param { driver& drv }
 </pre>
-　で、その変数が宣言されます。今後この「drv」を「parser.yy」で使うことができるようになります。<br>
+　で、その変数が宣言されます。今後この<strong>drv</strong>を<strong>parser.yy</strong>で使うことができるようになります。<br>
 　その後の
 <pre>
 %locations
@@ -321,14 +321,14 @@ yy::parser::error (const location_type& l, const std::string& m)
 %define parse.error detailed
 %define parse.lac full
 </pre>
-　は、今はあんまり重要ではないです。「location」を意識する場合は今後意味が出てくるかと思いますが、ここは流しましょう。<br>
+　は、今はあんまり重要ではないです。<strong>location</strong>を意識する場合は今後意味が出てくるかと思いますが、ここは流しましょう。<br>
 　続いて
 <pre>
 %code {
 # include "driver.hh"
 }
 </pre>
-　は重要です。ここで「driverクラス」の宣言が読み込まれます。<br>
+　は重要です。ここで<strong>driverクラス</strong>の宣言が読み込まれます。<br>
 　続く
 <pre>
 %define api.token.prefix {TOK_}
@@ -342,33 +342,41 @@ yy::parser::error (const location_type& l, const std::string& m)
   RPAREN  ")"
 ;
 </pre>
-　は重要です。実はここで「ASSIGN、MINUS、PLUS」といった「parser」内の識別子が「":="」などで使えるようになります。結果として
+　ですが、実はここで<strong>ASSIGN、MINUS、PLUS</strong>といった<strong>parser</strong>内の識別子が<strong>":="</strong>などで使えるようになります。結果として
 <pre>
 exp "+" exp   { $$ = $1 + $3; }
 </pre>
-　のような記述ができるのです。これがないと
+　のような記述ができるのです。わかりやすいですね。これがないと
 <pre>
 exp PLUS exp   { $$ = $1 + $3; }
 </pre>
-　のように書くことになります。その実験は、後ほどやってみます。<br>
+　のように書くことになります。<br>
 　続く
 <pre>
 %token &lt;std::string> IDENTIFIER "identifier"
 %token &lt;int> NUMBER "number"
 %nterm &lt;int> exp
 </pre>
-　は「<span class="red">%define api.value.type variant</span>」の記述で書けるようになります。<br>
-　つまりは、「parser」で扱える型が「std::string」や「int」であることを宣言しています。今後、別の型を扱いたいときは
+　は<strong><span class="red">%define api.value.type variant</span></strong>の記述で書けるようになります。<br>
+　ここで<strong>非終端記号</strong>と<strong>終端記号</strong>について説明します。<br>
+　例えば、<strong>ASSIGN、MINUS、PLUS</strong>などのトークンは変化することがありませんね。一回<strong>PLUS</strong>というトークンで初期化されれば、以降<strong>PLUSあるいは"+"</strong>は同じ記号を指します。こういうのは<strong>終端記号</strong>と言って<strong>%token</strong>で定義します。<br>
+　しかし<strong>exp</strong>は違います。<strong>"number"</strong>がセットされたり、<strong>"identifier"</strong>がセットされたりして、それもまた<strong>exp</strong>にまとめられますね。<br>
+　こういう、どんどん変化していく（まとめられていく）トークンを<strong>非終端記号</strong>といいます。<br>
+　<strong>非終端記号</strong>は、前のBisonのバージョンでは<strong>%type</strong>を使いました。expならば
 <pre>
-%token &lt;型名> トークン名
+%type &lt;int> exp
 </pre>
-　のようにできるのです。<br>
+　のような書き方ですね。新しいバージョンでも<strong>%type</strong>は使えるのですが、実は<strong>%type</strong>は<strong>終端記号</strong>にも使えたりします。それでは安全性がけけるということで<strong>%nterm</strong>ができたらしいです。ですから
+<pre>
+%type &lt;int> exp
+</pre>
+　と記述して、再コンパイルしても問題なくビルドできます。<br>
 　続く
 <pre>
 %printer { yyo &lt;&lt; $$; } &lt;*>;
 </pre>
 　は出力用の定義です。<br>
-　続くブロックが一番重要です。
+　続くブロックが<strong>構文解析の規則</strong>を記述します。
 <pre>
 %%
 %start unit;
@@ -393,57 +401,560 @@ exp:
 | "(" exp ")"   { $$ = $2; }
 %%
 </pre>
-　これが「bison」の本体です。「構文解析（parser）」の部分で、「字句解析（scanner）」である「scanner.l（flex向けファイル）」によってトークン分けされた「部品」を、「どういう並びならどういう処理をする」ということを決めます。<br>
-　また「優先順位」も重要です。「bison」は下のほうが優先順位が高くなります。<br>
+　これが<strong>bison</strong>の本体ともいえるでしょう。<strong>構文解析（parser）</strong>の部分で、<strong>字句解析（scanner）</strong>である<strong>scanner.l（flex向けファイル）</strong>によってトークン分けされた<strong>部品</strong>を、<strong>どういう並びならどういう処理をする</strong>ということを決めます。<br>
+　また<strong>優先順位</strong>も重要です。<strong>bison</strong>は下のほうが優先順位が高くなります。ですので下から説明します。<br>
 　書式については
 <pre>
-定義A:                          //定義Aとは何か
-  定義B{何かの処理（省略可）}   //定義Bである
-| 定義C{何かの処理（省略可）}   //もしくは定義Cである
-| 定義D{何かの処理（省略可）}   //もしくは定義Dである
+result: components...
+        ;
 </pre>
-　となり、この場合、一番「定義D」の優先度が高くなります。<br>
-　この法則に従って、「exp」の定義を見てみますと
+　というものですが、あまりに分かりにくいのでもう少し詳しく説明します。<br>
+　<strong>result</strong>というのは<strong>結果</strong>ですね。その名の通り<strong>$$</strong>にあたる部分の、多くの場合は<strong>非終端記号</strong>で定義された記号を記述します。<br>
+　上記の<strong>exp</strong>の規則を例にとりましょう。例えば
 <pre>
-exp:   //expと名何か
-  "number"    //トークン「"number"」である
-| "identifier"  { $$ = drv.variables[$1]; } //もしくは、トークン「identifier"」であり、
-                                            //drv.variables[$1]の結果を上位に渡す
-| exp "+" exp   { $$ = $1 + $3; }           //もしくは、トークン「"+"」の左右に「exp」が存在するものである
-                                            //「"+"」の左に右を足して上位に渡す
-| exp "-" exp   { $$ = $1 - $3; }           //もしくは、トークン「"-"」の左右に「exp」が存在するものである
-                                            //「"-"」の左から右を引いて上位に渡す
-| exp "*" exp   { $$ = $1 * $3; }           //もしくは、トークン「"*"」の左右に「exp」が存在するものである
-                                            //「"*"」の左に右を掛けて上位に渡す
-| exp "/" exp   { $$ = $1 / $3; }           //もしくは、トークン「"/"」の左右に「exp」が存在するものである
-                                            //「"/"」の左から右を割って上位に渡す
-| "(" exp ")"   { $$ = $2; }                //もしくは、トークン「exp」の左に「"("」、右に「")"」が存在するものである
-                                            //「exp」を上位に渡す
+exp: "number"
 </pre>
-　となります。「$1」とか「$3」とかは、トークン並びの順番を指します。「$1、$2、$3、$4、...」という感じに続きます<br>
-　また「$$」に渡すことで、結果を返す（上位に渡す）という意味になります。<br>
-　ですので
+　だけが規則化されていたとします。すると
 <pre>
-exp "/" exp
+expには "number"を入れることができる
 </pre>
-　は、トークン並びは
+　みたいな意味になります。これは<strong>定義部</strong>が省略されていて、省略しないで書くと
+<pre>
+exp: "number" { $$ = $1 }
+</pre>
+　という意味になります。定義しないと自動的に<strong>result</strong>に、一番目のトークン（つまりは$1）が渡されます。<br>
+　規則は複数書くことができて
+<pre>
+exp:
+  "number"
+| "identifier"  { $$ = drv.variables[$1]; }
+| exp "+" exp   { $$ = $1 + $3; }
+...以下略
+</pre>
+　みたいに<strong>|記号</strong>でつなげられます。<strong>または</strong>に意味ですね。<br>
+　また
+<pre>
+exp "+" exp
+</pre>
+　のトークン並びは
 <pre>
 $1 $2 $3
 </pre>
-　となるので「$1 / $3」という割り算をすることになります。<br>
+　となるので<strong>$1 + $3</strong>という足し算をして、$$に渡すことになります。<br>
 　基本的にこの書式で書いていき、下位の定義が、上位にまとまられていく感じになります。<br>
+　また<strong>exp</strong>のブロックには<strong>;（セミコロン）</strong>がついてないですが、これは、<strong>構文解析規則</strong>の終わりを示す<strong>%%</strong>が直後にあるので省略できる、ということです。<br>
 　この上に記述がある
 <pre>
 %left "+" "-";
 %left "*" "/";
 </pre>
-　というのは、左から処理、の意味です。掛け算や足し算はどちらから処理をしてもいいですが、引き算と割り算は「左から右を引く（割る）」という処理になるので、この順番は大事です。<br>
-　ところで、これらのトークンの中で「exp」は特殊です。「parser.yy」の上位のほうで
+　というのは<strong>演算子の優先順位</strong>を指定するものです。<br>
+　例えば
 <pre>
-%nterm &lt;int> exp
+a + b + c
 </pre>
-　と指定されていて、これは「非終端記号として使う」の意味で、いわゆる「左辺値」の意味
+というのは
+<pre>
+(a + b) + c
+</pre>
+　という意味ですよね。<br>
+　しかし<strong>代入演算子</strong>は<strong>右優先</strong>です。C言語の<strong>=</strong>を代入演算子とした場合
+<pre>
+a = b + c
+</pre>
+　は
+<pre>
+a = (b + c)
+</pre>
+　という意味です。決して
+<pre>
+(a = b) + c
+</pre>
+　にはなりませんね。<br>
+　このようにして<strong>構文解析規則</strong>が、下位のブロックの<strong>result</strong>が上位のブロックの一部になり、ということで、最終的に
+<pre>
+unit: assignments exp  { drv.result = $2; };
+</pre>
+　までたどり着きます。<br>
+　ところで、各ブロックの<strong>unit、assignments、assignment</strong>は、<strong>result</strong>ですが、<strong>非終端記号</strong>ではありませんね（%ntermあるいは%typeで定義されていない）。<br>
+　これは<strong>flex</strong>から渡された<strong>トークン</strong>でないからですが<strong>Bison</strong>ではこのように<strong>result</strong>を自由に作成できます。要は、ツリー構造に矛盾なくつながればよいということなのでしょう。<br>
+　最後に、
+<pre>
+%start unit;
+</pre>
+　ですが、これは構文解析をどこからやるかの指定です。<strong>unit</strong>ブロックからやりなさいという意味ですが、実際には、<strong>unit</strong>から、スクリプトソースを下に降りて行って、<strong>exp</strong>ブロックにたどり着き、そこから上に登っていくイメージですね。
+<h5>scanner.lと、その関連</h5>
+　最後に<strong>flex</strong>用のファイルである<strong>scanner.l</strong>を見てみましょう。まずおさらいとして全コードを示します。
+<pre>
+%{ /* -*- C++ -*- */
+# include &lt;cerrno>
+# include &lt;climits>
+# include &lt;cstdlib>
+# include &lt;cstring> // strerror
+# include &lt;string>
+# include "driver.hh"
+# include "parser.hh"
+%}
 
+%option noyywrap nounput noinput batch debug
+
+%{
+  // A number symbol corresponding to the value in S.
+  yy::parser::symbol_type
+  make_NUMBER (const std::string &s, const yy::parser::location_type& loc);
+%}
+
+id    [a-zA-Z][a-zA-Z_0-9]*
+int   [0-9]+
+blank [ \t\r]
+
+
+%{
+  // Code run each time a pattern is matched.
+  # define YY_USER_ACTION  loc.columns (yyleng);
+%}
+%%
+%{
+  // A handy shortcut to the location held by the driver.
+  yy::location& loc = drv.location;
+  // Code run each time yylex is called.
+  loc.step ();
+%}
+{blank}+   loc.step ();
+\n+        loc.lines (yyleng); loc.step ();
+"-"        return yy::parser::make_MINUS  (loc);
+"+"        return yy::parser::make_PLUS   (loc);
+"*"        return yy::parser::make_STAR   (loc);
+"/"        return yy::parser::make_SLASH  (loc);
+"("        return yy::parser::make_LPAREN (loc);
+")"        return yy::parser::make_RPAREN (loc);
+":="       return yy::parser::make_ASSIGN (loc);
+
+{int}      return make_NUMBER (yytext, loc);
+{id}       return yy::parser::make_IDENTIFIER (yytext, loc);
+.          {
+             throw yy::parser::syntax_error
+               (loc, "invalid character: " + std::string(yytext));
+}
+&lt;&lt;EOF>>    return yy::parser::make_YYEOF (loc);
+%%
+yy::parser::symbol_type
+make_NUMBER (const std::string &s, const yy::parser::location_type& loc)
+{
+  errno = 0;
+  long n = strtol (s.c_str(), NULL, 10);
+  if (! (INT_MIN &lt;= n && n &lt;= INT_MAX && errno != ERANGE))
+    throw yy::parser::syntax_error (loc, "integer is out of range: " + s);
+  return yy::parser::make_NUMBER ((int) n, loc);
+}
+
+void
+driver::scan_begin ()
+{
+  yy_flex_debug = trace_scanning;
+  if (file.empty () || file == "-")
+    yyin = stdin;
+  else if (!(yyin = fopen (file.c_str (), "r")))
+  {
+    std::cerr &lt;&lt; "cannot open " &lt;&lt; file &lt;&lt; ": " &lt;&lt; strerror (errno) &lt;&lt; '\n';
+    exit (EXIT_FAILURE);
+  }
+}
+
+void
+driver::scan_end ()
+{
+  fclose (yyin);
+}
+</pre>
+　上から順番に見ていきましょう。<br>
+　まず、
+<pre>
+%{ /* -*- C++ -*- */
+# include &lt;cerrno>
+# include &lt;climits>
+# include &lt;cstdlib>
+# include &lt;cstring> // strerror
+# include &lt;string>
+# include "driver.hh"
+# include "parser.hh"
+%}
+</pre>
+　ですが
+<pre>
+%{　と　%}　で囲む
+</pre>
+　ことで、C/C++ブロックを記述することができます。ここでは必要なファイルをインクルードしています。<br>
+　続く
+<pre>
+%option noyywrap nounput noinput batch debug
+</pre>
+　は、<strong>オプションの設定</strong>です。<br>
+　今回の<strong>calcCpp</strong>には#includeのような機能がないため、yywrapは必要ありません。unput関数とinput関数も必要ありません。実際のファイルを解析します。これは、ユーザーとの対話型セッションではありません。最後に、スキャナートレースを有効にします。<br>
+　続く
+<pre>
+%{
+  // A number symbol corresponding to the value in S.
+  yy::parser::symbol_type
+  make_NUMBER (const std::string &s, const yy::parser::location_type& loc);
+%}
+</pre>
+　の<strong>make_NUMBER</strong>は、数値を示す文字列をNUMBERトークンに変換するのに便利です。<br>
+　ここの記述は宣言ですが、実体は、下のほうにあります。その内容は
+<pre>
+yy::parser::symbol_type
+make_NUMBER (const std::string &s, const yy::parser::location_type& loc)
+{
+  errno = 0;
+  long n = strtol (s.c_str(), NULL, 10);
+  if (! (INT_MIN &lt;= n && n &lt;= INT_MAX && errno != ERANGE))
+    throw yy::parser::syntax_error (loc, "integer is out of range: " + s);
+  return yy::parser::make_NUMBER ((int) n, loc);
+}
+</pre>
+　となります。<br>
+　コードをよく読むと<strong>const std::string &s</strong>から、<strong>strtol関数</strong>を使って数値に変換しています。その後
+<pre>
+  return yy::parser::make_NUMBER ((int) n, loc);
+</pre>
+　とparserの同名の関数を呼んでいます。これは、Bisonが作り出す<strong>parser.hh</strong>に実体があり
+<pre class="sub">
+#if 201103L &lt;= YY_CPLUSPLUS
+      static
+      symbol_type
+      make_NUMBER (int v, location_type l)
+      {
+        return symbol_type (token::TOK_NUMBER, std::move (v), std::move (l));
+      }
+#else
+      static
+      symbol_type
+      make_NUMBER (const int& v, const location_type& l)
+      {
+        return symbol_type (token::TOK_NUMBER, v, l);
+      }
+#endif
+</pre>
+　と<strong>C++11かそれ以前</strong>で動きが異なっていますが、ようは<strong>int</strong>を<strong>symbol_type</strong>にキャストしているわけですね。<br>
+　ここで<strong>symbol_type</strong>とは何ぞや、と調べると<strong>parser.hh</strong>に保存されています。
+<pre class="sub">
+    /// "External" symbols: returned by the scanner.
+    struct symbol_type : basic_symbol&lt;by_kind>
+    {
+      /// Superclass.
+      typedef basic_symbol&lt;by_kind> super_type;
+
+      /// Empty symbol.
+      symbol_type () YY_NOEXCEPT {}
+
+      /// Constructor for valueless symbols, and symbols from each type.
+#if 201103L &lt;= YY_CPLUSPLUS
+      symbol_type (int tok, location_type l)
+        : super_type (token_kind_type (tok), std::move (l))
+#else
+      symbol_type (int tok, const location_type& l)
+        : super_type (token_kind_type (tok), l)
+#endif
+      {
+#if !defined _MSC_VER || defined __clang__
+        YY_ASSERT (tok == token::TOK_YYEOF
+                   || (token::TOK_YYerror &lt;= tok && tok &lt;= token::TOK_RPAREN));
+#endif
+      }
+#if 201103L &lt;= YY_CPLUSPLUS
+      symbol_type (int tok, int v, location_type l)
+        : super_type (token_kind_type (tok), std::move (v), std::move (l))
+#else
+      symbol_type (int tok, const int& v, const location_type& l)
+        : super_type (token_kind_type (tok), v, l)
+#endif
+      {
+#if !defined _MSC_VER || defined __clang__
+        YY_ASSERT (tok == token::TOK_NUMBER);
+#endif
+      }
+#if 201103L &lt;= YY_CPLUSPLUS
+      symbol_type (int tok, std::string v, location_type l)
+        : super_type (token_kind_type (tok), std::move (v), std::move (l))
+#else
+      symbol_type (int tok, const std::string& v, const location_type& l)
+        : super_type (token_kind_type (tok), v, l)
+#endif
+      {
+#if !defined _MSC_VER || defined __clang__
+        YY_ASSERT (tok == token::TOK_IDENTIFIER);
+#endif
+      }
+    };
+</pre>
+　このクラスは構造体となっていて<strong>basic_symbol</strong>の派生クラスです。<br>
+　<strong>basic_symbol</strong>は、同様に<strong>parser.hh</strong>にありテンプレートクラスになっています。
+<pre class="sub">
+    template &lt;typename Base>
+    struct basic_symbol : Base
+    {
+      /// Alias to Base.
+      typedef Base super_type;
+
+      /// Default constructor.
+      basic_symbol () YY_NOEXCEPT
+        : value ()
+        , location ()
+      {}
+
+#if 201103L &lt;= YY_CPLUSPLUS
+      /// Move constructor.
+      basic_symbol (basic_symbol&& that)
+        : Base (std::move (that))
+        , value ()
+        , location (std::move (that.location))
+      {
+        switch (this->kind ())
+    {
+      case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_exp: // exp
+        value.move&lt; int > (std::move (that.value));
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+        value.move&lt; std::string > (std::move (that.value));
+        break;
+
+      default:
+        break;
+    }
+
+      }
+#endif
+
+      /// Copy constructor.
+      basic_symbol (const basic_symbol& that);
+
+      /// Constructors for typed symbols.
+#if 201103L &lt;= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, location_type&& l)
+        : Base (t)
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const location_type& l)
+        : Base (t)
+        , location (l)
+      {}
+#endif
+
+#if 201103L &lt;= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, int&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const int& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+#if 201103L &lt;= YY_CPLUSPLUS
+      basic_symbol (typename Base::kind_type t, std::string&& v, location_type&& l)
+        : Base (t)
+        , value (std::move (v))
+        , location (std::move (l))
+      {}
+#else
+      basic_symbol (typename Base::kind_type t, const std::string& v, const location_type& l)
+        : Base (t)
+        , value (v)
+        , location (l)
+      {}
+#endif
+
+      /// Destroy the symbol.
+      ~basic_symbol ()
+      {
+        clear ();
+      }
+
+
+
+      /// Destroy contents, and record that is empty.
+      void clear () YY_NOEXCEPT
+      {
+        // User destructor.
+        symbol_kind_type yykind = this->kind ();
+        basic_symbol&lt;Base>& yysym = *this;
+        (void) yysym;
+        switch (yykind)
+        {
+       default:
+          break;
+        }
+
+        // Value type destructor.
+switch (yykind)
+    {
+      case symbol_kind::S_NUMBER: // NUMBER
+      case symbol_kind::S_exp: // exp
+        value.template destroy&lt; int > ();
+        break;
+
+      case symbol_kind::S_IDENTIFIER: // IDENTIFIER
+        value.template destroy&lt; std::string > ();
+        break;
+
+      default:
+        break;
+    }
+
+        Base::clear ();
+      }
+
+      /// The user-facing name of this symbol.
+      const char *name () const YY_NOEXCEPT
+      {
+        return parser::symbol_name (this->kind ());
+      }
+
+      /// Backward compatibility (Bison 3.6).
+      symbol_kind_type type_get () const YY_NOEXCEPT;
+
+      /// Whether empty.
+      bool empty () const YY_NOEXCEPT;
+
+      /// Destructive move, \a s is emptied into this.
+      void move (basic_symbol& s);
+
+      /// The semantic value.
+      value_type value;
+
+      /// The location.
+      location_type location;
+
+    private:
+#if YY_CPLUSPLUS &lt; 201103L
+      /// Assignment operator.
+      basic_symbol& operator= (const basic_symbol& that);
+#endif
+    };
+</pre>
+　このテンプレートクラスの説明は詳しくはしませんが、ようは、<strong>flex</strong>が<strong>字句解析</strong>で振り分けるトークンは自由度の高い<strong>symbol_type</strong>という型の変数に振り分けられる、ということです。<br>
+　<strong>scanner.l</strong>に戻ります。
+<pre>
+id    [a-zA-Z][a-zA-Z_0-9]*
+int   [0-9]+
+blank [ \t\r]
+</pre>
+　というのは、<strong>id、int、blank</strong>を<strong>正規表現</strong>で定義しています。例えば<strong>id</strong>は<strong>1文字目はアルファベットで、2文字以降は数字もOK</strong>といった、興味深い正規表現ですね。
+<pre>
+%{
+  // Code run each time a pattern is matched.
+  # define YY_USER_ACTION  loc.columns (yyleng);
+%}
+</pre>
+　はマクロで<strong>YY_USER_ACTION</strong>を<strong>loc.columns (yyleng);</strong>に置き換えるよう定義しています。<br>
+　続いては<strong>parserファイル</strong>のように<strong>%%</strong>で囲まれたブロックになります
+<pre>
+%%
+%{
+  // A handy shortcut to the location held by the driver.
+  yy::location& loc = drv.location;
+  // Code run each time yylex is called.
+  loc.step ();
+%}
+{blank}+   loc.step ();
+\n+        loc.lines (yyleng); loc.step ();
+"-"        return yy::parser::make_MINUS  (loc);
+"+"        return yy::parser::make_PLUS   (loc);
+"*"        return yy::parser::make_STAR   (loc);
+"/"        return yy::parser::make_SLASH  (loc);
+"("        return yy::parser::make_LPAREN (loc);
+")"        return yy::parser::make_RPAREN (loc);
+":="       return yy::parser::make_ASSIGN (loc);
+
+{int}      return make_NUMBER (yytext, loc);
+{id}       return yy::parser::make_IDENTIFIER (yytext, loc);
+.          {
+             throw yy::parser::syntax_error
+               (loc, "invalid character: " + std::string(yytext));
+}
+&lt;&lt;EOF>>    return yy::parser::make_YYEOF (loc);
+%%
+</pre>
+　まず<strong>flex</strong>は<strong>locationクラス</strong>の<strong>step()</strong>という関数呼び出しで、解析を進めるのが分かります。<br>
+　そのあとの<strong>{blank}+</strong>は、上で定義した正規表現<strong>blank</strong>の再利用です。ですから
+<pre>
+{blank}+   loc.step ();
+</pre>
+　は
+<pre>
+[ \t\r]+   loc.step ();
+</pre>
+　と等価です。<br>
+　改行は
+<pre>
+\n+        loc.lines (yyleng); loc.step ();
+</pre>
+　とステップを進めます。<strong>loc.lines (yyleng);</strong>が行を数えています。
+<pre>
+"-"        return yy::parser::make_MINUS  (loc);
+"+"        return yy::parser::make_PLUS   (loc);
+"*"        return yy::parser::make_STAR   (loc);
+"/"        return yy::parser::make_SLASH  (loc);
+...省略
+</pre>
+　はflexの定義が続きますが、それぞれ<strong>yy::parser::make_なんたら</strong>という関数を呼んでいます。それぞれ<strong>yy::parser::make_NUMBER</strong>と同様<strong>parser.hh</strong>に生成される関数です。この<strong>make_なんたら</strong>は重要で、<strong>なんたら</strong>は<strong>Bisonのyyファイル</strong>で
+<pre class="sub">
+%token
+  ASSIGN  ":="
+  MINUS   "-"
+  PLUS    "+"
+  STAR    "*"
+  SLASH   "/"
+  LPAREN  "("
+  RPAREN  ")"
+;
+</pre>
+　のように再利用されます。
+<pre>
+.          {
+             throw yy::parser::syntax_error
+               (loc, "invalid character: " + std::string(yytext));
+}
+</pre>
+　は、それぞれのトークンに合致しないものはエラーとする処理です。<strong>std::string(yytext)</strong>で、エラー原因を表示してます。<br>
+<pre>
+&lt;&lt;EOF>>    return yy::parser::make_YYEOF (loc);
+</pre>
+　は、YYEOFを作成しています。これは<strong>ファイルの終端</strong>を表します。<br>
+　これは<strong>calcCpp,cc</strong>において
+<pre class="sub">
+  for (int i = 1; i &lt; argc; ++i)
+    if (argv[i] == std::string ("-p"))
+      drv.trace_parsing = true;
+    else if (argv[i] == std::string ("-s"))
+      drv.trace_scanning = true;
+    else if (!drv.parse (argv[i]))
+      <span class="red">std::cout &lt;&lt; drv.result &lt;&lt; '\n';</span>
+    else
+      res = 1;
+</pre>
+　の<strong>!drv.parse</strong>が終了したときの処理へとつながります。すなわち<strong>drv.result</strong>を出力すると最後の計算結果が表示されます。<br>
+　<strong>drv.result</strong>に結果を入れているのはどこかというと、<strong>parser.yy</strong>の<strong>unit</strong>ブロックで
+<pre class="sub">
+unit: assignments exp  { drv.result = $2; };
+</pre>
+　と代入しています。それが<strong>test.txt</strong>における
+<pre class="sub">
+three := 3
+seven := one + two * three
+<span class="red">seven * seven</span>
+
+</pre>
+　の<strong>seven * sevenの表示</strong>につながるわけです。<br>
+　以上で<strong>scanner.l</strong>で<strong>%%</strong>による<strong>字句解析の終了</strong>なります。<br>
+　そのあとの関数の実体は<strong>make_NUMBER</strong>と<strong>driver.hh</strong>で宣言された関数2つ（driver::scan_begin ()、driver::scan_end ()）となります。
 <br>
       </div>
       <!--/col-->
