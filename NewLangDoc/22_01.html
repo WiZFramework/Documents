@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link href="css/bootStyle.css" rel="stylesheet">
+
+<title>言語を作ろうプロジェクト（2022年）</title>
+</head>
+<body>
+<header class="sticky-top">
+  <div>
+<h3>２２．Ubuntuでひな形を作る２</h3>
+  </div>
+</header>
+<!--container-->
+<div class="container">
+  <main>
+    <!--row-->
+    <div class="row">
+      <!--col-->
+      <div class="col">
+<h4>２２－０１．仕切り直し</h4>
+<h5>Bison3.8.1の壁</h5>
+　前章では<strong>Bison3.8.1</strong>を使って開発を進めようと考えていたのですが、実際にカスタマイズしようとすると、いくつかの問題点（というか理解不足による壁）が出てきました。<br>
+　ようは
+<pre>
+%define api.value.type variant
+</pre>
+　を使うことによって、例えばスキャナー<strong>scanner.l</strong>において<strong>状態</strong>を管理する<strong>&lt;INITIAL>や&lt;COMMENT></strong>を使うことが難しいようです。<br>
+　何か方法があるのは間違いないのですが、そこが壁になってしまいました。<br>
+　なので、初心に立ち返って、<strong>１３－０１．構造の修正</strong>に紹介した記述方法で開発を進め<strong>Bison3.8.1</strong>への対応はぼちぼち考えたいと思います。<br>
+<h5>%unionを使った型管理</h5>
+　<strong>１３－０１．構造の修正</strong>では<strong>%union</strong>を使って<strong>%type</strong>の管理をしています。内容的には<strong>１２－０２．FlexとBisonで計算機（VS2019版）</strong>を記述してそれを<strong>１３－０１．構造の修正</strong>する形になります。以下にソースを紹介します。
+<h5>scanner.l</h5>
+　まず<strong>flex</strong>のファイルです。<strong>scanner.l</strong>という名前で作成します。
+<pre>
+%{
+#include &lt;stdio.h>
+#include "parser.h"
+
+#define YY_SKIP_YYWRAP 1
+
+int
+yywrap(void)
+{
+    return 1;
+}
+%}
+%%
+"+"     return ADD;
+"-"     return SUB;
+"*"     return MUL;
+"/"     return DIV;
+"\n"    return CR;
+[1-9][0-9]* {
+    double temp;
+    sscanf(yytext, "%lf", &temp);
+    yylval.double_value = temp;
+    return DOUBLE_LITERAL;
+}
+[0-9]*\.[0-9]* {
+    double temp;
+    sscanf(yytext, "%lf", &temp);
+    yylval.double_value = temp;
+    return DOUBLE_LITERAL;
+}
+[ \t] ;
+%%
+</pre>
+<h5>parser.y</h5>
+　続いて、<strong>parser.y</strong>を記述します。<strong>bison</strong>のファイルですね。
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+
+#define YYDEBUG 1
+
+extern int yylex(void);
+
+int
+yyerror(char const *str)
+{
+    extern char *yytext;
+    fprintf(stderr, "parser error near %s\n", yytext);
+    return 0;
+}
+
+%}
+%union {
+    int     int_value;
+    double  double_value;
+}
+%token &lt;double_value>    DOUBLE_LITERAL
+%token ADD SUB MUL DIV CR
+%type &lt;double_value> expression term primary_expression
+%%
+line_list
+    : line
+    | line_list line
+    ;
+line
+    : expression CR
+    {
+        std::cout &lt;&lt; ">>" &lt;&lt; $1 &lt;&lt; std::endl;
+    }
+expression
+    : term
+    | expression ADD term
+    {
+        $$ = $1 + $3;
+    }
+    | expression SUB term
+    {
+        $$ = $1 - $3;
+    }
+    ;
+term
+    : primary_expression
+    | term MUL primary_expression 
+    {
+        $$ = $1 * $3;
+    }
+    | term DIV primary_expression
+    {
+        $$ = $1 / $3;
+    }
+    ;
+primary_expression
+    : DOUBLE_LITERAL
+    ;
+%%
+</pre>
+<h5>main.cpp</h5>
+　続いて<strong>main.cpp</strong>です。<strong>main()関数</strong>が入ります。
+<pre>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;vector>
+#include &lt;string>
+
+int
+main (int argc, char *argv[])
+{
+  extern int yyparse(void);
+  extern FILE* yyin;
+  for (int i = 1; i &lt; argc; ++i){
+      if ((yyin = fopen(argv[i], "r")) == NULL) {
+          std::cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; std::endl;
+          return 1;
+      }
+      if (yyparse()) {
+          std::cout &lt;&lt; "プログラム終了" &lt;&lt; std::endl;
+      }
+    else{
+        return 0;
+    }
+  }
+    return 0;
+}
+</pre>
+<h5>test.txt</h5>
+　このサンプルは、スクリプトをテキストファイルから読み込むので<strong>test.txt</strong>を作成します。
+<pre>
+10 + 3
+10 * 3
+</pre>
+<h5>Makefile</h5>
+　最後に<strong>Makefile</strong>です。
+<pre>
+calcCpp : scanner.cpp parser.h main.cpp
+  g++ -o calcCpp scanner.cpp main.cpp
+
+scanner.cpp : scanner.l
+  flex -o scanner.cpp scanner.l
+
+parser.h : parser.y
+  bison -o parser.h parser.y
+</pre>
+<h5>コンパイルと実行</h5>
+　記述が終わったらコンパイルしましょう
+<pre>
+$ make
+flex -o scanner.cpp scanner.l
+bison -o parser.h parser.y
+g++ -o calcCpp scanner.cpp main.cpp
+</pre>
+　これで<strong>calcCpp</strong>が出来上がっています。実行してみましょう。
+<pre>
+$ ./calcCpp test.txt
+>>13
+>>30
+</pre>
+　これで、開発するひな形ができました。
+      </div>
+      <!--/col-->
+    </div>
+    <!--/row-->
+  </main>
+  <!--/main-->
+  <footer id="footer" class="fixed-bottom text-center">
+    <ul>
+      <li class="list-inline-item"><a href="21_02.html">前ページ</a></li>
+      <li class="list-inline-item"><a href="index.html">目次</a></li>
+      <li class="list-inline-item"><a href="23_01.html">次ページ</a></li>
+    </ul>
+  </footer>
+</div>
+<!--/container-->
+<!-- Optional JavaScript; choose one of the two! -->
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+-->
+</body>
+</html>
