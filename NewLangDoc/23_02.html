@@ -41,7 +41,7 @@ using namespace std;
 class driver
 {
     driver ();
-    map&lt;std::string,double> m_variables;
+  map&lt;std::string,double> m_variables;
 public:
     void output(double a);
     double createNUM(const string& a);
@@ -102,6 +102,166 @@ driver::parse (const string &f)
     }
     return 0;
 }
+</pre>
+　続いて「parser.y」です。
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include "driver.h"
+
+#define YYDEBUG 1
+
+extern int yylex(void);
+
+int
+yyerror(char const *str)
+{
+    extern char *yytext;
+    fprintf(stderr, "parser error near %s\n", yytext);
+    return 0;
+}
+
+%}
+%union {
+    double  double_value;
+    char* literal_value;
+}
+%token &lt;double_value>    DOUBLE_VALUE
+%token &lt;literal_value>   DOUBLE_LITERAL_PTR IDENTIFIER_PTR
+%token
+  ADD "+"
+  SUB "-"
+  MUL "*"
+  DIV "/"
+  CR
+;
+%type &lt;double_value> expression term primary_expression
+%%
+line_list
+    : line
+    | line_list line
+    ;
+line
+    : expression CR
+    {
+        driver::get()->output($1);
+    }
+expression
+    : term
+  | IDENTIFIER_PTR 
+  {
+        $$ = driver::get()->createIDENTIFIER($1);
+  }
+    | expression "+" term
+    {
+        $$ = $1 + $3;
+    }
+    | expression "-" term
+    {
+        $$ = $1 - $3;
+    }
+    ;
+term
+    : primary_expression
+    | term "*" primary_expression 
+    {
+        $$ = $1 * $3;
+    }
+    | term "/" primary_expression
+    {
+        $$ = $1 / $3;
+    }
+    ;
+primary_expression
+    : DOUBLE_LITERAL_PTR
+    {
+        $$ = driver::get()->createNUM($1);
+    }
+    ;
+%%
+</pre>
+　続いて「scanner.l」です。
+<pre>
+%{
+#include &lt;stdio.h>
+#include "parser.hpp"
+#include "driver.h"
+
+#define YY_SKIP_YYWRAP 1
+
+int
+yywrap()
+{
+    return 1;
+}
+%}
+
+id    [a-zA-Z][a-zA-Z_0-9]*
+blank [ \t]
+int   [1-9][0-9]*
+double [0-9]*\.[0-9]*
+
+
+%%
+{blank}+ ;
+"+"     return ADD;
+"-"     return SUB;
+"*"     return MUL;
+"/"     return DIV;
+"\n"    return CR;
+{int} {
+    yylval.literal_value = yytext;
+    return DOUBLE_LITERAL_PTR;
+}
+{double} {
+    yylval.literal_value = yytext;
+    return DOUBLE_LITERAL_PTR;
+}
+{id} {
+    yylval.literal_value = yytext;
+    return IDENTIFIER_PTR;
+}
+%%
+</pre>
+　以下、変更はありませんが「main.cpp」です。<br>
+<pre>
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;vector>
+#include &lt;string>
+#include "driver.h"
+
+using namespace std;
+
+int
+main (int argc, char *argv[])
+{
+    driver* drv = driver::get();
+    for (int i = 1; i &lt; argc; ++i){
+        return drv->parse(argv[i]);
+    }
+    return 0;
+}
+</pre>
+　変更がありませんが「Makefile」です。
+<pre>
+calcCpp : scanner.cpp parser.hpp parser.cpp main.cpp driver.cpp driver.h
+&#009;g++ -o calcCpp scanner.cpp parser.cpp driver.cpp main.cpp
+
+scanner.cpp : scanner.l
+&#009;flex -o scanner.cpp scanner.l
+
+parser.hpp parser.cpp : parser.y
+&#009;bison -d -o parser.cpp parser.y
+</pre>
+　以下、スクリプトファイルです「test.txt」です。
+<pre>
+10 + 3
+10 * 3
 </pre>
 
       </div>
