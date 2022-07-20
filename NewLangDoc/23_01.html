@@ -53,6 +53,7 @@ public:
 #endif // ! DRIVER_H
 
 </pre>
+<h5>driver.cpp</h5>
 　続いて<strong>driver.cpp</strong>です。日本語も入ってます。必ず<strong>utf-8</strong>で保存しましょう。
 <pre>
 #include "driver.h"
@@ -99,7 +100,7 @@ driver::parse (const string &f)
 　ここで、赤くなっている<strong>driver::get()関数</strong>について補足します。<br>
 　<strong>driverクラス</strong>はコンストラクタが<strong>privateメンバ</strong>になっています。こうすると、外部からインスタンスを作成できません。そのうえで<strong>driver::get()関数</strong>を用意します。<strong>driver.h</strong>を見るとわかりますが、この関数は<strong>static関数</strong>になっていて、戻り値が<strong>driver型のポインタ</strong>を返す形となっています。<br>
 　<strong>driver::get()関数</strong>は以下のようになっていて
-<pre>
+<pre class="sub">
 <span class="red">driver* driver::get(){
     static driver* instance = nullptr;
     if(!instance){
@@ -111,19 +112,19 @@ driver::parse (const string &f)
 　<strong>static driver* instance</strong>という変数を保持しています。これを<strong>nullptr</strong>で初期化しておきます。<br>
 　そして<strong>instanceがnullptr</strong>であれば<strong>new</strong>でインスタンスを作成します。<strong>static変数</strong>ですので、一度インスタンスが構築されると以降はそのポインタを使う形となります。<br>
 　こうしておけば<strong>driver.h</strong>がインクルードされている場所であれば
-<pre>
+<pre class="sub">
     driver* drv = driver::get();
 </pre>
 　という記述で、このインスタンスを取得できます。この方法は<strong>シングルトン</strong>と言って、アプリケーション中に一つのインスタンスのみ許す、時に使用します。今回は別にシングルトンにしなくても問題ありませんが、シングルトンにしておいたほうが、簡単にインスタンスにアクセスできるので、この方法を使用しました。<br>
-　「driverクラス」にはこのほかに
-<pre>
+　<strong>driverクラス</strong>にはこのほかに
+<pre class="sub">
     void output(double a);
     double createNUM(const string& a);
 </pre>
-　という2つのメンバ関数があります。「output()関数」は計算結果を表示する関数です。この計算機は、「改行ード」があると、結果を出力して、構文解析は終了ですので、この先解析はありませんので、「void型」を返します。<br>
-　「createNUM()関数」は「string型の参照」を受け取って、そこから「double型」を作り出し、それを返す関数です。「数字」から「数値」を作ります。<br>
-　「parse()関数」は、ファイル名の文字列を受け取って、「bisonファイル」とのやりとりを行います。具体的には以下ですが
-<pre>
+　という2つのメンバ関数があります。<strong>output()関数</strong>は計算結果を表示する関数です。この計算機は、<strong>改行ード</strong>があると、結果を出力して、構文解析は終了ですので、この先解析はありませんので、<strong>void型</strong>を返します。<br>
+　<strong>createNUM()関数</strong>は<strong>string型の参照</strong>を受け取って、そこから<strong>double型</strong>を作り出し、それを返す関数です。<strong>数字</strong>から<strong>数値</strong>を作ります。<br>
+　<strong>parse()関数</strong>は、ファイル名の文字列を受け取って、<strong>bisonファイル</strong>とのやりとりを行います。具体的には以下ですが
+<pre class="sub">
 int
 driver::parse (const string &f)
 {
@@ -143,26 +144,27 @@ driver::parse (const string &f)
 }
 </pre>
 　まず
-<pre>
+<pre class="sub">
     extern int yyparse(void);
     extern FILE* yyin;
 </pre>
-　とbisonの関数と変数を「extern宣言」してます。これで、「bisonファイル」内のそれらの変数や関数にアクセスできます。<br>>
-<pre>
+　とbisonの関数と変数を<strong>extern宣言</strong>してます。これで、<strong>bisonファイル</strong>内のそれらの変数や関数にアクセスできます。<br>>
+<pre class="sub">
     if ((yyin = fopen(m_file.c_str(), "r")) == NULL) {
         cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; endl;
         return 1;
     }
 </pre>
-　で、ファイルをオープンし、成功したらそのファイルポインタを「yyin」に渡します。そうしたうえで
-<pre>
+　で、ファイルをオープンし、成功したらそのファイルポインタを<strong>yyin</strong>に渡します。そうしたうえで
+<pre class="sub">
     if (yyparse()) {
         cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
         return 1;
     }
 </pre>
-　と、「baisonファイル」内の「構文解析関数（yyparse()関数）」を呼び出します。この関数は失敗すると「1」を返すので、その場合は終了します。正常終了の場合は、「0」を返します。<br>
-　この「driver::parse()関数」は「main()関数」から呼ばれます。<br>
+　と、<strong>baisonファイル</strong>内の<strong>構文解析関数（yyparse()関数）</strong>を呼び出します。この関数は失敗すると<strong>1</strong>を返すので、その場合は終了します。正常終了の場合は、<strong>0</strong>を返します。<br>
+　この<strong>driver::parse()関数</strong>は<strong>main()関数</strong>から呼ばれます。<br>
+<h5>parser.y</h5>
 　続いて<strong>parser.y</strong>も書き換えます。
 <pre>
 %{
@@ -188,8 +190,8 @@ yyerror(char const *str)
     double  double_value;
     char* literal_value;
 }
-%token &lt;double_value>    DOUBLE_LITERAL
-%token &lt;literal_value>    PTR_LITERAL
+%token &lt;double_value>    DOUBLE_VALUE
+%token &lt;literal_value>   DOUBLE_LITERAL_PTR
 %token
   ADD "+"
   SUB "-"
@@ -231,15 +233,15 @@ term
     }
     ;
 primary_expression
-    : PTR_LITERAL
+    : DOUBLE_LITERAL_PTR
     {
         $$ = driver::get()->createNUM($1);
     }
     ;
 %%
 </pre>
-　最初の「%{」から「%}」はC++のソースファイルを記述します。ここでは、ライブラリのインクルードとか、エラー関数を実装します。
-<pre>
+　最初の<strong>%{</strong>から<strong>%}</strong>はC++のソースファイルを記述します。ここでは、ライブラリのインクルードとか、エラー関数を実装します。
+<pre class="sub">
 %{
 #include &lt;stdio.h>
 #include &lt;stdlib.h>
@@ -260,14 +262,14 @@ yyerror(char const *str)
 
 %}
 </pre>
-　続くブロックは「Bison宣言」を記述します。
-<pre>
+　続くブロックは<strong>Bison宣言</strong>を記述します。
+<pre class="sub">
 %union {
     double  double_value;
     char* literal_value;
 }
-%token &lt;double_value>    DOUBLE_LITERAL
-%token &lt;literal_value>    PTR_LITERAL
+%token &lt;double_value>    DOUBLE_VALUE
+%token &lt;literal_value>   DOUBLE_LITERAL_PTR
 %token
   ADD "+"
   SUB "-"
@@ -277,14 +279,136 @@ yyerror(char const *str)
 ;
 %type &lt;double_value> expression term primary_expression
 </pre>
-　「%union」は「共用体」です。「double  double_value;」という変数と「char* literal_value;」を「同じ領域を使う」という意味です。<br>
+　<strong>%union</strong>は<strong>共用体</strong>です。C/C++の<strong>union</strong>に展開します。<strong>double  double_value;</strong>という変数と<strong>char* literal_value;</strong>を<strong>同じ領域を使う</strong>という意味です。<br>
 　次の
-<pre>
-%token &lt;double_value>    DOUBLE_LITERAL
-%token &lt;literal_value>    PTR_LITERAL
+<pre class="sub">
+%token &lt;double_value>    DOUBLE_VALUE
+%token &lt;literal_value>   DOUBLE_LITERAL_PTR
 </pre>
-　は「%union」で定義された内容のうち「double_value」該当する（すなわちdouble型の時）は「DOUBLE_LITERAL」というトークンを返しなさい、という意味です。
-
+　は<strong>%union</strong>で定義された内容のうち<strong>double_value</strong>該当する（すなわち<strong>double型</strong>の時）は<strong>DOUBLE_LITERAL</strong>というトークンを返しなさい、という意味です。<br>
+　同様、<strong>char*</strong>の時は<strong>DOUBLE_LITERAL_PTR</strong>を返しなさい、という意味になります。<br>
+　続く
+<pre class="sub">
+%token
+  ADD "+"
+  SUB "-"
+  MUL "*"
+  DIV "/"
+  CR
+;
+</pre>
+　は、<strong>終端記号</strong>です。<strong>DOUBLE_VALUE</strong>や<strong>DOUBLE_LITERAL_PTR</strong>もそうですが<strong>%token</strong>で定義されるトークンは<strong>$$</strong>に入れることはできません。<br>
+　続く
+<pre class="sub">
+%type &lt;double_value> expression term primary_expression
+</pre>
+　は<strong>非終端記号</strong>です。<strong>$$</strong>に設定することができる。<strong>２１．Ubuntuでひな形を作る</strong>でも説明した、つまりは以下の<strong>result:</strong>部）に置けるキーワードです。
+<pre class="sub">
+result: components...
+        ;
+</pre>
+　そして、そのあとの<strong>%%</strong>で囲まれた領域が<strong>文法規則の構文</strong>になります。
+<pre class="sub">
+%%
+line_list
+    : line
+    | line_list line
+    ;
+line
+    : expression CR
+    {
+        driver::get()->output($1);
+    }
+expression
+    : term
+    | expression "+" term
+    {
+        $$ = $1 + $3;
+    }
+    | expression "-" term
+    {
+        $$ = $1 - $3;
+    }
+    ;
+term
+    : primary_expression
+    | term "*" primary_expression 
+    {
+        $$ = $1 * $3;
+    }
+    | term "/" primary_expression
+    {
+        $$ = $1 / $3;
+    }
+    ;
+primary_expression
+    : DOUBLE_LITERAL_PTR
+    {
+        $$ = driver::get()->createNUM($1);
+    }
+    ;
+%%
+</pre>
+　このブロックは、下から読んでいきます。<br>
+　まず
+<pre class="sub">
+primary_expression
+    : DOUBLE_LITERAL_PTR
+    {
+        $$ = driver::get()->createNUM($1);
+    }
+    ;
+</pre>
+　は<strong>%type</strong>で定義された<strong>primary_expression</strong>が<strong>非終端記号</strong>になります。<br>
+　<strong>DOUBLE_LITERAL_PTR</strong>は<strong>%token</strong>で<strong>char*</strong>ですから、<strong>$$ = driver::get()->createNUM($1);</strong>により、<strong>DOUBLE_LITERAL_PTR</strong>が<strong>$1</strong>として渡され、<strong>driver::get()->createNUM()関数</strong>を呼び出します。<br>
+　これは<strong>driver.cpp</strong>にあるように
+<pre class="sub">
+double driver::createNUM(const string& a){
+    double d = (double)strtof(a.c_str(),nullptr);
+    return d;
+}
+</pre>
+　として<strong>const string& a</strong>に変換されます。<strong>std::string</strong>は<strong>char*</strong>を<strong>const string&</strong>として受けることができます。その<strong>stringの参照a</strong>を使って<strong>double d</strong>を作り出し、それを返しています。<br>
+　ですので<strong>$$ = driver::get()->createNUM($1);</strong>は<strong>$$すなわちprimary_expression</strong>にdouble型の値を渡すことになります。<br>
+　そして<strong>primary_expression</strong>は一つ上のブロック
+<pre class="sub">
+term
+    : <span class="red">primary_expression</span>
+    | term "*" primary_expression 
+    {
+        $$ = $1 * $3;
+    }
+    | term "/" primary_expression
+    {
+        $$ = $1 / $3;
+    }
+    ;
+</pre>
+　に現れます。<strong>term（すなわち$$）</strong>に渡せ、という意味です。<br>
+　定義部（{　}で囲まれた部分）が省略されると<strong>$1</strong>が<strong>$$</strong>に渡されます。ですから
+<pre class="sub">
+term
+    : primary_expression
+</pre>
+　は
+<pre class="sub">
+term
+    : primary_expression
+    {
+      $$ = $1;
+    }
+</pre>
+　と等価です。<br>
+　このようにして<strong>文法規則の構文</strong>が積み上げられ、最後に
+<pre class="sub">
+line_list
+    : line
+    | line_list line
+    ;
+</pre>
+　にたどり着きます。
+　<strong>line_list</strong>は<strong>line</strong>である。または<strong>line_list line</strong>である、ということですが、この<strong>line_list line</strong>は<strong>任意の数の行を読み込んだ後で、もし可能ならば、 もう1行読み込む</strong>という意味になります。<br>
+<h5>scanner.l</h5>
 　<strong>scanner.l</strong>も書き換えます。
 <pre>
 %{
@@ -294,7 +418,7 @@ yyerror(char const *str)
 #define YY_SKIP_YYWRAP 1
 
 int
-yywrap(void)
+yywrap()
 {
     return 1;
 }
@@ -307,15 +431,56 @@ yywrap(void)
 "\n"    return CR;
 [1-9][0-9]* {
     yylval.literal_value = yytext;
-    return PTR_LITERAL;
+    return DOUBLE_LITERAL_PTR;
 }
 [0-9]*\.[0-9]* {
     yylval.literal_value = yytext;
-    return PTR_LITERAL;
+    return DOUBLE_LITERAL_PTR;
 }
 [ \t] ;
 %%
 </pre>
+　<strong>スキャナー</strong>の役割は<strong>字句解析</strong>です。ソースコードを<strong>トークン</strong>に分割し、それを<strong>パーサー</strong>に渡します。<br>
+　まず、冒頭の
+<pre class="sub">
+%{
+#include &lt;stdio.h>
+#include "parser.hpp"
+
+#define YY_SKIP_YYWRAP 1
+
+int
+yywrap()
+{
+    return 1;
+}
+%}
+</pre>
+　は、<strong>parser.y</strong>同様に<strong>C/C++</strong>の構文を記述します。ここではいくつかヘッダをインクルードして<strong>yywrap()関数</strong>を記述します。<br>
+　インクルードされるファイルのうち<strong>parser.hpp</strong>は、ヘッダファイルです。<strong>Makefile</strong>で今回は<strong>parser.y</strong>を<strong>bison</strong>で実行するときに<strong>-d</strong>オプションを付けています。こうするとヘッダファイルを作成してくれます。そうすると<strong>scanner.l</strong>では<strong>parser.y</strong>で定義された<strong>%union</strong>の<strong>yylval.literal_value</strong>にアクセスできます。<strong>yylval</strong>は<strong>union</strong>の変数名です。<br>
+　続く<strong>yywrap()関数</strong>は、あまり考えずに<strong>return 1;</strong>を書いておきましょう。<br>
+　次の<strong>%%</strong>と<strong>%%</strong>に囲まれたブロックが<strong>scanner.l</strong>の本体です。
+<pre class="sub">
+%%
+"+"     return ADD;
+"-"     return SUB;
+"*"     return MUL;
+"/"     return DIV;
+"\n"    return CR;
+[1-9][0-9]* {
+    yylval.literal_value = yytext;
+    return DOUBLE_LITERAL_PTR;
+}
+[0-9]*\.[0-9]* {
+    yylval.literal_value = yytext;
+    return DOUBLE_LITERAL_PTR;
+}
+[ \t] ;
+%%
+</pre>
+　ここでは<strong>正規表現</strong>を使って<strong>トークン</strong>に分けます。そしてそれぞれのトークンを<strong>parser.y</strong>の定義と互換を保ちながら<strong>return</strong>します。<br>
+　ここで出てくる<strong>yytext</strong>とは、トークン分けされた文字列そのものです（char*型）。<strong>yylval.literal_value = yytext;</strong>は<strong>数字の文字列</strong>を<strong>unionの変数</strong>に代入しています。
+<h5>main.cpp</h5>
 　<strong>main.cpp</strong>も書き換えます。
 <pre>
 #include &lt;stdio.h>
@@ -338,7 +503,10 @@ main (int argc, char *argv[])
     return 0;
 }
 </pre>
-　<strong>Makefile</strong>も書き換えます。今回は<strong>parser.y</strong>からヘッダファイル（<strong>parser.hpp</strong>）を書き出すような内容になっています。
+　ここでは、コマンドラインからスクリプトのファイル名を取り出し、<strong>driverクラス</strong>の<strong>parse()関数</strong>に渡しています。今回のスクリプトは<strong>test.txt</strong>ですね。<br>
+　１つのファイルを処理したら、そのままリターンするので、複数のスクリプトファイルには対応していません。
+<h5>Makefile</h5>
+　<strong>Makefile</strong>も書き換えます。今回は<strong>parser.y</strong>からヘッダファイル（<strong>parser.hpp</strong>）を書き出すような内容になっています（<strong>bison</strong>コマンドに<strong>-dオプション</strong>をつけています）。
 <pre>
 calcCpp : scanner.cpp parser.hpp parser.cpp main.cpp
 &#009;g++ -o calcCpp scanner.cpp parser.cpp driver.cpp main.cpp
