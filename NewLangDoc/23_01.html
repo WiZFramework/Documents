@@ -28,31 +28,32 @@
 <h5>driverクラスの役割</h5>
 　<strong>Ubuntuでひな形を作る２</strong>で作成した計算機に、<strong>cpp側</strong>とのインターフェイスを作成します。<strong>２１－０１．Bison3.8.1</strong>で紹介した<strong>driverクラス</strong>と似たようなクラスです。まず<strong>driver.h</strong>です。
 <pre>
-# ifndef DRIVER_H
-# define DRIVER_H
+#ifndef DRIVER_H
+#define DRIVER_H
 #include &lt;iostream>
 #include &lt;fstream>
-# include &lt;string>
-# include &lt;map>
+#include &lt;string>
+#include &lt;map>
 
 using namespace std;
 
 class driver
 {
-  driver ();
+    driver ();
 public:
-  void output(double a);
-  double createNUM(const string& a);
+    void output(double a);
+    double createNUM(const string& a);
 
-  int parse (const string& f);
-  string m_file;
-  static driver* get();
+    int parse (const string& f);
+    string m_file;
+    <span class="red">static driver* get();</span>
 
 };
 
 #endif // ! DRIVER_H
+
 </pre>
-　続いて<strong>driver.cpp</strong>です。
+　続いて<strong>driver.cpp</strong>です。日本語も入ってます。必ず<strong>utf-8</strong>で保存しましょう。
 <pre>
 #include "driver.h"
 
@@ -61,41 +62,108 @@ driver::driver ()
 }
 
 void driver::output(double a){
-  cout &lt;&lt; ">>" &lt;&lt; a &lt;&lt; std::endl;
+    cout &lt;&lt; ">>" &lt;&lt; a &lt;&lt; std::endl;
 }
 
 double driver::createNUM(const string& a){
-  double d = (double)strtof(a.c_str(),nullptr);
-  return d;
+    double d = (double)strtof(a.c_str(),nullptr);
+    return d;
 }
 
-driver* driver::get(){
-  static driver* instance = nullptr;
-  if(!instance){
-    instance = new driver();
-  }
-  return instance;
-}
+<span class="red">driver* driver::get(){
+    static driver* instance = nullptr;
+    if(!instance){
+      instance = new driver();
+    }
+    return instance;
+}</span>
 
 int
 driver::parse (const string &f)
 {
-  extern int yyparse(void);
-  extern FILE* yyin;
-  m_file = f;
+    extern int yyparse(void);
+    extern FILE* yyin;
+    m_file = f;
 
-  if ((yyin = fopen(m_file.c_str(), "r")) == NULL) {
-    cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; endl;
-    return 1;
-  }
-  if (yyparse()) {
-    cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
-    return 1;
-  }
-  return 0;
+    if ((yyin = fopen(m_file.c_str(), "r")) == NULL) {
+        cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; endl;
+        return 1;
+    }
+    if (yyparse()) {
+        cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
+        return 1;
+    }
+    return 0;
 }
 </pre>
-　<strong>parser.y</strong>も書き換えます。
+　ここで、赤くなっている<strong>driver::get()関数</strong>について補足します。<br>
+　<strong>driverクラス</strong>はコンストラクタが<strong>privateメンバ</strong>になっています。こうすると、外部からインスタンスを作成できません。そのうえで<strong>driver::get()関数</strong>を用意します。<strong>driver.h</strong>を見るとわかりますが、この関数は<strong>static関数</strong>になっていて、戻り値が<strong>driver型のポインタ</strong>を返す形となっています。<br>
+　<strong>driver::get()関数</strong>は以下のようになっていて
+<pre>
+<span class="red">driver* driver::get(){
+    static driver* instance = nullptr;
+    if(!instance){
+      instance = new driver();
+    }
+    return instance;
+}</span>
+</pre>
+　<strong>static driver* instance</strong>という変数を保持しています。これを<strong>nullptr</strong>で初期化しておきます。<br>
+　そして<strong>instanceがnullptr</strong>であれば<strong>new</strong>でインスタンスを作成します。<strong>static変数</strong>ですので、一度インスタンスが構築されると以降はそのポインタを使う形となります。<br>
+　こうしておけば<strong>driver.h</strong>がインクルードされている場所であれば
+<pre>
+    driver* drv = driver::get();
+</pre>
+　という記述で、このインスタンスを取得できます。この方法は<strong>シングルトン</strong>と言って、アプリケーション中に一つのインスタンスのみ許す、時に使用します。今回は別にシングルトンにしなくても問題ありませんが、シングルトンにしておいたほうが、簡単にインスタンスにアクセスできるので、この方法を使用しました。<br>
+　「driverクラス」にはこのほかに
+<pre>
+    void output(double a);
+    double createNUM(const string& a);
+</pre>
+　という2つのメンバ関数があります。「output()関数」は計算結果を表示する関数です。この計算機は、「改行ード」があると、結果を出力して、構文解析は終了ですので、この先解析はありませんので、「void型」を返します。<br>
+　「createNUM()関数」は「string型の参照」を受け取って、そこから「double型」を作り出し、それを返す関数です。「数字」から「数値」を作ります。<br>
+　「parse()関数」は、ファイル名の文字列を受け取って、「bisonファイル」とのやりとりを行います。具体的には以下ですが
+<pre>
+int
+driver::parse (const string &f)
+{
+    extern int yyparse(void);
+    extern FILE* yyin;
+    m_file = f;
+
+    if ((yyin = fopen(m_file.c_str(), "r")) == NULL) {
+        cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; endl;
+        return 1;
+    }
+    if (yyparse()) {
+        cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
+        return 1;
+    }
+    return 0;
+}
+</pre>
+　まず
+<pre>
+    extern int yyparse(void);
+    extern FILE* yyin;
+</pre>
+　とbisonの関数と変数を「extern宣言」してます。これで、「bisonファイル」内のそれらの変数や関数にアクセスできます。<br>>
+<pre>
+    if ((yyin = fopen(m_file.c_str(), "r")) == NULL) {
+        cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; endl;
+        return 1;
+    }
+</pre>
+　で、ファイルをオープンし、成功したらそのファイルポインタを「yyin」に渡します。そうしたうえで
+<pre>
+    if (yyparse()) {
+        cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
+        return 1;
+    }
+</pre>
+　と、「baisonファイル」内の「構文解析関数（yyparse()関数）」を呼び出します。この関数は失敗すると「1」を返すので、その場合は終了します。正常終了の場合は、「0」を返します。<br>
+　この「driver::parse()関数」は「main()関数」から呼ばれます。<br>
+　続いて<strong>parser.y</strong>も書き換えます。
 <pre>
 %{
 #include &lt;stdio.h>
@@ -117,9 +185,8 @@ yyerror(char const *str)
 
 %}
 %union {
-    int     int_value;
     double  double_value;
-  char* literal_value;
+    char* literal_value;
 }
 %token &lt;double_value>    DOUBLE_LITERAL
 %token &lt;literal_value>    PTR_LITERAL
@@ -165,17 +232,64 @@ term
     ;
 primary_expression
     : PTR_LITERAL
-      {
-    $$ = driver::get()->createNUM($1);
-      }
+    {
+        $$ = driver::get()->createNUM($1);
+    }
     ;
 %%
 </pre>
+　最初の「%{」から「%}」はC++のソースファイルを記述します。ここでは、ライブラリのインクルードとか、エラー関数を実装します。
+<pre>
+%{
+#include &lt;stdio.h>
+#include &lt;stdlib.h>
+#include &lt;iostream>
+#include "driver.h"
+
+#define YYDEBUG 1
+
+extern int yylex(void);
+
+int
+yyerror(char const *str)
+{
+    extern char *yytext;
+    fprintf(stderr, "parser error near %s\n", yytext);
+    return 0;
+}
+
+%}
+</pre>
+　続くブロックは「Bison宣言」を記述します。
+<pre>
+%union {
+    double  double_value;
+    char* literal_value;
+}
+%token &lt;double_value>    DOUBLE_LITERAL
+%token &lt;literal_value>    PTR_LITERAL
+%token
+  ADD "+"
+  SUB "-"
+  MUL "*"
+  DIV "/"
+  CR
+;
+%type &lt;double_value> expression term primary_expression
+</pre>
+　「%union」は「共用体」です。「double  double_value;」という変数と「char* literal_value;」を「同じ領域を使う」という意味です。<br>
+　次の
+<pre>
+%token &lt;double_value>    DOUBLE_LITERAL
+%token &lt;literal_value>    PTR_LITERAL
+</pre>
+　は「%union」で定義された内容のうち「double_value」該当する（すなわちdouble型の時）は「DOUBLE_LITERAL」というトークンを返しなさい、という意味です。
+
 　<strong>scanner.l</strong>も書き換えます。
 <pre>
 %{
 #include &lt;stdio.h>
-#include "parser.h"
+#include "parser.hpp"
 
 #define YY_SKIP_YYWRAP 1
 
@@ -217,12 +331,23 @@ using namespace std;
 int
 main (int argc, char *argv[])
 {
-  driver* drv = driver::get();
-  for (int i = 1; i &lt; argc; ++i){
-    return drv->parse(argv[i]);
-  }
+    driver* drv = driver::get();
+    for (int i = 1; i &lt; argc; ++i){
+        return drv->parse(argv[i]);
+    }
     return 0;
 }
+</pre>
+　<strong>Makefile</strong>も書き換えます。今回は<strong>parser.y</strong>からヘッダファイル（<strong>parser.hpp</strong>）を書き出すような内容になっています。
+<pre>
+calcCpp : scanner.cpp parser.hpp parser.cpp main.cpp
+&#009;g++ -o calcCpp scanner.cpp parser.cpp driver.cpp main.cpp
+
+scanner.cpp : scanner.l
+&#009;flex -o scanner.cpp scanner.l
+
+parser.hpp parser.cpp : parser.y
+&#009;bison -d -o parser.cpp parser.y
 </pre>
 　これで<strong>make</strong>して
 <pre>

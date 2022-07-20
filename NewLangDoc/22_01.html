@@ -177,13 +177,13 @@ main (int argc, char *argv[])
 　最後に<strong>Makefile</strong>です。
 <pre>
 calcCpp : scanner.cpp parser.h main.cpp
-  g++ -o calcCpp scanner.cpp main.cpp
+&#009;g++ -o calcCpp scanner.cpp main.cpp
 
 scanner.cpp : scanner.l
-  flex -o scanner.cpp scanner.l
+&#009;flex -o scanner.cpp scanner.l
 
 parser.h : parser.y
-  bison -o parser.h parser.y
+&#009;bison -o parser.h parser.y
 </pre>
 <h5>コンパイルと実行</h5>
 　記述が終わったらコンパイルしましょう
