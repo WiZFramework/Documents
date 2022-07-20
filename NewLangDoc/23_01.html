@@ -508,7 +508,7 @@ main (int argc, char *argv[])
 <h5>Makefile</h5>
 　<strong>Makefile</strong>も書き換えます。今回は<strong>parser.y</strong>からヘッダファイル（<strong>parser.hpp</strong>）を書き出すような内容になっています（<strong>bison</strong>コマンドに<strong>-dオプション</strong>をつけています）。
 <pre>
-calcCpp : scanner.cpp parser.hpp parser.cpp main.cpp
+calcCpp : scanner.cpp parser.hpp parser.cpp main.cpp driver.cpp driver.h
 &#009;g++ -o calcCpp scanner.cpp parser.cpp driver.cpp main.cpp
 
 scanner.cpp : scanner.l

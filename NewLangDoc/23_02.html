@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link href="css/bootStyle.css" rel="stylesheet">
+
+<title>言語を作ろうプロジェクト（2022年）</title>
+</head>
+<body>
+<header class="sticky-top">
+  <div>
+<h3>２３．構造を考える</h3>
+  </div>
+</header>
+<!--container-->
+<div class="container">
+  <main>
+    <!--row-->
+    <div class="row">
+      <!--col-->
+      <div class="col">
+<h4>２３－０２．識別子</h4>
+<h5>driverクラスの修正</h5>
+　この項では「変数」を実装してみます。ここで「変数」とは、任意の名前を持ち、double型の値をセットできるオブジェクトとします。<br>
+　まず、「driver.h」を書き換えます。
+<pre>
+#ifndef DRIVER_H
+#define DRIVER_H
+#include &lt;iostream>
+#include &lt;fstream>
+#include &lt;string>
+#include &lt;map>
+
+using namespace std;
+
+class driver
+{
+    driver ();
+    map&lt;std::string,double> m_variables;
+public:
+    void output(double a);
+    double createNUM(const string& a);
+    double createIDENTIFIER(const string& idnt);
+
+    int parse (const string& f);
+    string m_file;
+    static driver* get();
+
+};
+
+#endif // ! DRIVER_H
+</pre>
+　続いて、「driver.cpp」を書き換えます。
+<pre>
+#include "driver.h"
+
+driver::driver ()
+{
+}
+
+void driver::output(double a){
+    cout &lt;&lt; ">>" &lt;&lt; a &lt;&lt; std::endl;
+}
+
+double driver::createNUM(const string& a){
+    double d = (double)strtof(a.c_str(),nullptr);
+    return d;
+}
+
+double driver::createIDENTIFIER(const string& idnt){
+    return m_variables[idnt];
+}
+
+
+driver* driver::get(){
+    static driver* instance = nullptr;
+    if(!instance){
+      instance = new driver();
+    }
+    return instance;
+}
+
+int
+driver::parse (const string &f)
+{
+    extern int yyparse(void);
+    extern FILE* yyin;
+    m_file = f;
+
+    if ((yyin = fopen(m_file.c_str(), "r")) == NULL) {
+        cerr &lt;&lt; "ファイル読み込みに失敗しました" &lt;&lt; endl;
+        return 1;
+    }
+    if (yyparse()) {
+        cout &lt;&lt; "プログラム終了" &lt;&lt; endl;
+        return 1;
+    }
+    return 0;
+}
+</pre>
+
+      </div>
+      <!--/col-->
+    </div>
+    <!--/row-->
+  </main>
+  <!--/main-->
+  <footer id="footer" class="fixed-bottom text-center">
+    <ul>
+      <li class="list-inline-item"><a href="23_01.html">前ページ</a></li>
+      <li class="list-inline-item"><a href="index.html">目次</a></li>
+      <li class="list-inline-item"><a href="23_03.html">次ページ</a></li>
+    </ul>
+  </footer>
+</div>
+<!--/container-->
+<!-- Optional JavaScript; choose one of the two! -->
+<!-- Option 1: Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<!-- Option 2: Separate Popper and Bootstrap JS -->
+<!--
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+-->
+</body>
+</html>
