@@ -38,6 +38,61 @@
 
 using namespace std;
 
+enum class valType{
+  intType,
+  doubleType,
+  stringType,
+  boolType,
+  endType
+};
+
+class expression{
+  valType m_valueType;
+  int m_intVal;
+  double m_doubleVal;
+  bool m_boolVal;
+  string m_strVal;
+public:
+  expression():
+    m_valueType(valType::endType),
+    m_intVal(0),
+    m_doubleVal(0.0),
+    m_boolVal(false),
+    m_strVal()
+  {}
+  valType getValueType() const{
+    return m_valueType;
+  }
+  void setValueType(valType type){
+    m_valueType = type;
+  }
+  
+  int getIntVal() const{
+    return m_intVal;
+  }
+  void setIntVal(int val){
+    m_intVal = val;
+  }
+  double getDoubleVal() const{
+    return m_doubleVal;
+  }
+  void setDoubleVal(double val) {
+    m_doubleVal = val;
+  }
+  string& getStrVal(){
+    return m_strVal;
+  }
+  void setStrVal(const string& str){
+    m_strVal = str;
+  }
+  bool getBoolVal()const{
+    return m_boolVal;
+  }
+  void setBoolVal(bool b){
+    m_boolVal = b;
+  }
+};
+
 class driver
 {
     driver ();
