@@ -46,20 +46,252 @@ enum class valType{
   endType
 };
 
-class expression{
+class exp{
   valType m_valueType;
   int m_intVal;
   double m_doubleVal;
   bool m_boolVal;
   string m_strVal;
 public:
-  expression():
+  exp():
     m_valueType(valType::endType),
     m_intVal(0),
     m_doubleVal(0.0),
     m_boolVal(false),
     m_strVal()
   {}
+  exp(const exp& other):
+    m_valueType(other.m_valueType),
+    m_intVal(other.m_intVal),
+    m_doubleVal(other.m_doubleVal),
+    m_boolVal(other.m_boolVal),
+    m_strVal(other.m_strVal)
+  {}
+  exp& operator =(const exp& other){
+    m_valueType = other.m_valueType;
+    m_intVal = other.m_intVal;
+    m_doubleVal = other.m_doubleVal;
+    m_boolVal = other.m_boolVal;
+    m_strVal = other.m_strVal;
+    return *this;
+  
+  }
+#define STR_BUFFSIZE 100  
+  exp& operator +=(const exp& other){
+  char buff[STR_BUFFSIZE];
+  switch(m_valueType){
+    case valType::intType:
+      switch(other.m_valueType){
+        case valType::intType:
+          m_intVal += other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          m_intVal += (int)other.m_doubleVal;
+          return *this;
+        break;
+        case valType::stringType:
+          m_intVal += atoi(other.m_strVal.c_str());
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    case valType::doubleType:
+      switch(other.m_valueType){
+        case valType::intType:
+          m_doubleVal += (double)other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          m_doubleVal += other.m_doubleVal;
+          return *this;
+        break;
+        case valType::stringType:
+          m_doubleVal += atof(other.m_strVal.c_str());
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    case valType::stringType:
+      switch(other.m_valueType){
+        case valType::intType:
+          snprintf(buff,STR_BUFFSIZE, "%d",other.m_intVal);
+          m_strVal += buff;
+          return *this;
+        break;
+        case valType::doubleType:
+          snprintf(buff,STR_BUFFSIZE, "%f",other.m_doubleVal);
+          m_strVal += buff;
+          return *this;
+        break;
+        case valType::stringType:
+          m_strVal += other.m_strVal;
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    default:
+    break;
+  }
+    return *this;
+  }
+  
+  exp operator +(const exp& other){
+  exp temp = *this;
+  temp += other;
+  return temp;
+  }
+  
+  
+  exp& operator -=(const exp& other){
+  char buff[STR_BUFFSIZE];
+  switch(m_valueType){
+    case valType::intType:
+      switch(other.m_valueType){
+        case valType::intType:
+          m_intVal -= other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          m_intVal -= (int)other.m_doubleVal;
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    case valType::doubleType:
+      switch(other.m_valueType){
+        case valType::intType:
+          m_doubleVal -= (double)other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          m_doubleVal -= other.m_doubleVal;
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    default:
+    break;
+  }
+    return *this;
+  }
+  
+  exp operator -(const exp& other){
+  exp temp = *this;
+  temp -= other;
+  return temp;
+  }
+  
+  
+  exp& operator /=(const exp& other){
+  char buff[STR_BUFFSIZE];
+  switch(m_valueType){
+    case valType::intType:
+      switch(other.m_valueType){
+        case valType::intType:
+          if(other.m_intVal == 0){
+            break;
+          }
+          m_intVal /= other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          if(other.m_doubleVal == 0.0){
+            break;
+          }
+          m_intVal /= (int)other.m_doubleVal;
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    case valType::doubleType:
+      switch(other.m_valueType){
+        case valType::intType:
+          if(other.m_intVal == 0){
+            break;
+          }
+          m_doubleVal /= (double)other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          if(other.m_doubleVal == 0.0){
+            break;
+          }
+          m_doubleVal /= other.m_doubleVal;
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    default:
+    break;
+  }
+    return *this;
+  }
+  
+  exp operator /(const exp& other){
+  exp temp = *this;
+  temp /= other;
+  return temp;
+  }
+  
+  exp& operator *=(const exp& other){
+  char buff[STR_BUFFSIZE];
+  switch(m_valueType){
+    case valType::intType:
+      switch(other.m_valueType){
+        case valType::intType:
+          m_intVal *= other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          m_intVal *= (int)other.m_doubleVal;
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    case valType::doubleType:
+      switch(other.m_valueType){
+        case valType::intType:
+          m_doubleVal *= (double)other.m_intVal;
+          return *this;
+        break;
+        case valType::doubleType:
+          m_doubleVal *= other.m_doubleVal;
+          return *this;
+        break;
+        default:
+        break;
+      }
+    break;
+    default:
+    break;
+  }
+    return *this;
+  }
+  
+  exp operator *(const exp& other){
+  exp temp = *this;
+  temp *= other;
+  return temp;
+  }
+  
+  
   valType getValueType() const{
     return m_valueType;
   }
