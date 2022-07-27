@@ -477,8 +477,8 @@ yyerror(char const *str)
   SEMICOLON ";"
   ASS "="
 ;
-%type &lt;exp_value> constart_expression identifier_expression primary_expression term expression
-%type &lt;exp_value> assign_expression add_expression
+%type &lt;exp_value> constart_expression identifier_expression primary_expression mul_expression add_expression
+%type &lt;exp_value> assign_expression  expression
 %right ASS 
 %left ADD SUB 
 %left MUL DIV
@@ -494,44 +494,35 @@ line
     }
 expression
     : assign_expression
-    {
-        $$ = driver::get()->copyExp($1);
-    }
     ;
 assign_expression
     : add_expression
-    {
-        $$ = driver::get()->copyExp($1);
-    }
     | identifier_expression ASS assign_expression
     {
         $$ = driver::get()->assExp($1,$3);
     }
     ;
 add_expression
-    : term
-    {
-        $$ = driver::get()->copyExp($1);
-    }
-    | expression "+" term
+    : mul_expression
+    | add_expression "+" mul_expression
     {
         $$ = driver::get()->calcADD($1,$3);
     }
-    | expression "-" term
+    | add_expression "-" mul_expression
     {
         $$ = driver::get()->calcSUB($1,$3);
     }
     ;
-term
+mul_expression
     : primary_expression
     {
         $$ = driver::get()->copyExp($1);
     }
-    | term "*" primary_expression 
+    | mul_expression "*" primary_expression 
     {
         $$ = driver::get()->calcMUL($1,$3);
     }
-    | term "/" primary_expression
+    | mul_expression "/" primary_expression
     {
         $$ = driver::get()->calcDIV($1,$3);
     }
