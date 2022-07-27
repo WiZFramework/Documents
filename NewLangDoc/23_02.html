@@ -26,7 +26,7 @@
       <div class="col">
 <h4>２３－０２．識別子</h4>
 <h5>driverクラスの修正</h5>
-　この項では「変数」を実装してみます。ここで「変数」とは、任意の名前を持ち、double型の値をセットできるオブジェクトとします。<br>
+　この項では「変数」を実装してみます。ここで「変数」とは、任意の名前を持ち、int型やdouble型の値をセットできるオブジェクトとします。<br>
 　まず、「driver.h」を書き換えます。
 <pre>
 #ifndef DRIVER_H
@@ -34,310 +34,77 @@
 #include &lt;iostream>
 #include &lt;fstream>
 #include &lt;string>
-#include &lt;map>
+#include &lt;vector>
 
 using namespace std;
 
 enum class valType{
-  intType,
-  doubleType,
-  stringType,
-  boolType,
-  endType
+    intType,
+    doubleType,
+    stringType,
+    boolType,
 };
 
-class exp{
-  valType m_valueType;
-  int m_intVal;
-  double m_doubleVal;
-  bool m_boolVal;
-  string m_strVal;
-public:
-  exp():
-    m_valueType(valType::endType),
-    m_intVal(0),
-    m_doubleVal(0.0),
-    m_boolVal(false),
-    m_strVal()
-  {}
-  exp(const exp& other):
-    m_valueType(other.m_valueType),
-    m_intVal(other.m_intVal),
-    m_doubleVal(other.m_doubleVal),
-    m_boolVal(other.m_boolVal),
-    m_strVal(other.m_strVal)
-  {}
-  exp& operator =(const exp& other){
-    m_valueType = other.m_valueType;
-    m_intVal = other.m_intVal;
-    m_doubleVal = other.m_doubleVal;
-    m_boolVal = other.m_boolVal;
-    m_strVal = other.m_strVal;
-    return *this;
-  
-  }
-#define STR_BUFFSIZE 100  
-  exp& operator +=(const exp& other){
-  char buff[STR_BUFFSIZE];
-  switch(m_valueType){
-    case valType::intType:
-      switch(other.m_valueType){
-        case valType::intType:
-          m_intVal += other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          m_intVal += (int)other.m_doubleVal;
-          return *this;
-        break;
-        case valType::stringType:
-          m_intVal += atoi(other.m_strVal.c_str());
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    case valType::doubleType:
-      switch(other.m_valueType){
-        case valType::intType:
-          m_doubleVal += (double)other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          m_doubleVal += other.m_doubleVal;
-          return *this;
-        break;
-        case valType::stringType:
-          m_doubleVal += atof(other.m_strVal.c_str());
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    case valType::stringType:
-      switch(other.m_valueType){
-        case valType::intType:
-          snprintf(buff,STR_BUFFSIZE, "%d",other.m_intVal);
-          m_strVal += buff;
-          return *this;
-        break;
-        case valType::doubleType:
-          snprintf(buff,STR_BUFFSIZE, "%f",other.m_doubleVal);
-          m_strVal += buff;
-          return *this;
-        break;
-        case valType::stringType:
-          m_strVal += other.m_strVal;
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    default:
-    break;
-  }
-    return *this;
-  }
-  
-  exp operator +(const exp& other){
-  exp temp = *this;
-  temp += other;
-  return temp;
-  }
-  
-  
-  exp& operator -=(const exp& other){
-  char buff[STR_BUFFSIZE];
-  switch(m_valueType){
-    case valType::intType:
-      switch(other.m_valueType){
-        case valType::intType:
-          m_intVal -= other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          m_intVal -= (int)other.m_doubleVal;
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    case valType::doubleType:
-      switch(other.m_valueType){
-        case valType::intType:
-          m_doubleVal -= (double)other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          m_doubleVal -= other.m_doubleVal;
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    default:
-    break;
-  }
-    return *this;
-  }
-  
-  exp operator -(const exp& other){
-  exp temp = *this;
-  temp -= other;
-  return temp;
-  }
-  
-  
-  exp& operator /=(const exp& other){
-  char buff[STR_BUFFSIZE];
-  switch(m_valueType){
-    case valType::intType:
-      switch(other.m_valueType){
-        case valType::intType:
-          if(other.m_intVal == 0){
+union value {
+    int m_intVal;
+    double m_doubleVal;
+    bool m_boolVal;
+    string m_strVal;
+    value():m_intVal(0){}
+    ~value(){}
+};
+
+
+struct exp{
+    exp()
+    {}
+
+    exp(const exp& other)
+    {
+        m_valType = other.m_valType;
+        m_variable = other.m_variable;
+        switch(m_valType){
+            case valType::intType:
+            m_value.m_intVal = other.m_value.m_intVal;
             break;
-          }
-          m_intVal /= other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          if(other.m_doubleVal == 0.0){
+            case valType::doubleType:
+            m_value.m_doubleVal = other.m_value.m_doubleVal;
             break;
-          }
-          m_intVal /= (int)other.m_doubleVal;
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    case valType::doubleType:
-      switch(other.m_valueType){
-        case valType::intType:
-          if(other.m_intVal == 0){
+            case valType::boolType:
+            m_value.m_boolVal = other.m_value.m_boolVal;
             break;
-          }
-          m_doubleVal /= (double)other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          if(other.m_doubleVal == 0.0){
+            case valType::stringType:
+            m_value.m_strVal = other.m_value.m_strVal;
             break;
-          }
-          m_doubleVal /= other.m_doubleVal;
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    default:
-    break;
-  }
-    return *this;
-  }
-  
-  exp operator /(const exp& other){
-  exp temp = *this;
-  temp /= other;
-  return temp;
-  }
-  
-  exp& operator *=(const exp& other){
-  char buff[STR_BUFFSIZE];
-  switch(m_valueType){
-    case valType::intType:
-      switch(other.m_valueType){
-        case valType::intType:
-          m_intVal *= other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          m_intVal *= (int)other.m_doubleVal;
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    case valType::doubleType:
-      switch(other.m_valueType){
-        case valType::intType:
-          m_doubleVal *= (double)other.m_intVal;
-          return *this;
-        break;
-        case valType::doubleType:
-          m_doubleVal *= other.m_doubleVal;
-          return *this;
-        break;
-        default:
-        break;
-      }
-    break;
-    default:
-    break;
-  }
-    return *this;
-  }
-  
-  exp operator *(const exp& other){
-  exp temp = *this;
-  temp *= other;
-  return temp;
-  }
-  
-  
-  valType getValueType() const{
-    return m_valueType;
-  }
-  void setValueType(valType type){
-    m_valueType = type;
-  }
-  
-  int getIntVal() const{
-    return m_intVal;
-  }
-  void setIntVal(int val){
-    m_intVal = val;
-  }
-  double getDoubleVal() const{
-    return m_doubleVal;
-  }
-  void setDoubleVal(double val) {
-    m_doubleVal = val;
-  }
-  string& getStrVal(){
-    return m_strVal;
-  }
-  void setStrVal(const string& str){
-    m_strVal = str;
-  }
-  bool getBoolVal()const{
-    return m_boolVal;
-  }
-  void setBoolVal(bool b){
-    m_boolVal = b;
-  }
+        }
+    }
+    valType m_valType;
+    value m_value;
+    string m_variable;
 };
 
 class driver
 {
     driver ();
-  map&lt;std::string,double> m_variables;
+    vector&lt;exp> m_expPool;
 public:
-    void output(double a);
-    double createNUM(const string& a);
-    double createIDENTIFIER(const string& idnt);
+    void output(exp*  a);
+    
+    exp* createDOUBLE(const string& str);
+    exp* createINT(const string& str);
+    exp* createVARIABLE(const string& str);
+
+    exp* copyExp(exp* other);
+    exp* assExp(exp* dest,exp* src);
+
+    exp* calcADD(exp* left,exp* right);
+    exp* calcSUB(exp* left,exp* right);
+    exp* calcMUL(exp* left,const exp* right);
+    exp* calcDIV(exp* left,exp* right);
 
     int parse (const string& f);
     string m_file;
     static driver* get();
-
 };
 
 #endif // ! DRIVER_H
@@ -346,22 +113,300 @@ public:
 <pre>
 #include "driver.h"
 
+
 driver::driver ()
 {
 }
 
-void driver::output(double a){
-    cout &lt;&lt; ">>" &lt;&lt; a &lt;&lt; std::endl;
+void driver::output(exp* a){
+    switch(a->m_valType){
+        case valType::intType:
+            cout &lt;&lt; ">>" &lt;&lt; a->m_value.m_intVal &lt;&lt; std::endl;
+        break;
+        case valType::doubleType:
+            cout &lt;&lt; ">>" &lt;&lt; a->m_value.m_doubleVal &lt;&lt; std::endl;
+        break;
+        case valType::boolType:
+            cout &lt;&lt; ">>" &lt;&lt; a->m_value.m_boolVal &lt;&lt; std::endl;
+        break;
+        case valType::stringType:
+            cout &lt;&lt; ">>" &lt;&lt; a->m_value.m_strVal &lt;&lt; std::endl;
+        break;
+    }
+
 }
 
-double driver::createNUM(const string& a){
-    double d = (double)strtof(a.c_str(),nullptr);
-    return d;
+exp* driver::createDOUBLE(const string& str){
+    double d = (double)strtof(str.c_str(),nullptr);
+    exp temp;
+    temp.m_valType = valType::doubleType;
+    temp.m_value.m_doubleVal = d;
+    auto index = m_expPool.size();
+    m_expPool.push_back(temp);
+    return &(m_expPool[index]);
+}
+exp* driver::createINT(const string& str){
+    int i = (int)strtod(str.c_str(),nullptr);
+    exp temp;
+    temp.m_valType = valType::intType;
+    temp.m_value.m_intVal = i;
+    auto index = m_expPool.size();
+    m_expPool.push_back(temp);
+    return &(m_expPool[index]);
 }
 
-double driver::createIDENTIFIER(const string& idnt){
-    return m_variables[idnt];
+exp* driver::copyExp(exp* other){
+    exp temp;
+    temp.m_valType = other->m_valType;
+    temp.m_variable = other->m_variable;
+    switch(temp.m_valType){
+        case valType::intType:
+        temp.m_value.m_intVal = other->m_value.m_intVal;
+        break;
+        case valType::doubleType:
+        temp.m_value.m_doubleVal = other->m_value.m_doubleVal;
+        break;
+        case valType::boolType:
+        temp.m_value.m_boolVal = other->m_value.m_boolVal;
+        break;
+        case valType::stringType:
+        temp.m_value.m_strVal = other->m_value.m_strVal;
+        break;
+    }
+    auto index = m_expPool.size();
+    m_expPool.push_back(temp);
+    return &(m_expPool[index]);
 }
+
+exp* driver::assExp(exp* dest,exp* src){
+    dest->m_valType = src->m_valType;
+    switch(src->m_valType){
+        case valType::intType:
+        dest->m_value.m_intVal = src->m_value.m_intVal;
+        break;
+        case valType::doubleType:
+        dest->m_value.m_doubleVal = src->m_value.m_doubleVal;
+        break;
+        case valType::boolType:
+        dest->m_value.m_boolVal = src->m_value.m_boolVal;
+        break;
+        case valType::stringType:
+        dest->m_value.m_strVal = src->m_value.m_strVal;
+        break;
+    }
+    return dest;
+}
+
+
+
+#define MAX_NUM_BUFF 100
+
+exp* driver::calcADD(exp* left,exp* right){
+    char buff[MAX_NUM_BUFF];
+    switch(left->m_valType){
+        case valType::intType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_intVal += right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_intVal += (int)right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_intVal += atoi(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::doubleType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_doubleVal += (double)right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_doubleVal += right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_doubleVal += atof(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::boolType:
+            //何もしない
+        break;
+        case valType::stringType:
+            switch(right->m_valType){
+                case valType::intType:
+                snprintf(buff,MAX_NUM_BUFF,"%d",right->m_value.m_intVal);
+                left->m_value.m_strVal += buff;
+                break;
+                case valType::doubleType:
+                snprintf(buff,MAX_NUM_BUFF,"%f",right->m_value.m_doubleVal);
+                left->m_value.m_strVal += buff;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_strVal += right->m_value.m_strVal;
+                break;
+            }
+        
+            left->m_value.m_strVal += right->m_value.m_strVal;
+        break;
+    }
+    return left;
+}
+exp* driver::calcSUB(exp* left,exp* right){
+    char buff[MAX_NUM_BUFF];
+    switch(left->m_valType){
+        case valType::intType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_intVal -= right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_intVal -= (int)right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_intVal -= atoi(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::doubleType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_doubleVal -= (double)right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_doubleVal -= right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_doubleVal -= atof(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::boolType:
+            //何もしない
+        break;
+        case valType::stringType:
+            //何もしない
+        break;
+    }
+    return left;
+}
+
+exp* driver::calcMUL(exp* left,const exp* right){
+    char buff[MAX_NUM_BUFF];
+    switch(left->m_valType){
+        case valType::intType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_intVal *= right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_intVal *= (int)right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_intVal *= atoi(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::doubleType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_doubleVal *= (double)right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_doubleVal *= right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_doubleVal *= atof(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::boolType:
+            //何もしない
+        break;
+        case valType::stringType:
+            //何もしない
+        break;
+    }
+    return left;
+}
+exp* driver::calcDIV(exp* left,exp* right){
+    char buff[MAX_NUM_BUFF];
+    switch(left->m_valType){
+        case valType::intType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_intVal /= right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_intVal /= (int)right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_intVal /= atoi(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::doubleType:
+            switch(right->m_valType){
+                case valType::intType:
+                left->m_value.m_doubleVal /= (double)right->m_value.m_intVal;
+                break;
+                case valType::doubleType:
+                left->m_value.m_doubleVal /= right->m_value.m_doubleVal;
+                break;
+                case valType::boolType:
+                //何もしない
+                break;
+                case valType::stringType:
+                left->m_value.m_doubleVal /= atof(right->m_value.m_strVal.c_str());
+                break;
+            }
+        break;
+        case valType::boolType:
+            //何もしない
+        break;
+        case valType::stringType:
+            //何もしない
+        break;
+    }
+    return left;
+}
+
+exp* driver::createVARIABLE(const string& str){
+    exp temp;
+    //intに初期化
+    temp.m_valType = valType::intType;
+    temp.m_value.m_intVal = 0;
+    temp.m_variable = str;
+    auto index = m_expPool.size();
+    m_expPool.push_back(temp);
+    return &(m_expPool[index]);
+}
+
 
 
 driver* driver::get(){
@@ -411,60 +456,103 @@ yyerror(char const *str)
 }
 
 %}
-%union {
-    double  double_value;
-    char* literal_value;
+
+%code requires {
+#include "driver.h"
 }
-%token &lt;double_value>    DOUBLE_VALUE
-%token &lt;literal_value>   DOUBLE_LITERAL_PTR IDENTIFIER_PTR
+
+
+%union {
+    const char* identString;
+    exp*  exp_value;
+    const char* literal_value;
+}
+%token &lt;identString>   IDENTIFIER
+%token &lt;literal_value>   DOUBLE_LITERAL INT_LITERAL
 %token
   ADD "+"
   SUB "-"
   MUL "*"
   DIV "/"
-  CR
+  SEMICOLON ";"
+  ASS "="
 ;
-%type &lt;double_value> expression term primary_expression
+%type &lt;exp_value> constart_expression identifier_expression primary_expression term expression
+%type &lt;exp_value> assign_expression add_expression
+%right ASS 
+%left ADD SUB 
+%left MUL DIV
 %%
 line_list
     : line
     | line_list line
     ;
 line
-    : expression CR
+    : expression ";"
     {
         driver::get()->output($1);
     }
 expression
+    : assign_expression
+    {
+        $$ = driver::get()->copyExp($1);
+    }
+    ;
+assign_expression
+    : add_expression
+    {
+        $$ = driver::get()->copyExp($1);
+    }
+    | identifier_expression ASS assign_expression
+    {
+        $$ = driver::get()->assExp($1,$3);
+    }
+    ;
+add_expression
     : term
-  | IDENTIFIER_PTR 
-  {
-        $$ = driver::get()->createIDENTIFIER($1);
-  }
+    {
+        $$ = driver::get()->copyExp($1);
+    }
     | expression "+" term
     {
-        $$ = $1 + $3;
+        $$ = driver::get()->calcADD($1,$3);
     }
     | expression "-" term
     {
-        $$ = $1 - $3;
+        $$ = driver::get()->calcSUB($1,$3);
     }
     ;
 term
     : primary_expression
+    {
+        $$ = driver::get()->copyExp($1);
+    }
     | term "*" primary_expression 
     {
-        $$ = $1 * $3;
+        $$ = driver::get()->calcMUL($1,$3);
     }
     | term "/" primary_expression
     {
-        $$ = $1 / $3;
+        $$ = driver::get()->calcDIV($1,$3);
     }
     ;
 primary_expression
-    : DOUBLE_LITERAL_PTR
+    : identifier_expression
+    | constart_expression
+    ;
+identifier_expression
+    : IDENTIFIER
     {
-        $$ = driver::get()->createNUM($1);
+        $$ = driver::get()->createVARIABLE($1);
+    }
+constart_expression
+    : DOUBLE_LITERAL
+    {
+        $$ = driver::get()->createDOUBLE($1);
+    }
+    | INT_LITERAL
+    {
+        $$ = driver::get()->createINT($1);
     }
     ;
 %%
@@ -477,6 +565,7 @@ primary_expression
 #include "driver.h"
 
 #define YY_SKIP_YYWRAP 1
+int gLine = 1;
 
 int
 yywrap()
@@ -485,34 +574,70 @@ yywrap()
 }
 %}
 
-id    [a-zA-Z][a-zA-Z_0-9]*
-blank [ \t]
-int   [1-9][0-9]*
-double [0-9]*\.[0-9]*
+%s COMMENT
+%s LINE_COMMENT
+%s STR_LITERAL_ST_D
+%s STR_LITERAL_ST_S
 
+blank [ \t\r]
+int [1-9][0-9]*
+double [0-9]*\.[0-9]*
+ident [A-Za-z_][A-Za-z_0-9]*
 
 %%
+&lt;INITIAL>{
 {blank}+ ;
+{int} {
+    yylval.literal_value = yytext;
+    return INT_LITERAL;
+}
+{double} {
+    yylval.literal_value = yytext;
+    return DOUBLE_LITERAL;
+}
+";"     return SEMICOLON;
 "+"     return ADD;
 "-"     return SUB;
 "*"     return MUL;
 "/"     return DIV;
-"\n"    return CR;
-{int} {
-    yylval.literal_value = yytext;
-    return DOUBLE_LITERAL_PTR;
+"="     return ASS;
+{ident} {
+    yylval.identString = yytext;
+    return IDENTIFIER;
 }
-{double} {
-    yylval.literal_value = yytext;
-    return DOUBLE_LITERAL_PTR;
+"/*"   { BEGIN(COMMENT);}
+[/][/]+ { BEGIN(LINE_COMMENT);}
+"\""    {
+            BEGIN(STR_LITERAL_ST_D);
+        }
+"\'"    {
+            BEGIN(STR_LITERAL_ST_S);
+        }
+"\n"    { gLine++; }
+.       { return 0; }
 }
-{id} {
-    yylval.literal_value = yytext;
-    return IDENTIFIER_PTR;
+&lt;COMMENT>{
+    "\n"    { gLine++;}
+    "*/"    { BEGIN(INITIAL); }
+    .       ;
+}
+&lt;LINE_COMMENT>{
+    "\n"    { gLine++; BEGIN(INITIAL); }
+    .       ;
+}
+&lt;STR_LITERAL_ST_D>{
+    "\n"    { gLine++;  }
+    "\""    { BEGIN(INITIAL);}
+    .       { ; }
+}
+&lt;STR_LITERAL_ST_S>{
+    "\n"    { gLine++;  }
+    "\'"    { BEGIN(INITIAL);}
+    .       { ; }
 }
 %%
 </pre>
-　以下、変更はありませんが「main.cpp」です。<br>
+　以下、「main.cpp」です。<br>
 <pre>
 #include &lt;stdio.h>
 #include &lt;stdlib.h>
@@ -534,7 +659,7 @@ main (int argc, char *argv[])
     return 0;
 }
 </pre>
-　変更がありませんが「Makefile」です。
+　「Makefile」です。
 <pre>
 calcCpp : scanner.cpp parser.hpp parser.cpp main.cpp driver.cpp driver.h
 &#009;g++ -o calcCpp scanner.cpp parser.cpp driver.cpp main.cpp
@@ -547,8 +672,22 @@ parser.hpp parser.cpp : parser.y
 </pre>
 　以下、スクリプトファイルです「test.txt」です。
 <pre>
-10 + 3
-10 * 3
+10.5 + 3.5;
+40.25+12.3;
+i = 15.55;
+2+5; //1行コメント
+4+50;
+/*
+ここは複数行コメント
+*/
+</pre>
+　以下、実行結果です。
+<pre>
+>>14
+>>52.55
+>>15.55
+>>7
+>>54
 </pre>
 
       </div>
