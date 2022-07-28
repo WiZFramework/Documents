@@ -109,7 +109,50 @@ public:
 
 #endif // ! DRIVER_H
 </pre>
-　続いて、「driver.cpp」を書き換えます。
+　前項から大きく変わったところに「expクラス（構造体）」があります。「expression」の意味です。「式」というと数学での
+<pre class="sub">
+y = a * x + b
+</pre>
+　のようなものを思い浮かべるかもしれませんが、プログラム言語における「式」の概念はちょっと違います。「何かの操作をして結果を
+返すもの」という感じでしょうか。例えば
+<pre class="sub">
+"hello world"
+</pre>
+　という文字列があった場合、これも「文字列リテラル式」というりっぱな「式」です。<br>
+　C言語の代入
+<pre class="sub">
+val = 30
+</pre>
+　も「代入式」という「式」です。「val」という変数に「3」を代入して、代入した値そのもの「3」を返します。そういう風に、プログラム言語の「式」はかなり広い意味で使われます。<br>
+　数値や文字列、あるいはbool値などを、保存しておくのに「expクラス」は使われます。ですから内部に
+<pre class="sub">
+	valType m_valType;
+	value m_value;
+	string m_variable;
+</pre>
+　といったメンバ変数を持っています。「valType」は、上部に定義されている
+<pre class="sub">
+enum class valType{
+	intType,
+	doubleType,
+	stringType,
+	boolType,
+};
+</pre>
+　の変数です「enum class」ですから「どういう型か」を指定します。「value」は、「値」です。
+<pre class="sub">
+union value {
+	int m_intVal;
+	double m_doubleVal;
+	bool m_boolVal;
+	string m_strVal;
+	value():m_intVal(0){}
+	~value(){}
+};
+</pre>
+　と定義されています。
+<h5>driver.cpp</h5>
+　続いて、「driver.cpp」を書き換えます。「driver.h」に宣言された関数の実体を記述します。
 <pre>
 #include "driver.h"
 
@@ -434,6 +477,62 @@ driver::parse (const string &f)
 	return 0;
 }
 </pre>
+<h5>数値リテラル</h5>
+　まず、数値リテラルの処理です
+<pre class="sub">
+exp* driver::createDOUBLE(const string& str){
+	double d = (double)strtof(str.c_str(),nullptr);
+	exp temp;
+	temp.m_valType = valType::doubleType;
+	temp.m_value.m_doubleVal = d;
+	<span class="red">auto index = m_expPool.size();
+	m_expPool.push_back(temp);
+	return &(m_expPool[index]);</span>
+}
+</pre>
+　前項では「driver::createNUM()関数」として実装されていました。前項では「式」ではなく「double型」の値をやり取りしていました。この項では「exp*」をやり取りするので書き直さなければなりません。また今回は「int」と「double」を分けたいと考えたので、関数名も変わっています。
+<pre class="sub">
+	double d = (double)strtof(str.c_str(),nullptr);
+</pre>
+　で、数字文字列から「double型の値」を作成します。その後「exp temp;」と変数を作成し、そのメンバを初期化します。<br>
+　赤くなっているところは、作成した「temp」をメモリ上に保持する操作です。「temp変数」は「ローカル変数」なので、この関数を抜けると消滅してしまいます。ここで作成した「expのインスタンス」は、今後も使用するので、どこかにとっておかなければなりません。<br>
+「driverクラス」には
+<pre class="sub">
+	vector&lt;exp> m_expPool;
+</pre>
+　という「exp型の配列」があります。この配列にとっておくわけですが、「vector」は「size()関数」で現在の要素数を取り出せます。また、添え字は「0」から始ますので、「push_back()」で追加した要素の添え字は「push_back()する直前の要素数と同じ」になります。なので、保存後、その位置の「expのポインタ」を返します。<br>
+　「int型」のリテラルの処理も同様です。「driver::createINT()関数」で処理しています。
+<h5>代入先のexpの作成</h5>
+　続く「driver::copyExp()関数」
+<pre class="sub">
+exp* driver::copyExp(exp* other){
+	exp temp;
+	temp.m_valType = other->m_valType;
+	temp.m_variable = other->m_variable;
+	switch(temp.m_valType){
+		case valType::intType:
+		temp.m_value.m_intVal = other->m_value.m_intVal;
+		break;
+		case valType::doubleType:
+		temp.m_value.m_doubleVal = other->m_value.m_doubleVal;
+		break;
+		case valType::boolType:
+		temp.m_value.m_boolVal = other->m_value.m_boolVal;
+		break;
+		case valType::stringType:
+		temp.m_value.m_strVal = other->m_value.m_strVal;
+		break;
+	}
+	auto index = m_expPool.size();
+	m_expPool.push_back(temp);
+	return &(m_expPool[index]);
+}
+</pre>
+
+
+
+<h5>parser.y</h5>
+
 　続いて「parser.y」です。
 <pre>
 %{
