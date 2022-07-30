@@ -26,8 +26,8 @@
 	  		<div class="col">
 <h4>２３－０２．識別子</h4>
 <h5>driverクラスの修正</h5>
-　この項では「変数」を実装してみます。ここで「変数」とは、任意の名前を持ち、int型やdouble型の値をセットできるオブジェクトとします。<br>
-　まず、「driver.h」を書き換えます。
+　この項では<strong>変数</strong>を実装してみます。ここで<strong>変数</strong>とは、任意の名前を持ち、int型やdouble型の値をセットできるオブジェクトとします。<br>
+　まず、<strong>driver.h</strong>を書き換えます。
 <pre>
 #ifndef DRIVER_H
 #define DRIVER_H
@@ -109,28 +109,28 @@ public:
 
 #endif // ! DRIVER_H
 </pre>
-　前項から大きく変わったところに「expクラス（構造体）」があります。「expression」の意味です。「式」というと数学での
+　前項から大きく変わったところに<strong>expクラス（構造体）</strong>があります。<strong>expression</strong>の意味です。<strong>式</strong>というと数学での
 <pre class="sub">
 y = a * x + b
 </pre>
-　のようなものを思い浮かべるかもしれませんが、プログラム言語における「式」の概念はちょっと違います。「何かの操作をして結果を
-返すもの」という感じでしょうか。例えば
+　のようなものを思い浮かべるかもしれませんが、プログラム言語における<strong>式</strong>の概念はちょっと違います。<strong>何かの操作をして結果を
+返すもの</strong>という感じでしょうか。例えば
 <pre class="sub">
 "hello world"
 </pre>
-　という文字列があった場合、これも「文字列リテラル式」というりっぱな「式」です。<br>
+　という文字列があった場合、これも<strong>文字列リテラル式</strong>というりっぱな<strong>式</strong>です。<br>
 　C言語の代入
 <pre class="sub">
 val = 30
 </pre>
-　も「代入式」という「式」です。「val」という変数に「3」を代入して、代入した値そのもの「3」を返します。そういう風に、プログラム言語の「式」はかなり広い意味で使われます。<br>
-　数値や文字列、あるいはbool値などを、保存しておくのに「expクラス」は使われます。ですから内部に
+　も<strong>代入式</strong>という<strong>式</strong>です。<strong>val</strong>という変数に<strong>3</strong>を代入して、代入した値そのもの<strong>3</strong>を返します。そういう風に、プログラム言語の<strong>式</strong>はかなり広い意味で使われます。<br>
+　数値や文字列、あるいはbool値などを、保存しておくのに<strong>expクラス</strong>は使われます。ですから内部に
 <pre class="sub">
 	valType m_valType;
 	value m_value;
 	string m_variable;
 </pre>
-　といったメンバ変数を持っています。「valType」は、上部に定義されている
+　といったメンバ変数を持っています。<strong>valType</strong>は、上部に定義されている
 <pre class="sub">
 enum class valType{
 	intType,
@@ -139,7 +139,7 @@ enum class valType{
 	boolType,
 };
 </pre>
-　の変数です「enum class」ですから「どういう型か」を指定します。「value」は、「値」です。
+　の変数です<strong>enum class</strong>ですから<strong>どういう型か</strong>を指定します。<strong>value</strong>は、<strong>値</strong>です。
 <pre class="sub">
 union value {
 	int m_intVal;
@@ -152,7 +152,7 @@ union value {
 </pre>
 　と定義されています。
 <h5>driver.cpp</h5>
-　続いて、「driver.cpp」を書き換えます。「driver.h」に宣言された関数の実体を記述します。
+　続いて、<strong>driver.cpp</strong>を書き換えます。<strong>driver.h</strong>に宣言された関数の実体を記述します。
 <pre>
 #include "driver.h"
 
@@ -490,20 +490,34 @@ exp* driver::createDOUBLE(const string& str){
 	return &(m_expPool[index]);</span>
 }
 </pre>
-　前項では「driver::createNUM()関数」として実装されていました。前項では「式」ではなく「double型」の値をやり取りしていました。この項では「exp*」をやり取りするので書き直さなければなりません。また今回は「int」と「double」を分けたいと考えたので、関数名も変わっています。
+　前項では<strong>driver::createNUM()関数</strong>として実装されていました。前項では<strong>式</strong>ではなく<strong>double型</strong>の値をやり取りしていました。この項では<strong>exp*</strong>をやり取りするので書き直さなければなりません。また今回は<strong>int</strong>と<strong>double</strong>を分けたいと考えたので、関数名も変わっています。
 <pre class="sub">
 	double d = (double)strtof(str.c_str(),nullptr);
 </pre>
-　で、数字文字列から「double型の値」を作成します。その後「exp temp;」と変数を作成し、そのメンバを初期化します。<br>
-　赤くなっているところは、作成した「temp」をメモリ上に保持する操作です。「temp変数」は「ローカル変数」なので、この関数を抜けると消滅してしまいます。ここで作成した「expのインスタンス」は、今後も使用するので、どこかにとっておかなければなりません。<br>
-「driverクラス」には
+　で、数字文字列から<strong>double型の値</strong>を作成します。その後<strong>exp temp;</strong>と変数を作成し、そのメンバを初期化します。<br>
+　赤くなっているところは、作成した<strong>temp</strong>をメモリ上に保持する操作です。<strong>temp変数</strong>は<strong>ローカル変数</strong>なので、この関数を抜けると消滅してしまいます。ここで作成した<strong>expのインスタンス</strong>は、今後も使用するので、どこかにとっておかなければなりません。<br>
+<strong>driverクラス</strong>には
 <pre class="sub">
 	vector&lt;exp> m_expPool;
 </pre>
-　という「exp型の配列」があります。この配列にとっておくわけですが、「vector」は「size()関数」で現在の要素数を取り出せます。また、添え字は「0」から始ますので、「push_back()」で追加した要素の添え字は「push_back()する直前の要素数と同じ」になります。なので、保存後、その位置の「expのポインタ」を返します。<br>
-　「int型」のリテラルの処理も同様です。「driver::createINT()関数」で処理しています。
+　という<strong>exp型の配列</strong>があります。この配列にとっておくわけですが、<strong>vector</strong>は<strong>size()関数</strong>で現在の要素数を取り出せます。また、添え字は<strong>0</strong>から始ますので、<strong>push_back()</strong>で追加した要素の添え字は<strong>push_back()する直前の要素数と同じ</strong>になります。なので、保存後、その位置の<strong>expのポインタ</strong>を返します。<br>
+　<strong>int型</strong>のリテラルの処理も同様です。<strong>driver::createINT()関数</strong>で処理しています。
 <h5>代入先のexpの作成</h5>
-　続く「driver::copyExp()関数」
+　続く<strong>driver::copyExp()関数</strong>は<strong>代入先のexpの作成</strong>です。<br>
+　例えば、<strong>parser.y</strong>に
+<pre class="sub">
+primary_expression
+	: identifier_expression
+</pre>
+　という記述があります。これは
+<pre class="sub">
+primary_expression
+	: identifier_expression
+	{
+		$$ = $1;
+	}
+</pre>
+　の略であり、この<strong>$$側</strong>は初めて出てくるので、<strong>expのインスタンス</strong>を作成しなければなりません。前項のように<strong>double型</strong>といったC/C++の組み込み型変数ならいいのですが<strong>exp</strong>はユーザー定義型なので、その作成方法を記述しなければならないのです。その処理は以下です。
 <pre class="sub">
 exp* driver::copyExp(exp* other){
 	exp temp;
@@ -528,12 +542,130 @@ exp* driver::copyExp(exp* other){
 	return &(m_expPool[index]);
 }
 </pre>
+　新しい<strong>exp型の変数temp</strong>を作成して<strong>m_expPool配列</strong>に追加し、そのポインタを返します。<br>
+<h5>代入式の作成</h5>
+　続く
+<pre class="sub">
+exp* driver::assExp(exp* dest,exp* src){
+	dest->m_valType = src->m_valType;
+	switch(src->m_valType){
+		case valType::intType:
+		dest->m_value.m_intVal = src->m_value.m_intVal;
+		break;
+		case valType::doubleType:
+		dest->m_value.m_doubleVal = src->m_value.m_doubleVal;
+		break;
+		case valType::boolType:
+		dest->m_value.m_boolVal = src->m_value.m_boolVal;
+		break;
+		case valType::stringType:
+		dest->m_value.m_strVal = src->m_value.m_strVal;
+		break;
+	}
+	return dest;
+}
+</pre>
+　は<strong>代入式</strong>です。C言語のように<strong>=</strong>で代入できるようにしました。引数の<strong>src</strong>から<strong>dest</strong>にコピーされます。<strong>dest</strong>は<strong>変数式</strong>が入ることを想定しています。値が代入された<strong>dest</strong>はそのままreturnされます。
+<h5>四則演算</h5>
+続く
+<pre class="sub">
+#define MAX_NUM_BUFF 100
 
+exp* driver::calcADD(exp* left,exp* right){
+	char buff[MAX_NUM_BUFF];
+	switch(left->m_valType){
+		case valType::intType:
+			switch(right->m_valType){
+				case valType::intType:
+				left->m_value.m_intVal += right->m_value.m_intVal;
+				break;
+				case valType::doubleType:
+				left->m_value.m_intVal += (int)right->m_value.m_doubleVal;
+				break;
+				case valType::boolType:
+				//何もしない
+				break;
+				case valType::stringType:
+				left->m_value.m_intVal += atoi(right->m_value.m_strVal.c_str());
+				break;
+			}
+		break;
+		case valType::doubleType:
+			switch(right->m_valType){
+				case valType::intType:
+				left->m_value.m_doubleVal += (double)right->m_value.m_intVal;
+				break;
+				case valType::doubleType:
+				left->m_value.m_doubleVal += right->m_value.m_doubleVal;
+				break;
+				case valType::boolType:
+				//何もしない
+				break;
+				case valType::stringType:
+				left->m_value.m_doubleVal += atof(right->m_value.m_strVal.c_str());
+				break;
+			}
+		break;
+		case valType::boolType:
+		    //何もしない
+		break;
+		case valType::stringType:
+			switch(right->m_valType){
+				case valType::intType:
+				snprintf(buff,MAX_NUM_BUFF,"%d",right->m_value.m_intVal);
+				left->m_value.m_strVal += buff;
+				break;
+				case valType::doubleType:
+				snprintf(buff,MAX_NUM_BUFF,"%f",right->m_value.m_doubleVal);
+				left->m_value.m_strVal += buff;
+				break;
+				case valType::boolType:
+				//何もしない
+				break;
+				case valType::stringType:
+				left->m_value.m_strVal += right->m_value.m_strVal;
+				break;
+			}
+			left->m_value.m_strVal += right->m_value.m_strVal;
+		break;
+	}
+	return left;
+}
+</pre>
+　は<strong>足し算</strong>です。左辺の形に合わせるように型変換を行います。これについては、<strong>大きいほうに合わせる</strong>のほうがいいかもしれませんね。つまり<strong>intとdoubleの計算であれば、doubleにする</strong>形です。後ほど検討しましょう。<br>
+　文字列型の場合は、後ろに追加します。演算の結果は左辺にまとめられ、その左辺を返します。<br>
+　この後
+<pre class="sub">
+exp* driver::calcSUB(exp* left,exp* right){
+//中略
+}
 
-
+exp* driver::calcMUL(exp* left,const exp* right){
+//中略
+}
+exp* driver::calcDIV(exp* left,exp* right){
+//中略
+}
+</pre>
+　と残りの四則演算が続きます。文字列の追加は<strong>+</strong>でできますが、ほかの演算では何もしない形になります。
+<h5>変数の追加</h5>
+　続く<strong>driver::createVARIABLE()関数</strong>が、この項のテーマになっている<strong>変数の追加</strong>です。
+<pre class="sub">
+exp* driver::createVARIABLE(const string& str){
+	exp temp;
+	//intに初期化
+	temp.m_valType = valType::intType;
+	temp.m_value.m_intVal = 0;
+	temp.m_variable = str;
+	auto index = m_expPool.size();
+	m_expPool.push_back(temp);
+	return &(m_expPool[index]);
+}
+</pre>
+　ここでも新しく<strong>exp temp;</strong>とインスタンスを作成し、<strong>temp.m_variable</strong>に変数名をセットし、<strong>m_expPool</strong>に保存します。
 <h5>parser.y</h5>
-
-　続いて「parser.y」です。
+　続いて<strong>Bison</strong>のファイルである<strong>parser.y</strong>です。<br>
+　ここでの注目点は<strong>primary_expression</strong>の処理と<strong>identifier_expression</strong>の処理です。
 <pre>
 %{
 #include &lt;stdio.h>
@@ -581,11 +713,11 @@ yyerror(char const *str)
 %left ADD SUB 
 %left MUL DIV
 %%
-line_list
-	: line
-	| line_list line
+statement_list
+	: statement
+	| statement_list statement
 	;
-line
+statement
 	: expression ";"
 	{
 	    driver::get()->output($1);
@@ -610,9 +742,6 @@ add_expression
 	;
 mul_expression
 	: primary_expression
-	{
-		$$ = driver::get()->copyExp($1);
-	}
 	| mul_expression "*" primary_expression 
 	{
 		$$ = driver::get()->calcMUL($1,$3);
@@ -624,7 +753,13 @@ mul_expression
 	;
 primary_expression
 	: identifier_expression
+	{
+		$$ = driver::get()->copyExp($1);
+	}
 	| constart_expression
+	{
+		$$ = driver::get()->copyExp($1);
+	}
 	;
 identifier_expression
 	: IDENTIFIER
@@ -643,7 +778,64 @@ constart_expression
 	;
 %%
 </pre>
-　続いて「scanner.l」です。
+<h5>代入先のexpの作成</h5>
+　<strong>primary_expression</strong>の<strong>アクション</strong>は以下のようになります。<strong>アクション</strong>とは<strong>非終端記号（ここではprimary_expression）</strong>を作り出すための<strong>終端記号（ここではidentifier_expressionやconstart_expression）</strong>における動作の定期です。<strong>{</strong>と<strong>}</strong>に挟んで書きます。<br>
+<pre class="sub">
+primary_expression
+	: identifier_expression
+	{
+		$$ = driver::get()->copyExp($1);
+	}
+	| constart_expression
+	{
+		$$ = driver::get()->copyExp($1);
+	}
+	;
+</pre>
+　となります。<strong>driver::get()->copyExp()関数</strong>は<strong>driverクラス</strong>の関数です。<strong>driver.cpp</strong>で紹介した関数で、新しい<strong>expのインスタンス</strong>を作って、引数の内容をコピーし、そのインスタンスを返します。。<br>
+　ここで作成しておくと、上位の処理である
+<pre class="sub">
+mul_expression
+	: primary_expression
+</pre>
+　の処理の時に、デフォルトの動作である
+<pre class="sub">
+mul_expression
+	: primary_expression
+	{
+		$$ = $1;
+	}
+</pre>
+　が、安全に実行されることになります。<br>
+<h5>変数の追加</h5>
+　変数は
+<pre class="sub">
+identifier_expression
+	: IDENTIFIER
+	{
+		$$ = driver::get()->createVARIABLE($1);
+	}
+</pre>
+　で追加します。<strong>driver::createVARIABLE()関数</strong>を使います。<br>
+<h5>四則演算</h5>
+　<strong>四則演算</strong>も<strong>driverクラス</strong>で定義した関数を呼び出します。前項では<strong>double型</strong>をやり取りしたので、そのまま記述できましたが、今項からは<strong>expクラス</strong>を使いますので、それ専用の関数を呼び出します。<br>
+<h5>文と出力</h5>
+　<strong>変数式</strong>は、その内容が勝手に出力されます。今項から<strong>文（statement）</strong>の概念を取り入れました。この言語はC言語のように<strong> ; （セミコロン）</strong>で文が終わります。通常<strong>文</strong>は命令であり<strong>出力</strong>は
+<pre class="sub">
+print i;
+</pre>
+　のような形で実装されますが、現時点ではこの言語は<strong>命令</strong>の言う概念を持っていません。ですので、
+<pre class="sub">
+statement
+	: expression ";"
+	{
+	    driver::get()->output($1);
+	}
+</pre>
+　のように、式の最後に<strong> ; （セミコロン）</strong>がついていれば、実行（出力）します。<br>
+　ちなみに<strong>expression ";"</strong>というのは<strong>式文</strong>といって、プログラム言語のほとんどを占める<strong>文</strong>の形態です。<strong>順次処理</strong>というのは<strong>式文</strong>が並んだものであり、それとは違うのが、今後出てくる<strong>if文</strong>や<strong>ループ文</strong>ということになります。<br>
+<h5>scanner.l</h5>
+　続いて<strong>scanner.l</strong>です。
 <pre>
 %{
 #include &lt;stdio.h>
@@ -723,7 +915,76 @@ ident [A-Za-z_][A-Za-z_0-9]*
 }
 %%
 </pre>
-　以下、「main.cpp」です。<br>
+　ここでは<strong>変数（識別子）</strong>と<strong>コメント</strong>と<strong>文字列</strong>を追加しています。<br>
+<h5>識別子</h5>
+　<strong>変数（識別子）</strong>は
+<pre class="sub">
+	{ident} {
+		yylval.identString = yytext;
+		return IDENTIFIER;
+	}
+</pre>
+　で表現されます。<strong>{ident}</strong>は上方で記述される正規表現
+<pre class="sub">
+ident [A-Za-z_][A-Za-z_0-9]*
+</pre>
+　です。<strong> { } </strong>で囲むことで、上方で定義した正規表現を指定できます。<br>
+<h5>コメント</h5>
+　<strong>Flex</strong>は、最初は<strong>&lt;INITIAL></strong>という<strong>状態</strong>を持ちます。状態は別に定義することができ
+<pre class="sub">
+%s COMMENT
+%s LINE_COMMENT
+%s STR_LITERAL_ST_D
+%s STR_LITERAL_ST_S
+</pre>
+　のように定義します。状態の変更は
+<pre class="sub">
+	"/*"	{ BEGIN(COMMENT);}
+</pre>
+　のように記述します。この言語は<strong>/*</strong>ではじまり<strong>*/</strong>で終わる<strong>複数行コメント</strong>と<strong>//</strong>以降その行は無視する<strong>1行コメント</strong>があります。<br>
+　これを<strong>状態の変更</strong>で行います。<br>
+　<strong>"/*"</strong>があれば<strong>複数行コメント</strong>の始まりです。<strong>{ BEGIN(COMMENT);}</strong>と状態変更します。<strong>COMMENT状態</strong>では
+<pre class="sub">
+&lt;COMMENT>{
+	"\n"	{ gLine++;}
+	"*/"	{ BEGIN(INITIAL); }
+	.		;
+}
+</pre>
+　のように<strong>"*/"</strong>が出てきたら<strong>BEGIN(INITIAL);</strong>と<strong>INITIAL状態</strong>に戻します。<br>
+　１行コメントは<strong>INITIAL状態</strong>の時に
+<pre class="sub">
+	[/][/]+	{ BEGIN(LINE_COMMENT);}
+</pre>
+　があれば<strong>LINE_COMMENT状態</strong>に推移します。その中では
+<pre class="sub">
+&lt;LINE_COMMENT>{
+	"\n"	{ gLine++; BEGIN(INITIAL); }
+	.		;
+}
+</pre>
+　のように<strong>改行</strong>があれば<strong>INITIAL状態</strong>に戻します。<br>
+<h5>文字列</h5>
+　また、まだ実装はしてませんが<strong>文字列</strong>についても<strong>Flexファイル</strong>では定義されています。この言語は<strong>PHP</strong>のように<strong>複数行文字列</strong>をきょかしたいとおもいますので<strong>状態</strong>を使って、文字列を管理します。
+<pre class="sub">
+&lt;STR_LITERAL_ST_D>{
+	"\n"	{ gLine++;  }
+	"\""	{ BEGIN(INITIAL);}
+	.		{ ; }
+}
+</pre>
+　は<strong>ダブルクオーテーション</strong>の<strong>文字列状態</strong>です。<br>
+　同様に
+<pre class="sub">
+&lt;STR_LITERAL_ST_S>{
+	"\n"	{ gLine++;  }
+	"\'"	{ BEGIN(INITIAL);}
+	.		{ ; }
+}
+</pre>
+　は<strong>シングルクオーテーション</strong>の<strong>文字列状態</strong>です。まだ<strong>Flex上</strong>でしか記述はないので、現時点では<strong>文字列</strong>が出てきても何もしません。
+<h5>main.cpp</h5>
+　以下、<strong>main.cpp</strong>です。前項と変わりません<br>
 <pre>
 #include &lt;stdio.h>
 #include &lt;stdlib.h>
@@ -745,7 +1006,8 @@ main (int argc, char *argv[])
 	return 0;
 }
 </pre>
-　「Makefile」です。
+<h5>Makefile</h5>
+　<strong>Makefile</strong>です。これも前項と変わりません。
 <pre>
 calcCpp : scanner.cpp parser.hpp parser.cpp main.cpp driver.cpp driver.h
 	g++ -o calcCpp scanner.cpp parser.cpp driver.cpp main.cpp
@@ -756,7 +1018,8 @@ scanner.cpp : scanner.l
 parser.hpp parser.cpp : parser.y
 	bison -d -o parser.cpp parser.y
 </pre>
-　以下、スクリプトファイルです「test.txt」です。
+<h5>test.txt</h5>
+　以下、スクリプトファイルです<strong>test.txt</strong>です。少し実験的な内容になっています。
 <pre>
 10.5 + 3.5;
 40.25+12.3;
