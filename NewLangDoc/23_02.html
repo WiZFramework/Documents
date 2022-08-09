@@ -54,12 +54,20 @@ union value {
 	~value(){}
 };
 
+struct ObjBase{
+protected:
+	ObjBase(){}
+public:
+	~ObjBase(){}
+};
 
-struct exp{
-	exp()
+struct Expression : public ObjBase{
+	Expression():
+		ObjBase()
 	{}
 
-	exp(const exp& other)
+	Expression(const Expression& other):
+		ObjBase()
 	{
 		m_valType = other.m_valType;
 		m_variable = other.m_variable;
@@ -83,33 +91,34 @@ struct exp{
 	string m_variable;
 };
 
-class driver
+class Driver
 {
-	driver ();
-	vector&lt;exp> m_expPool;
+	Driver ();
+	~Driver ();
+	vector&lt;ObjBase*> m_pObjPool;
 public:
-	void output(exp*  a);
+	void output(Expression*  a);
 
-	exp* createDOUBLE(const string& str);
-	exp* createINT(const string& str);
-	exp* createVARIABLE(const string& str);
+	Expression* createDOUBLE(const string& str);
+	Expression* createINT(const string& str);
+	Expression* createVARIABLE(const string& str);
 
-	exp* copyExp(exp* other);
-	exp* assExp(exp* dest,exp* src);
+	Expression* copyExp(Expression* other);
+	Expression* assExp(Expression* dest,Expression* src);
 
-	exp* calcADD(exp* left,exp* right);
-	exp* calcSUB(exp* left,exp* right);
-	exp* calcMUL(exp* left,const exp* right);
-	exp* calcDIV(exp* left,exp* right);
+	Expression* calcADD(Expression* left,Expression* right);
+	Expression* calcSUB(Expression* left,Expression* right);
+	Expression* calcMUL(Expression* left,const Expression* right);
+	Expression* calcDIV(Expression* left,Expression* right);
 
 	int parse (const string& f);
 	string m_file;
-	static driver* get();
+	static Driver* get();
 };
 
 #endif // ! DRIVER_H
 </pre>
-　前項から大きく変わったところに<strong>expクラス（構造体）</strong>があります。<strong>expression</strong>の意味です。<strong>式</strong>というと数学での
+　前項から大きく変わったところに<strong>Expressionクラス（構造体）</strong>があります。<strong>expression（式）</strong>の意味です。<strong>式</strong>というと数学での
 <pre class="sub">
 y = a * x + b
 </pre>
@@ -124,7 +133,7 @@ y = a * x + b
 val = 30
 </pre>
 　も<strong>代入式</strong>という<strong>式</strong>です。<strong>val</strong>という変数に<strong>3</strong>を代入して、代入した値そのもの<strong>3</strong>を返します。そういう風に、プログラム言語の<strong>式</strong>はかなり広い意味で使われます。<br>
-　数値や文字列、あるいはbool値などを、保存しておくのに<strong>expクラス</strong>は使われます。ですから内部に
+　数値や文字列、あるいはbool値などを、保存しておくのに<strong>Expressionクラス</strong>は使われます。ですから内部に
 <pre class="sub">
 	valType m_valType;
 	value m_value;
@@ -150,18 +159,35 @@ union value {
 	~value(){}
 };
 </pre>
-　と定義されています。
+　と定義されています。<br>
+　<strong>Expressionクラス</strong>は、親クラスとして<strong>ObjBaseクラス</strong>を持ちます。このクラスは直接インスタンスを作成できない形とし<strong>プロテクトコンストラクタ</strong>を持ちます。<br>
+　この項で実装する<strong>Expressionクラス</strong>以外でも、<strong>ObjBaseクラス</strong>から継承すれば、<strong>ObjBaseクラス</strong>のポインタの配列である。
+<pre class="sub">
+	vector&lt;ObjBase*> m_pObjPool;
+</pre>
+　に追加することができます。<br>
+　また、この項から<strong>Driverクラス</strong>と、先頭を大文字にしています。
 <h5>driver.cpp</h5>
 　続いて、<strong>driver.cpp</strong>を書き換えます。<strong>driver.h</strong>に宣言された関数の実体を記述します。
 <pre>
 #include "driver.h"
 
 
-driver::driver ()
+Driver::Driver ()
 {
 }
 
-void driver::output(exp* a){
+Driver::~Driver ()
+{
+	for(auto& v : m_pObjPool){
+		delete v;
+	}
+	m_pObjPool.clear();
+}
+
+
+
+void Driver::output(Expression* a){
 	switch(a->m_valType){
 		case valType::intType:
 			cout &lt;&lt; ">>" &lt;&lt; a->m_value.m_intVal &lt;&lt; std::endl;
@@ -179,49 +205,46 @@ void driver::output(exp* a){
 
 }
 
-exp* driver::createDOUBLE(const string& str){
+Expression* Driver::createDOUBLE(const string& str){
 	double d = (double)strtof(str.c_str(),nullptr);
-	exp temp;
-	temp.m_valType = valType::doubleType;
-	temp.m_value.m_doubleVal = d;
-	auto index = m_expPool.size();
-	m_expPool.push_back(temp);
-	return &(m_expPool[index]);
+	Expression* temp = new Expression();
+	temp->m_valType = valType::doubleType;
+	temp->m_value.m_doubleVal = d;
+	m_pObjPool.push_back(temp);
+	return temp;
 }
-exp* driver::createINT(const string& str){
+Expression* Driver::createINT(const string& str){
 	int i = (int)strtod(str.c_str(),nullptr);
-	exp temp;
-	temp.m_valType = valType::intType;
-	temp.m_value.m_intVal = i;
-	auto index = m_expPool.size();
-	m_expPool.push_back(temp);
-	return &(m_expPool[index]);
+	Expression* temp = new Expression();
+	temp->m_valType = valType::intType;
+	temp->m_value.m_intVal = i;
+	m_pObjPool.push_back(temp);
+	return temp;
 }
 
-exp* driver::copyExp(exp* other){
-	exp temp;
-	temp.m_valType = other->m_valType;
-	temp.m_variable = other->m_variable;
-	switch(temp.m_valType){
+Expression* Driver::copyExp(Expression* other){
+	Expression* temp = new Expression();
+	temp->m_valType = other->m_valType;
+	temp->m_variable = other->m_variable;
+	switch(temp->m_valType){
 		case valType::intType:
-		temp.m_value.m_intVal = other->m_value.m_intVal;
+		temp->m_value.m_intVal = other->m_value.m_intVal;
 		break;
 		case valType::doubleType:
-		temp.m_value.m_doubleVal = other->m_value.m_doubleVal;
+		temp->m_value.m_doubleVal = other->m_value.m_doubleVal;
 		break;
 		case valType::boolType:
-		temp.m_value.m_boolVal = other->m_value.m_boolVal;
+		temp->m_value.m_boolVal = other->m_value.m_boolVal;
 		break;
 		case valType::stringType:
-		temp.m_value.m_strVal = other->m_value.m_strVal;
+		temp->m_value.m_strVal = other->m_value.m_strVal;
 		break;
 	}
-	auto index = m_expPool.size();
-	m_expPool.push_back(temp);
-	return &(m_expPool[index]);
+	m_pObjPool.push_back(temp);
+	return temp;
 }
 
-exp* driver::assExp(exp* dest,exp* src){
+Expression* Driver::assExp(Expression* dest,Expression* src){
 	dest->m_valType = src->m_valType;
 	switch(src->m_valType){
 		case valType::intType:
@@ -244,7 +267,7 @@ exp* driver::assExp(exp* dest,exp* src){
 
 #define MAX_NUM_BUFF 100
 
-exp* driver::calcADD(exp* left,exp* right){
+Expression* Driver::calcADD(Expression* left,Expression* right){
 	char buff[MAX_NUM_BUFF];
 	switch(left->m_valType){
 		case valType::intType:
@@ -304,7 +327,7 @@ exp* driver::calcADD(exp* left,exp* right){
 	}
 	return left;
 }
-exp* driver::calcSUB(exp* left,exp* right){
+Expression* Driver::calcSUB(Expression* left,Expression* right){
 	char buff[MAX_NUM_BUFF];
 	switch(left->m_valType){
 		case valType::intType:
@@ -349,7 +372,7 @@ exp* driver::calcSUB(exp* left,exp* right){
 	return left;
 }
 
-exp* driver::calcMUL(exp* left,const exp* right){
+Expression* Driver::calcMUL(Expression* left,const Expression* right){
 	char buff[MAX_NUM_BUFF];
 	switch(left->m_valType){
 		case valType::intType:
@@ -393,7 +416,7 @@ exp* driver::calcMUL(exp* left,const exp* right){
 	}
 	return left;
 }
-exp* driver::calcDIV(exp* left,exp* right){
+Expression* Driver::calcDIV(Expression* left,Expression* right){
 	char buff[MAX_NUM_BUFF];
 	switch(left->m_valType){
 		case valType::intType:
@@ -438,29 +461,28 @@ exp* driver::calcDIV(exp* left,exp* right){
 	return left;
 }
 
-exp* driver::createVARIABLE(const string& str){
-	exp temp;
+Expression* Driver::createVARIABLE(const string& str){
+	Expression* temp = new Expression();
 	//intに初期化
-	temp.m_valType = valType::intType;
-	temp.m_value.m_intVal = 0;
-	temp.m_variable = str;
-	auto index = m_expPool.size();
-	m_expPool.push_back(temp);
-	return &(m_expPool[index]);
+	temp->m_valType = valType::intType;
+	temp->m_value.m_intVal = 0;
+	temp->m_variable = str;
+	m_pObjPool.push_back(temp);
+	return temp;
 }
 
 
 
-driver* driver::get(){
-	static driver* instance = nullptr;
+Driver* Driver::get(){
+	static Driver* instance = nullptr;
 	if(!instance){
-		instance = new driver();
+		instance = new Driver();
 	}
 	return instance;
 }
 
 int
-driver::parse (const string &f)
+Driver::parse (const string &f)
 {
 	extern int yyparse(void);
 	extern FILE* yyin;
@@ -480,30 +502,29 @@ driver::parse (const string &f)
 <h5>数値リテラル</h5>
 　まず、数値リテラルの処理です
 <pre class="sub">
-exp* driver::createDOUBLE(const string& str){
+Expression* Driver::createDOUBLE(const string& str){
 	double d = (double)strtof(str.c_str(),nullptr);
-	exp temp;
-	temp.m_valType = valType::doubleType;
-	temp.m_value.m_doubleVal = d;
-	<span class="red">auto index = m_expPool.size();
-	m_expPool.push_back(temp);
-	return &(m_expPool[index]);</span>
+	Expression* temp = new Expression();
+	temp->m_valType = valType::doubleType;
+	temp->m_value.m_doubleVal = d;
+	<span class="red">m_pObjPool.push_back(temp);</span>
+	return temp;
 }
 </pre>
-　前項では<strong>driver::createNUM()関数</strong>として実装されていました。前項では<strong>式</strong>ではなく<strong>double型</strong>の値をやり取りしていました。この項では<strong>exp*</strong>をやり取りするので書き直さなければなりません。また今回は<strong>int</strong>と<strong>double</strong>を分けたいと考えたので、関数名も変わっています。
+　前項では<strong>driver::createNUM()関数</strong>として実装されていました。前項では<strong>式</strong>ではなく<strong>double型</strong>の値をやり取りしていました。この項では<strong>Expression*</strong>をやり取りするので書き直さなければなりません。また今回は<strong>int</strong>と<strong>double</strong>を分けたいと考えたので、関数名も変わっています。
 <pre class="sub">
 	double d = (double)strtof(str.c_str(),nullptr);
 </pre>
-　で、数字文字列から<strong>double型の値</strong>を作成します。その後<strong>exp temp;</strong>と変数を作成し、そのメンバを初期化します。<br>
-　赤くなっているところは、作成した<strong>temp</strong>をメモリ上に保持する操作です。<strong>temp変数</strong>は<strong>ローカル変数</strong>なので、この関数を抜けると消滅してしまいます。ここで作成した<strong>expのインスタンス</strong>は、今後も使用するので、どこかにとっておかなければなりません。<br>
-<strong>driverクラス</strong>には
+　で、数字文字列から<strong>double型の値</strong>を作成します。その後<strong>Expression* temp;</strong>を<strong>new</strong>で作成し、そのメンバを初期化します。<br>
+　赤くなっているところは、作成した<strong>temp</strong>をメモリ上に保持する操作です。<strong>temp変数</strong>は<strong>ローカル変数</strong>なので、この関数を抜けると消滅してしまいます。ここで作成した<strong>Expression*のインスタンス</strong>は、今後も使用するので、どこかにとっておかなければなりません。<br>
+<strong>Driverクラス</strong>には
 <pre class="sub">
-	vector&lt;exp> m_expPool;
+	vector&lt;ObjBase*> m_pObjPool;
 </pre>
-　という<strong>exp型の配列</strong>があります。この配列にとっておくわけですが、<strong>vector</strong>は<strong>size()関数</strong>で現在の要素数を取り出せます。また、添え字は<strong>0</strong>から始ますので、<strong>push_back()</strong>で追加した要素の添え字は<strong>push_back()する直前の要素数と同じ</strong>になります。なので、保存後、その位置の<strong>expのポインタ</strong>を返します。<br>
-　<strong>int型</strong>のリテラルの処理も同様です。<strong>driver::createINT()関数</strong>で処理しています。
-<h5>代入先のexpの作成</h5>
-　続く<strong>driver::copyExp()関数</strong>は<strong>代入先のexpの作成</strong>です。<br>
+　という<strong>ObjBase*型の配列</strong>があります。この配列にとっておくわけです。<br>
+　<strong>int型</strong>のリテラルの処理も同様です。<strong>Driver::createINT()関数</strong>で処理しています。
+<h5>代入先のExpression*の作成</h5>
+　続く<strong>Driver::copyExp()関数</strong>は<strong>代入先のExpression*の作成</strong>です。<br>
 　例えば、<strong>parser.y</strong>に
 <pre class="sub">
 primary_expression
@@ -517,36 +538,35 @@ primary_expression
 		$$ = $1;
 	}
 </pre>
-　の略であり、この<strong>$$側</strong>は初めて出てくるので、<strong>expのインスタンス</strong>を作成しなければなりません。前項のように<strong>double型</strong>といったC/C++の組み込み型変数ならいいのですが<strong>exp</strong>はユーザー定義型なので、その作成方法を記述しなければならないのです。その処理は以下です。
+　の略であり、この<strong>$$側</strong>は初めて出てくるので、<strong>Expression*のインスタンス</strong>を作成しなければなりません。前項のように<strong>double型</strong>といったC/C++の組み込み型変数ならいいのですが<strong>Expression*</strong>はユーザー定義型なので、その作成方法を記述しなければならないのです。その処理は以下です。
 <pre class="sub">
-exp* driver::copyExp(exp* other){
-	exp temp;
-	temp.m_valType = other->m_valType;
-	temp.m_variable = other->m_variable;
-	switch(temp.m_valType){
+Expression* Driver::copyExp(Expression* other){
+	Expression* temp = new Expression();
+	temp->m_valType = other->m_valType;
+	temp->m_variable = other->m_variable;
+	switch(temp->m_valType){
 		case valType::intType:
-		temp.m_value.m_intVal = other->m_value.m_intVal;
+		temp->m_value.m_intVal = other->m_value.m_intVal;
 		break;
 		case valType::doubleType:
-		temp.m_value.m_doubleVal = other->m_value.m_doubleVal;
+		temp->m_value.m_doubleVal = other->m_value.m_doubleVal;
 		break;
 		case valType::boolType:
-		temp.m_value.m_boolVal = other->m_value.m_boolVal;
+		temp->m_value.m_boolVal = other->m_value.m_boolVal;
 		break;
 		case valType::stringType:
-		temp.m_value.m_strVal = other->m_value.m_strVal;
+		temp->m_value.m_strVal = other->m_value.m_strVal;
 		break;
 	}
-	auto index = m_expPool.size();
-	m_expPool.push_back(temp);
-	return &(m_expPool[index]);
+	m_pObjPool.push_back(temp);
+	return temp;
 }
 </pre>
-　新しい<strong>exp型の変数temp</strong>を作成して<strong>m_expPool配列</strong>に追加し、そのポインタを返します。<br>
+　新しい<strong>Expression*型の変数temp</strong>を<strong>new</strong>で作成して<strong>m_pObjPool配列</strong>に追加し、それを返します。<br>
 <h5>代入式の作成</h5>
 　続く
 <pre class="sub">
-exp* driver::assExp(exp* dest,exp* src){
+Expression* Driver::assExp(Expression* dest,Expression* src){
 	dest->m_valType = src->m_valType;
 	switch(src->m_valType){
 		case valType::intType:
@@ -571,7 +591,7 @@ exp* driver::assExp(exp* dest,exp* src){
 <pre class="sub">
 #define MAX_NUM_BUFF 100
 
-exp* driver::calcADD(exp* left,exp* right){
+Expression* Driver::calcADD(Expression* left,Expression* right){
 	char buff[MAX_NUM_BUFF];
 	switch(left->m_valType){
 		case valType::intType:
@@ -636,33 +656,32 @@ exp* driver::calcADD(exp* left,exp* right){
 　文字列型の場合は、後ろに追加します。演算の結果は左辺にまとめられ、その左辺を返します。<br>
 　この後
 <pre class="sub">
-exp* driver::calcSUB(exp* left,exp* right){
-//中略
+Expression* Driver::calcSUB(Expression* left,Expression* right){
+	//中略
 }
 
-exp* driver::calcMUL(exp* left,const exp* right){
-//中略
+Expression* Driver::calcMUL(Expression* left,const Expression* right){
+	//中略
 }
-exp* driver::calcDIV(exp* left,exp* right){
-//中略
+Expression* Driver::calcDIV(Expression* left,Expression* right){
+	//中略
 }
 </pre>
 　と残りの四則演算が続きます。文字列の追加は<strong>+</strong>でできますが、ほかの演算では何もしない形になります。
 <h5>変数の追加</h5>
-　続く<strong>driver::createVARIABLE()関数</strong>が、この項のテーマになっている<strong>変数の追加</strong>です。
+　続く<strong>Driver::createVARIABLE()関数</strong>が、この項のテーマになっている<strong>変数の追加</strong>です。
 <pre class="sub">
-exp* driver::createVARIABLE(const string& str){
-	exp temp;
+Expression* Driver::createVARIABLE(const string& str){
+	Expression* temp = new Expression();
 	//intに初期化
-	temp.m_valType = valType::intType;
-	temp.m_value.m_intVal = 0;
-	temp.m_variable = str;
-	auto index = m_expPool.size();
-	m_expPool.push_back(temp);
-	return &(m_expPool[index]);
+	temp->m_valType = valType::intType;
+	temp->m_value.m_intVal = 0;
+	temp->m_variable = str;
+	m_pObjPool.push_back(temp);
+	return temp;
 }
 </pre>
-　ここでも新しく<strong>exp temp;</strong>とインスタンスを作成し、<strong>temp.m_variable</strong>に変数名をセットし、<strong>m_expPool</strong>に保存します。
+　ここでも新しく<strong>Expression* temp;</strong>と作成し、<strong>temp->m_variable</strong>に変数名をセットし、<strong>m_pObjPool</strong>に保存します。
 <h5>parser.y</h5>
 　続いて<strong>Bison</strong>のファイルである<strong>parser.y</strong>です。<br>
 　ここでの注目点は<strong>primary_expression</strong>の処理と<strong>identifier_expression</strong>の処理です。
@@ -694,7 +713,7 @@ yyerror(char const *str)
 
 %union {
 	const char* identString;
-	exp*  exp_value;
+	Expression*  exp_value;
 	const char* literal_value;
 }
 %token &lt;identString>   IDENTIFIER
@@ -720,79 +739,79 @@ statement_list
 statement
 	: expression ";"
 	{
-	    driver::get()->output($1);
+	    Driver::get()->output($1);
 	}
 expression
 	: add_expression
 	| identifier_expression ASS expression
 	{
-		$$ = driver::get()->assExp($1,$3);
+		$$ = Driver::get()->assExp($1,$3);
 	}
 	;
 add_expression
 	: mul_expression
 	| add_expression "+" mul_expression
 	{
-		$$ = driver::get()->calcADD($1,$3);
+		$$ = Driver::get()->calcADD($1,$3);
 	}
 	| add_expression "-" mul_expression
 	{
-		$$ = driver::get()->calcSUB($1,$3);
+		$$ = Driver::get()->calcSUB($1,$3);
 	}
 	;
 mul_expression
 	: primary_expression
 	| mul_expression "*" primary_expression 
 	{
-		$$ = driver::get()->calcMUL($1,$3);
+		$$ = Driver::get()->calcMUL($1,$3);
 	}
 	| mul_expression "/" primary_expression
 	{
-		$$ = driver::get()->calcDIV($1,$3);
+		$$ = Driver::get()->calcDIV($1,$3);
 	}
 	;
 primary_expression
 	: identifier_expression
 	{
-		$$ = driver::get()->copyExp($1);
+		$$ = Driver::get()->copyExp($1);
 	}
 	| constart_expression
 	{
-		$$ = driver::get()->copyExp($1);
+		$$ = Driver::get()->copyExp($1);
 	}
 	;
 identifier_expression
 	: IDENTIFIER
 	{
-		$$ = driver::get()->createVARIABLE($1);
+		$$ = Driver::get()->createVARIABLE($1);
 	}
 constart_expression
 	: DOUBLE_LITERAL
 	{
-		$$ = driver::get()->createDOUBLE($1);
+		$$ = Driver::get()->createDOUBLE($1);
 	}
 	| INT_LITERAL
 	{
-		$$ = driver::get()->createINT($1);
+		$$ = Driver::get()->createINT($1);
 	}
 	;
 %%
 </pre>
-<h5>代入先のexpの作成</h5>
+<h5>代入先のExpression*の作成</h5>
 　<strong>primary_expression</strong>の<strong>アクション</strong>は以下のようになります。<strong>アクション</strong>とは<strong>非終端記号（ここではprimary_expression）</strong>を作り出すための<strong>終端記号（ここではidentifier_expressionやconstart_expression）</strong>における動作の定期です。<strong>{</strong>と<strong>}</strong>に挟んで書きます。<br>
 <pre class="sub">
 primary_expression
 	: identifier_expression
 	{
-		$$ = driver::get()->copyExp($1);
+		$$ = Driver::get()->copyExp($1);
 	}
 	| constart_expression
 	{
-		$$ = driver::get()->copyExp($1);
+		$$ = Driver::get()->copyExp($1);
 	}
 	;
 </pre>
-　となります。<strong>driver::get()->copyExp()関数</strong>は<strong>driverクラス</strong>の関数です。<strong>driver.cpp</strong>で紹介した関数で、新しい<strong>expのインスタンス</strong>を作って、引数の内容をコピーし、そのインスタンスを返します。。<br>
+　となります。<strong>Driver::get()->copyExp()関数</strong>は<strong>Driverクラス</strong>の関数です。<strong>driver.cpp</strong>で紹介した関数で、新しい<strong>expのインスタンス</strong>を作って、引数の内容をコピーし、そのインスタンスを返します。<br>
 　ここで作成しておくと、上位の処理である
 <pre class="sub">
 mul_expression
@@ -813,12 +832,12 @@ mul_expression
 identifier_expression
 	: IDENTIFIER
 	{
-		$$ = driver::get()->createVARIABLE($1);
+		$$ = Driver::get()->createVARIABLE($1);
 	}
 </pre>
-　で追加します。<strong>driver::createVARIABLE()関数</strong>を使います。<br>
+　で追加します。<strong>Driver::createVARIABLE()関数</strong>を使います。<br>
 <h5>四則演算</h5>
-　<strong>四則演算</strong>も<strong>driverクラス</strong>で定義した関数を呼び出します。前項では<strong>double型</strong>をやり取りしたので、そのまま記述できましたが、今項からは<strong>expクラス</strong>を使いますので、それ専用の関数を呼び出します。<br>
+　<strong>四則演算</strong>も<strong>Driverクラス</strong>で定義した関数を呼び出します。前項では<strong>double型</strong>をやり取りしたので、そのまま記述できましたが、今項からは<strong>Expression*</strong>を使いますので、それ専用の関数を呼び出します。<br>
 <h5>文と出力</h5>
 　<strong>変数式</strong>は、その内容が勝手に出力されます。今項から<strong>文（statement）</strong>の概念を取り入れました。この言語はC言語のように<strong> ; （セミコロン）</strong>で文が終わります。通常<strong>文</strong>は命令であり<strong>出力</strong>は
 <pre class="sub">
@@ -829,7 +848,7 @@ print i;
 statement
 	: expression ";"
 	{
-	    driver::get()->output($1);
+	    Driver::get()->output($1);
 	}
 </pre>
 　のように、式の最後に<strong> ; （セミコロン）</strong>がついていれば、実行（出力）します。<br>
@@ -965,7 +984,7 @@ ident [A-Za-z_][A-Za-z_0-9]*
 </pre>
 　のように<strong>改行</strong>があれば<strong>INITIAL状態</strong>に戻します。<br>
 <h5>文字列</h5>
-　また、まだ実装はしてませんが<strong>文字列</strong>についても<strong>Flexファイル</strong>では定義されています。この言語は<strong>PHP</strong>のように<strong>複数行文字列</strong>をきょかしたいとおもいますので<strong>状態</strong>を使って、文字列を管理します。
+　また、まだ実装はしてませんが<strong>文字列</strong>についても<strong>Flexファイル</strong>では定義されています。この言語は<strong>PHP</strong>のように<strong>複数行文字列</strong>を許可したいとおもいますので<strong>状態</strong>を使って、文字列を管理します。
 <pre class="sub">
 &lt;STR_LITERAL_ST_D>{
 	"\n"	{ gLine++;  }
@@ -999,7 +1018,7 @@ using namespace std;
 int
 main (int argc, char *argv[])
 {
-	driver* drv = driver::get();
+	Driver* drv = Driver::get();
 	for (int i = 1; i &lt; argc; ++i){
 		return drv->parse(argv[i]);
 	}
@@ -1029,6 +1048,10 @@ i = 15.55;
 /*
 ここは複数行コメント
 */
+</pre>
+　以下、実行コマンドです。
+<pre>
+./calcCpp test.txt
 </pre>
 　以下、実行結果です。
 <pre>
